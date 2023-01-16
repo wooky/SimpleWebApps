@@ -1,0 +1,11 @@
+{% block create %}{% endblock %}
+
+{% block update %}
+<turbo-stream action="update" target="simplewebapps-username-{{ entity.id }}">
+  <template>
+    {{ entity.username }}
+  </template>
+</turbo-stream>
+{% endblock %}
+
+{% block remove %}{% endblock %}

@@ -1,0 +1,31 @@
+{% extends '_reusable/base.html.twig' %}
+
+{% block title %}Relationship index{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1 class="title is-1">My Relationships</h1>
+  <h2 class="title is-2">Users I have access to</h2>
+  <div class="panel">
+    {% for relationship in from_user %}
+      {{ component('relationship:relationship-box', {
+        'relationship': relationship,
+        'isFromUser': true,
+      }) }}
+    {% endfor %}
+    <div class="panel-block is-block">
+      <h3 class="subtitle">Ask a user to give access</h3>
+      <turbo-frame id="relationships-invite" src="{{ path('relationships_invite') }}"></turbo-frame>
+    </div>
+  </div>
+  <h2 class="title is-2">Users that have access to me</h2>
+  <div class="panel">
+    {% for relationship in to_user %}
+      {{ component('relationship:relationship-box', {
+        'relationship': relationship,
+        'isFromUser': false,
+      }) }}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

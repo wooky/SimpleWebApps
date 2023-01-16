@@ -1,0 +1,27 @@
+<turbo-frame id="simplewebapps-navbar-{{ ulid }}">
+  <nav class="navbar is-fixed-top">
+    <div class="navbar-brand is-hoverable">
+      <a class="navbar-item" href="{{ path('index') }}">Simple Web Apps</a>
+    </div>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div {{ stimulus_controller('stream') }}
+      data-mercure-url="{{ mercure('user_' ~ ulid, {'subscribe': 'user_' ~ ulid}) }}"
+    ></div>
+    <div class="navbar-end">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          <span id="simplewebapps-username-{{ ulid }}">
+            {{ app.user.username }}
+          </span>
+        </a>
+        <div class="navbar-dropdown is-right">
+          <a class="navbar-item" href="{{ path('auth_profile') }}">My Profile</a>
+          <a class="navbar-item" href="{{ path('relationships_index') }}">My Relationships</a>
+          <hr class="navbar-divider">
+          <a class="navbar-item" href="{{ path('app_logout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </nav>
+</turbo-frame>

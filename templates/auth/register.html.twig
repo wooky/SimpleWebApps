@@ -1,0 +1,11 @@
+{% extends 'auth/_base.html.twig' %}
+
+{% block form %}
+{{ form_start(registrationForm, {'attr': {'class': 'has-text-left'}}) }}
+  {{ form_widget(registrationForm) }}
+
+  <div class="has-text-centered">
+    <button type="submit" class="button is-success has-text-centered">Register</button>
+  </div>
+{{ form_end(registrationForm) }}
+{% endblock %}

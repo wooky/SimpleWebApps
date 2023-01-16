@@ -1,0 +1,28 @@
+{% extends '_reusable/base.html.twig' %}
+
+{% block body %}
+<div class="container">
+  <div class="columns">
+    <div class="column">
+      <h1 class="title">Weight Tracker</h1>
+    </div>
+    <div class="column is-narrow">
+      <form action="{{ path('weight_tracker_new') }}" data-turbo-frame="app-modal">
+        <button class="button is-primary" type="submit">
+          <span class="icon">
+            <iconify-icon icon="mdi:plus-circle"></iconify-icon>
+          </span>
+          <span>Add Point</span>
+        </button>
+      </form>
+    </div>
+  </div>
+  <div {{ stimulus_controller('weight_tracker') }}
+    data-weight-tracker-event-source-url-value="{{ mercure(chart_topics, {subscribe: chart_topics})|e('html_attr') }}"
+    data-weight-tracker-points-value="{{ points|json_encode|e('html_attr') }}"
+    data-weight-tracker-point-click-path-value="{{ path('weight_tracker_edit', {id: '{{id}}'}) }}"
+  >
+    <canvas data-weight-tracker-target="chart"></canvas>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% set ulid = isFromUser ? relationship.toUser.id : relationship.fromUser.id %}
+<div class="panel-block">
+  <div class="column py-0">
+    <span id="simplewebapps-username-{{ ulid }}">
+      {{ name }}
+    </span>
+  </div>
+  <div class="column is-narrow py-0">
+    {% if not relationship.active %}Pending - {% endif %}
+    {{ relationship.capability.value }}
+  </div>
+  <div class="column is-narrow py-0">
+  {% if not isFromUser and not relationship.active %}
+    <form method="POST" action="{{ path('relationships_approve', {'id': relationship.id}) }}">
+      <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ relationship.id) }}">
+      <button class="button is-success" type="submit" title="Approve request">
+        <span class="icon">
+          <iconify-icon icon="mdi:check-circle"></iconify-icon>
+        </span>
+      </button>
+    </form>
+  {% else %}
+    <div style="width: 2.5em"></div>
+  {% endif %}
+  </div>
+  <form class="column is-narrow py-0" action="{{ path('relationships_pre_delete', {'id': relationship.id}) }}" data-turbo-frame="app-modal">
+    <button class="button is-danger" type="submit" title="Delete relationship">
+      <span class="icon">
+        <iconify-icon icon="mdi:delete"></iconify-icon>
+      </span>
+    </button>
+  </form>
+</div>

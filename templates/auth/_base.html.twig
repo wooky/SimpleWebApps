@@ -1,0 +1,14 @@
+{% extends '_reusable/base.html.twig' %}
+
+{% block title %}Simple Web Apps{% endblock %}
+
+{% block body %}
+<section class="hero is-fullheight-with-navbar">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <p class="title">Simple Web Apps</p>
+      {% block form %}{% endblock %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+<turbo-frame id="app-modal">
+  <div {{ stimulus_controller('modal') }} class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      {% block before_modal %}{% endblock %}
+      <header class="modal-card-head">
+        <p class="modal-card-title">{{ block('title') }}</p>
+        <button class="delete"></button>
+      </header>
+      <section class="modal-card-body">
+        {% block modal_body %}{% endblock %}
+      </section>
+      <footer class="modal-card-foot">
+        {% block modal_footer %}{% endblock %}
+      </footer>
+      {% block after_modal %}{% endblock %}
+    </div>
+  </div>
+</turbo-frame>

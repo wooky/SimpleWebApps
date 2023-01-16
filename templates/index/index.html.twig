@@ -1,0 +1,14 @@
+{% extends '_reusable/base.html.twig' %}
+{% block title %}wazzup beijing{% endblock %}
+{% block body %}
+<section class="hero">
+  <div class="hero-body has-text-centered">
+    <p class="title">Simple Web Apps</p>
+  </div>
+</section>
+<div class="container">
+  <ul>
+    <li><a href="{{ path('weight_tracker_index') }}">Weight Tracker</a>
+  </ul>
+</div>
+{% endblock %}
