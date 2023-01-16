@@ -1,0 +1,6 @@
+turbo:
+  broadcast:
+    entity_template_prefixes:
+      SimpleWebApps\Entity\: broadcast/
+  # mercure:
+  #   hubs: [default]
