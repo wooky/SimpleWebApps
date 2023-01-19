@@ -17,16 +17,18 @@ class ProfileFormType extends AbstractType
     {
         $builder
             ->add('id', TextType::class, [
-                'label' => 'ULID',
+                'label' => 'form.ulid',
                 'disabled' => true,
             ])
-            ->add('username')
+            ->add('username', TextType::class, [
+                'label' => 'auth.username',
+            ])
             ->add('plainPassword', PasswordType::class, [
-                'label' => 'Password',
+                'label' => 'auth.password',
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => '(unchanged)',
+                    'placeholder' => 'form.unchanged',
                 ],
             ])
         ;

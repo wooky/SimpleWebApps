@@ -42,8 +42,9 @@ class WeightTrackerController extends AbstractController
             return $this->closeModalOrRedirect($request, 'weight_tracker_index');
         }
 
-        return $this->render('weight_tracker/new.html.twig', [
+        return $this->render('modal/new.html.twig', [
             'form' => $form,
+            'subject' => 'weight_tracker.subject',
         ]);
     }
 
@@ -51,7 +52,9 @@ class WeightTrackerController extends AbstractController
     public function edit(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
     {
         if (!$this->isGranted(RelationshipCapability::Write->value, $weightRecord)) {
-            return $this->render('weight_tracker/forbidden.html.twig')
+            return $this->render('modal/forbidden.html.twig', [
+                'subject' => 'weight_tracker.subject',
+            ])
                 ->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
@@ -63,17 +66,23 @@ class WeightTrackerController extends AbstractController
             return $this->closeModalOrRedirect($request, 'weight_tracker_index');
         }
 
-        return $this->render('weight_tracker/edit.html.twig', [
-            'id' => $weightRecord->getId(),
+        $id = $weightRecord->getId();
+        return $this->render('modal/edit.html.twig', [
+            'id' => $id,
             'form' => $form,
+            'subject' => 'weight_tracker.subject',
+            'pre_delete_path' => $this->generateUrl('weight_tracker_pre_delete', ['id' => $id]),
         ]);
     }
 
     #[Route('/{id}/delete', name: 'pre_delete', methods: ['POST'])]
     public function preDelete(WeightRecord $weightRecord): Response
     {
-        return $this->render('weight_tracker/pre_delete.html.twig', [
-            'id' => $weightRecord->getId(),
+        $id = $weightRecord->getId();
+        return $this->render('modal/pre_delete.html.twig', [
+            'id' => $id,
+            'subject' => 'weight_tracker.subject',
+            'delete_path' => $this->generateUrl('weight_tracker_delete', ['id' => $id]),
         ]);
     }
 
@@ -92,7 +101,7 @@ class WeightTrackerController extends AbstractController
     private function closeModalOrRedirect(Request $request, string $route): Response
     {
         if ($request->headers->get('Turbo-Frame') === "app-modal") {
-            return $this->render('_reusable/modal_close.html.twig');
+            return $this->render('modal/close.html.twig');
         }
 
         return $this->redirectToRoute($route, status: Response::HTTP_SEE_OTHER);

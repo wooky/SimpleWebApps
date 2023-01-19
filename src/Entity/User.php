@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
 #[Broadcast(['topics' => ['@="user_" ~ entity.getId()'], 'private' => true])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

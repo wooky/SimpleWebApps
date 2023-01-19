@@ -98,8 +98,11 @@ class RelationshipsController extends AbstractController
     #[Route('/{id}/delete', name: 'pre_delete', methods: ['GET'])]
     public function preDelete(Relationship $relationship): Response
     {
-        return $this->render('relationships/pre_delete.html.twig', [
-            'id' => $relationship->getId(),
+        $id = $relationship->getId();
+        return $this->render('modal/pre_delete.html.twig', [
+            'id' => $id,
+            'subject' => 'relationships.subject',
+            'delete_path' => $this->generateUrl('relationships_delete', ['id' => $id]),
         ]);
     }
 

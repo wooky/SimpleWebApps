@@ -3,12 +3,12 @@
 {% block body %}
 <section class="hero">
   <div class="hero-body has-text-centered">
-    <p class="title">Simple Web Apps</p>
+    <p class="title">{% trans %}SimpleWebApps{% endtrans %}</p>
   </div>
 </section>
 <div class="container">
   <ul>
-    <li><a href="{{ path('weight_tracker_index') }}">Weight Tracker</a>
+    <li><a href="{{ path('weight_tracker_index') }}">{% trans %}weight_tracker.title{% endtrans %}</a>
   </ul>
 </div>
 {% endblock %}

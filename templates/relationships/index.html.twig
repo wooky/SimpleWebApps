@@ -1,11 +1,11 @@
 {% extends '_reusable/base.html.twig' %}
 
-{% block title %}Relationship index{% endblock %}
+{% block title %}{% trans %}relationships.title{% endtrans %}{% endblock %}
 
 {% block body %}
 <div class="container">
-  <h1 class="title is-1">My Relationships</h1>
-  <h2 class="title is-2">Users I have access to</h2>
+  <h1 class="title is-1">{{ block('title') }}</h1>
+  <h2 class="title is-2">{% trans %}relationships.from_user{% endtrans %}</h2>
   <div class="panel">
     {% for relationship in from_user %}
       {{ component('relationship:relationship-box', {
@@ -14,11 +14,11 @@
       }) }}
     {% endfor %}
     <div class="panel-block is-block">
-      <h3 class="subtitle">Ask a user to give access</h3>
+      <h3 class="subtitle">{% trans %}relationships.ask_user{% endtrans %}</h3>
       <turbo-frame id="relationships-invite" src="{{ path('relationships_invite') }}"></turbo-frame>
     </div>
   </div>
-  <h2 class="title is-2">Users that have access to me</h2>
+  <h2 class="title is-2">{% trans %}relationships.to_user{% endtrans %}</h2>
   <div class="panel">
     {% for relationship in to_user %}
       {{ component('relationship:relationship-box', {

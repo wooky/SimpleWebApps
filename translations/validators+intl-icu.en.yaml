@@ -1,0 +1,6 @@
+auth:
+  didnt_agree_terms: 'You should agree to our terms.'
+  username_exists: 'There is already an account with this username'
+
+relationships:
+  to_self: 'Cannot create relationship to yourself.'

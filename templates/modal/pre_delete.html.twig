@@ -1,0 +1,11 @@
+{% extends 'modal/_base.html.twig' %}
+
+{% block title %}{{ 'modal.delete.title'|trans({'subject': subject|trans}) }}{% endblock %}
+
+{% block before_modal %}<form method="DELETE" action="{{ delete_path }}">{% endblock %}
+{% block modal_body %}
+{{ 'modal.delete.message'|trans({'subject': subject|trans}) }}
+<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+{% endblock %}
+{% block modal_footer %}<button class="button is-danger">{% trans %}modal.delete.delete{% endtrans %}</button>{% endblock %}
+{% block after_modal %}</form>{% endblock %}

@@ -18,16 +18,19 @@ class LoginFormType extends AbstractType
   {
     $builder
       ->add('_username', TextType::class, [
+        'label' => 'auth.username',
         'data' => $options[self::LAST_USERNAME],
       ])
-      ->add('_password', PasswordType::class)
+      ->add('_password', PasswordType::class, [
+        'label' => 'auth.password',
+      ])
     ;
   }
 
   public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
-      self::LAST_USERNAME => 'hurdur',
+      self::LAST_USERNAME => '',
       'csrf_protection' => true,
       'csrf_field_name' => '_csrf_token',
       'csrf_token_id' => 'authenticate',

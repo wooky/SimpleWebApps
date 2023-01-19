@@ -15,7 +15,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
     name: 'link_unique_idx',
     columns: ['from_user', 'to_user']
 )]
-#[Assert\Expression("this.fromUser != this.toUser", message: 'Cannot create relationship to yourself.')]
+#[Assert\Expression("this.fromUser != this.toUser", message: 'relationships.to_self')]
 #[Broadcast([
     'topics' => [
         '@="relationship_" ~ entity.getFromUser().getId()',

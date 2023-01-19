@@ -1,7 +1,7 @@
 <turbo-frame id="simplewebapps-navbar-{{ ulid }}">
   <nav class="navbar is-fixed-top">
     <div class="navbar-brand is-hoverable">
-      <a class="navbar-item" href="{{ path('index') }}">Simple Web Apps</a>
+      <a class="navbar-item" href="{{ path('index') }}">{% trans %}SimpleWebApps{% endtrans %}</a>
     </div>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <div {{ stimulus_controller('stream') }}
@@ -15,10 +15,10 @@
           </span>
         </a>
         <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href="{{ path('auth_profile') }}">My Profile</a>
-          <a class="navbar-item" href="{{ path('relationships_index') }}">My Relationships</a>
+          <a class="navbar-item" href="{{ path('auth_profile') }}">{% trans %}profile.title{% endtrans %}</a>
+          <a class="navbar-item" href="{{ path('relationships_index') }}">{% trans %}relationships.title{% endtrans %}</a>
           <hr class="navbar-divider">
-          <a class="navbar-item" href="{{ path('app_logout') }}">Log Out</a>
+          <a class="navbar-item" href="{{ path('app_logout') }}">{% trans %}auth.logout{% endtrans %}</a>
         </div>
       </div>
     </div>

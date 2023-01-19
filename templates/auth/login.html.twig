@@ -1,17 +1,15 @@
 {% extends 'auth/_base.html.twig' %}
 
-{% block title %}Simple Web Apps{% endblock %}
-
 {% block form %}
 {{ form_start(form) }}
   {{ form_widget(form) }}
 
   <div class="field is-grouped is-grouped-centered">
     <div class="control">
-      <button class="button is-success" type="submit">Log In</button>
+      <button class="button is-success" type="submit">{% trans %}auth.login{% endtrans %}</button>
     </div>
     <div class="control">
-      <a class="button" href="{{ path('auth_register') }}">Sign Up</a>
+      <a class="button" href="{{ path('auth_register') }}">{% trans %}auth.signup{% endtrans %}</a>
     </div>
   </div>
 {{ form_end(form) }}

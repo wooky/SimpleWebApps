@@ -1,0 +1,5 @@
+{% extends 'modal/_base.html.twig' %}
+
+{% block title %}{% trans %}modal.forbidden.title{% endtrans %}{% endblock %}
+
+{% block modal_body %}{{ 'modal.forbidden.message'|trans({'subject': subject|trans}) }}{% endblock %}

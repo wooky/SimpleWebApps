@@ -1,10 +1,12 @@
 {% extends '_reusable/base.html.twig' %}
 
+{% block title %}{% trans %}weight_tracker.title{% endtrans %}{% endblock %}
+
 {% block body %}
 <div class="container">
   <div class="columns">
     <div class="column">
-      <h1 class="title">Weight Tracker</h1>
+      <h1 class="title">{{ block('title') }}</h1>
     </div>
     <div class="column is-narrow">
       <form action="{{ path('weight_tracker_new') }}" data-turbo-frame="app-modal">
@@ -12,7 +14,7 @@
           <span class="icon">
             <iconify-icon icon="mdi:plus-circle"></iconify-icon>
           </span>
-          <span>Add Point</span>
+          <span>{% trans %}weight_tracker.add_point{% endtrans %}</span>
         </button>
       </form>
     </div>

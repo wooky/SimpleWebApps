@@ -29,6 +29,7 @@ class WeightRecordType extends AbstractType
         /** @var User */ $user = $this->security->getUser();
         $builder
             ->add('owner', EntityType::class, [
+                'label' => 'auth.username',
                 'class' => User::class,
                 'choice_label' => 'username',
                 'query_builder' => fn(UserRepository $userRepository) =>
@@ -37,9 +38,12 @@ class WeightRecordType extends AbstractType
                 'disabled' => $options[self::IS_OWNER_DISABLED],
             ])
             ->add('date', options: [
+                'label' => 'weight_tracker.date',
                 'widget' => 'single_text',
             ])
-            ->add('weight')
+            ->add('weight', options: [
+                'label' => 'weight_tracker.weight',
+            ])
         ;
     }
 

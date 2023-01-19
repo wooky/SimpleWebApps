@@ -1,16 +1,16 @@
 {% extends '_reusable/base.html.twig' %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}{% trans %}profile.title{% endtrans %}{% endblock %}
 
 {% block body %}
 <div class="container">
-  <h1 class="title">My Profile</h1>
+  <h1 class="title">{{ block('title') }}</h1>
   {{ form_start(form) }}
     {{ form_widget(form) }}
 
     <div class="field">
       <div class="control has-text-right">
-        <button class="button is-success" type="submit">Save</button>
+        <button class="button is-success" type="submit">{% trans %}form.save{% endtrans %}</button>
       </div>
     </div>
   {{ form_end(form) }}

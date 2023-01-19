@@ -19,10 +19,12 @@ class InviteFormType extends AbstractType
     {
         $builder
             ->add(self::TO_USER, UlidType::class, [
-                'label' => "User ULID",
+                'label' => 'relationships.capability.user_ulid',
             ])
             ->add(self::CAPABILITY, EnumType::class, [
+                'label' => 'relationships.capability.title',
                 'class' => RelationshipCapability::class,
+                'choice_label' => fn (RelationshipCapability $choice) => $choice,
             ]);
         ;
     }
