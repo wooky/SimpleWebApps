@@ -32,7 +32,7 @@ export default class extends Controller {
             type: "time",
             time: {
               unit: "day",
-              tooltipFormat: "MMM D",
+              tooltipFormat: "MMM D YYYY",
             },
           },
           y: {

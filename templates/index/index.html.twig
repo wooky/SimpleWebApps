@@ -1,9 +1,9 @@
 {% extends '_reusable/base.html.twig' %}
-{% block title %}wazzup beijing{% endblock %}
+{% block title %}{% trans %}SimpleWebApps{% endtrans %}{% endblock %}
 {% block body %}
 <section class="hero">
   <div class="hero-body has-text-centered">
-    <p class="title">{% trans %}SimpleWebApps{% endtrans %}</p>
+    <p class="title">{{ block('title') }}</p>
   </div>
 </section>
 <div class="container">

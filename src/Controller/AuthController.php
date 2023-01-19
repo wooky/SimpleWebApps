@@ -15,9 +15,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+#[Route(name: 'auth_')]
 class AuthController extends AbstractController
 {
-    #[Route('/register', name: 'auth_register', methods: ['GET', 'POST'])]
+    #[Route('/register', name: 'register', methods: ['GET', 'POST'])]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
     {
         $user = new User();
@@ -44,7 +45,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    #[Route('/login', name: 'auth_login', methods: ['GET', 'POST'])]
+    #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $form = $this->createForm(LoginFormType::class, options: [
@@ -61,7 +62,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    #[Route('/profile', name: 'auth_profile', methods: ['GET', 'POST'])]
+    #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
     public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
     {
         /** @var User */ $user = $this->getUser();
