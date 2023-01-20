@@ -8,7 +8,6 @@ use SimpleWebApps\Repository\RelationshipRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Uid\Ulid;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: RelationshipRepository::class)]
 #[ORM\UniqueConstraint(
@@ -16,13 +15,6 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
     columns: ['from_user', 'to_user']
 )]
 #[Assert\Expression("this.fromUser != this.toUser", message: 'relationships.to_self')]
-#[Broadcast([
-    'topics' => [
-        '@="relationship_" ~ entity.getFromUser().getId()',
-        '@="relationship_" ~ entity.getToUser().getId()',
-    ],
-    'private' => true
-])]
 class Relationship
 {
     #[ORM\Id]

@@ -1,7 +1,9 @@
 <?php declare(strict_types = 1);
 namespace SimpleWebApps\WeightTracker;
 
-use Psr\Log\LoggerInterface;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use RuntimeException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
@@ -12,7 +14,13 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
-class WeightRecordBroadcaster implements BroadcasterInterface
+#[AsEntityListener(event: Events::postPersist, method: 'onWeightRecordChange', entity: WeightRecord::class)]
+#[AsEntityListener(event: Events::postUpdate, method: 'onWeightRecordChange', entity: WeightRecord::class)]
+#[AsEntityListener(event: Events::postRemove, method: 'onWeightRecordChange', entity: WeightRecord::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'onRelationshipChange', entity: Relationship::class)]
+#[AsEntityListener(event: Events::postUpdate, method: 'onRelationshipChange', entity: Relationship::class)]
+#[AsEntityListener(event: Events::postRemove, method: 'onRelationshipChange', entity: Relationship::class)]
+class WeightRecordBroadcaster
 {
   private const TOPIC_PREFIX = 'weight_record_';
 
@@ -21,24 +29,43 @@ class WeightRecordBroadcaster implements BroadcasterInterface
   public function __construct(
     private readonly WeightTrackerService $weightTrackerService,
     private readonly UserRepository $userRepository,
-    private readonly LoggerInterface $logger,
     HubInterface $hub,
   ) {
     $this->mercureBroadcaster = new Broadcaster('default', $hub);
   }
 
-  public function broadcast(object $entity, string $action, array $options): void
+  public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
   {
-    /** @var User[] */ $users = [];
-    if ($entity instanceof WeightRecord) {
-      $users = $this->getAffectedUsersOfWeightRecord($entity);
-    } elseif ($entity instanceof Relationship) {
-      $users = $this->getAffectedUsersOfRelationship($entity);
-    }
+    $owner = $weightRecord->getOwner();
+    assert($owner !== null);
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
+    $this->broadcast($affectedUsers);
+  }
 
-    foreach ($users as $user) {
-      $options['topics'] = self::getTopics($user);
-      $options['rendered_action'] = json_encode($this->weightTrackerService->getRenderableDataSets($user));
+  public function onRelationshipChange(Relationship $relationship, LifecycleEventArgs $event): void
+  {
+    $fromUser = $relationship->getFromUser();
+    assert($fromUser !== null);
+    $affectedUsers = [$fromUser];
+    $this->broadcast($affectedUsers);
+  }
+
+  /**
+   * @param User[] $affectedUsers
+   */
+  private function broadcast(array $affectedUsers): void
+  {
+    foreach ($affectedUsers as $user) {
+      $options = [
+        'topics' => self::getTopics($user),
+        'rendered_action' => json_encode($this->weightTrackerService->getRenderableDataSets($user)),
+        'private' => true,
+        'topic' => '' // TODO https://github.com/symfony/ux/pull/653
+      ];
+      /**
+       * TODO https://github.com/symfony/ux/pull/653
+       * @psalm-suppress InvalidArgument
+       */
       $this->mercureBroadcaster->broadcast($user, '', $options); // first 2 parameters are not important
     }
   }
@@ -49,26 +76,6 @@ class WeightRecordBroadcaster implements BroadcasterInterface
   public static function getTopics(User $user): array
   {
     return [self::TOPIC_PREFIX . ($user->getId() ?? throw new RuntimeException('User has no ID'))];
-  }
-
-  /**
-   * @return User[]
-   */
-  private function getAffectedUsersOfWeightRecord(WeightRecord $weightRecord): array
-  {
-    $owner = $weightRecord->getOwner();
-    assert($owner !== null);
-    return $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
-  }
-
-  /**
-   * @return User[]
-   */
-  private function getAffectedUsersOfRelationship(Relationship $relationship): array
-  {
-    $fromUser = $relationship->getFromUser();
-    assert($fromUser !== null);
-    return [$fromUser];
   }
 }
 

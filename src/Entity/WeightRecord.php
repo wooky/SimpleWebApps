@@ -8,10 +8,8 @@ use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: WeightRecordRepository::class)]
-#[Broadcast(['private' => true])]
 class WeightRecord implements Ownable
 {
     #[ORM\Id]

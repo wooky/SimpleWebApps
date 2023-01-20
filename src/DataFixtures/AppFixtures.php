@@ -5,6 +5,7 @@ use DateInterval;
 use DatePeriod;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
@@ -12,6 +13,9 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class AppFixtures extends Fixture
 {
   public function __construct(
@@ -22,6 +26,13 @@ final class AppFixtures extends Fixture
 
   public function load(ObjectManager $manager): void
   {
+    // Disable event listeners
+    $metadata = $manager->getMetadataFactory()->getAllMetadata();
+    foreach ($metadata as $metadatum) {
+      assert($metadatum instanceof ClassMetadata);
+      $metadatum->entityListeners = [];
+    }
+
     $master = $this->createUser($manager, 'master');
     $slaveRead = $this->createUser($manager, 'slave-read');
     $slaveWrite = $this->createUser($manager, 'slave-write');
@@ -42,7 +53,7 @@ final class AppFixtures extends Fixture
       ->createWeightRecords($manager, $slaveWrite, fn(DateTimeImmutable $date) => (int) $date->format('j') % 2 == 0 ? 125 : 175)
       ->createWeightRecords($manager, $slaveReadPending, fn(DateTimeImmutable $date) => (int) $date->format('j') % 4 < 2 ? 175 : 200)
       ->createWeightRecords($manager, $slaveWritePending, fn(DateTimeImmutable $date) => (int) $date->format('N') < 6 ? 95 : 195)
-      ->createWeightRecords($manager, $loner, fn(DateTimeImmutable $date) => 150)
+      ->createWeightRecords($manager, $loner, fn() => 150)
       ;
 
     $manager->flush();
@@ -73,6 +84,10 @@ final class AppFixtures extends Fixture
    */
   private function createWeightRecords(ObjectManager $manager, User $owner, callable $weightGen): self
   {
+    /**
+     * TODO https://github.com/vimeo/psalm/issues/9147
+     * @psalm-suppress InvalidArgument
+     */
     $dateIterator = new DatePeriod(
       new DateTimeImmutable('2022-01-01 00:00:00 UTC'),
       new DateInterval('P1D'),
