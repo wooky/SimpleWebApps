@@ -16,6 +16,7 @@ class LoginFormType extends AbstractType
 
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
+    assert(isset($options[self::LAST_USERNAME]));
     $builder
       ->add('_username', TextType::class, [
         'label' => 'auth.username',

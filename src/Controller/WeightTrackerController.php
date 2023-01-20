@@ -90,7 +90,7 @@ class WeightTrackerController extends AbstractController
     public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
     {
         /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('delete'.$weightRecord->getId(), $token)) {
+        if ($this->isCsrfTokenValid('delete'.((string) $weightRecord->getId()), $token)) {
             $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
             $weightRecordRepository->remove($weightRecord, true);
         }

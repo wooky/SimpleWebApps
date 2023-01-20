@@ -75,7 +75,7 @@ class WeightRecordBroadcaster
    */
   public static function getTopics(User $user): array
   {
-    return [self::TOPIC_PREFIX . ($user->getId() ?? throw new RuntimeException('User has no ID'))];
+    return [self::TOPIC_PREFIX . ((string) $user->getId())];
   }
 }
 

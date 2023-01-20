@@ -5,12 +5,10 @@ use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class WeightTrackerService
 {
   public function __construct(
-    private Security $security,
     private UserRepository $userRepository,
     private WeightRecordRepository $weightRecordRepository,
   ) {

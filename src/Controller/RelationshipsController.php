@@ -87,7 +87,7 @@ class RelationshipsController extends AbstractController
         }
 
         /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('approve'.($relationship->getId() ?? ''), $token)) {
+        if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
             $relationship->setActive(true);
             $relationshipRepository->save($relationship, true);
         }
@@ -110,7 +110,7 @@ class RelationshipsController extends AbstractController
     public function delete(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
     {
         /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('delete'.($relationship->getId() ?? ''), $token)) {
+        if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
             $this->verifyRelationshipBelongsToUser($relationship);
             $relationshipRepository->remove($relationship, true);
         }

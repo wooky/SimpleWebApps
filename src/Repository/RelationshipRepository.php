@@ -4,7 +4,6 @@ namespace SimpleWebApps\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Psr\Log\LoggerInterface;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -19,7 +18,7 @@ use SimpleWebApps\Entity\User;
  */
 class RelationshipRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry, private LoggerInterface $logger)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Relationship::class);
     }

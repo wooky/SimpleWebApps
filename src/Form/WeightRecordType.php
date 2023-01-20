@@ -26,6 +26,8 @@ class WeightRecordType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        assert(isset($options[self::IS_OWNER_DISABLED]));
+
         /** @var User */ $user = $this->security->getUser();
         $builder
             ->add('owner', EntityType::class, [
