@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Form;
+
+use function assert;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -12,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class LoginFormType extends AbstractType
 {
-  const LAST_USERNAME = 'last_username';
+  public const LAST_USERNAME = 'last_username';
 
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
@@ -40,6 +45,6 @@ class LoginFormType extends AbstractType
 
   public function getBlockPrefix(): string
   {
-    return "";
+    return '';
   }
 }

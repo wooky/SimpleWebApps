@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\WeightTracker;
+
+use function assert;
 
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
@@ -22,14 +27,14 @@ class WeightTrackerService
     $dataSets = [];
     foreach ($users as $user) {
       $username = $user->getUsername();
-      assert($username !== null);
+      assert(null !== $username);
       $userId = $user->getId()?->toBinary();
-      assert($userId !== null);
+      assert(null !== $userId);
       $userIds[] = $userId;
       $dataSets[$username] = [
         'label' => $username,
         'data' => [],
-        '__self' => $user == $self,
+        '__self' => $user === $self,
         // TODO editable
       ];
     }
@@ -37,9 +42,9 @@ class WeightTrackerService
     $dataPoints = $this->weightRecordRepository->getDataPoints($userIds);
     foreach ($dataPoints as $dataPoint) {
       $username = $dataPoint->getOwner()?->getUsername();
-      assert($username !== null);
+      assert(null !== $username);
       $timestamp = $dataPoint->getDate()?->getTimestamp();
-      assert($timestamp !== null);
+      assert(null !== $timestamp);
       $dataSets[$username]['data'][] = [
         'id' => $dataPoint->getId(),
         'x' => $timestamp * 1000,
@@ -50,4 +55,3 @@ class WeightTrackerService
     return array_values($dataSets);
   }
 }
-

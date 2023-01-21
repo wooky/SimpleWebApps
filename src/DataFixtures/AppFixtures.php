@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\DataFixtures;
+
+use function assert;
 
 use DateInterval;
 use DatePeriod;
@@ -45,16 +50,16 @@ final class AppFixtures extends Fixture
       ->createRelationship($manager, $master, $slaveWrite, RelationshipCapability::Write, true)
       ->createRelationship($manager, $master, $slaveReadPending, RelationshipCapability::Read, false)
       ->createRelationship($manager, $master, $slaveWritePending, RelationshipCapability::Write, false)
-      ;
+    ;
 
     $this
-      ->createWeightRecords($manager, $master, fn(DateTimeImmutable $date) => 100 + (int) $date->format('j'))
-      ->createWeightRecords($manager, $slaveRead, fn(DateTimeImmutable $date) => 200 - (int) $date->format('j'))
-      ->createWeightRecords($manager, $slaveWrite, fn(DateTimeImmutable $date) => (int) $date->format('j') % 2 == 0 ? 125 : 175)
-      ->createWeightRecords($manager, $slaveReadPending, fn(DateTimeImmutable $date) => (int) $date->format('j') % 4 < 2 ? 175 : 200)
-      ->createWeightRecords($manager, $slaveWritePending, fn(DateTimeImmutable $date) => (int) $date->format('N') < 6 ? 95 : 195)
-      ->createWeightRecords($manager, $loner, fn() => 150)
-      ;
+      ->createWeightRecords($manager, $master, fn (DateTimeImmutable $date) => 100 + (int) $date->format('j'))
+      ->createWeightRecords($manager, $slaveRead, fn (DateTimeImmutable $date) => 200 - (int) $date->format('j'))
+      ->createWeightRecords($manager, $slaveWrite, fn (DateTimeImmutable $date) => 0 === (int) $date->format('j') % 2 ? 125 : 175)
+      ->createWeightRecords($manager, $slaveReadPending, fn (DateTimeImmutable $date) => (int) $date->format('j') % 4 < 2 ? 175 : 200)
+      ->createWeightRecords($manager, $slaveWritePending, fn (DateTimeImmutable $date) => (int) $date->format('N') < 6 ? 95 : 195)
+      ->createWeightRecords($manager, $loner, fn () => 150)
+    ;
 
     $manager->flush();
   }
@@ -64,6 +69,7 @@ final class AppFixtures extends Fixture
     $user = (new User())->setUsername($name);
     $user->setPassword($this->userPasswordHasher->hashPassword($user, $name));
     $manager->persist($user);
+
     return $user;
   }
 
@@ -74,8 +80,9 @@ final class AppFixtures extends Fixture
       ->setToUser($to)
       ->setCapability($capability)
       ->setActive($active)
-      ;
+    ;
     $manager->persist($relationship);
+
     return $this;
   }
 
@@ -85,7 +92,8 @@ final class AppFixtures extends Fixture
   private function createWeightRecords(ObjectManager $manager, User $owner, callable $weightGen): self
   {
     /**
-     * TODO https://github.com/vimeo/psalm/issues/9147
+     * TODO https://github.com/vimeo/psalm/issues/9147.
+     *
      * @psalm-suppress InvalidArgument
      */
     $dateIterator = new DatePeriod(
@@ -99,9 +107,10 @@ final class AppFixtures extends Fixture
         ->setOwner($owner)
         ->setDate($date)
         ->setWeight($weightGen($date))
-        ;
+      ;
       $manager->persist($weightRecord);
     }
+
     return $this;
   }
 }

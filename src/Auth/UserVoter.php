@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Auth;
+
+use function assert;
 
 use Psr\Log\LoggerInterface;
 use SimpleWebApps\Entity\User;
@@ -18,11 +23,12 @@ class UserVoter extends Voter
 
   protected function supports(string $attribute, mixed $subject): bool
   {
-    $this->logger->debug("Asking for support of UserVoter.", [
+    $this->logger->debug('Asking for support of UserVoter.', [
       'attribute' => $attribute,
       'is_ownable' => $subject instanceof Ownable,
     ]);
     $capability = RelationshipCapability::tryFrom($attribute);
+
     return $capability && $subject instanceof Ownable;
   }
 
@@ -30,22 +36,23 @@ class UserVoter extends Voter
   {
     $user = $token->getUser();
     if (!$user instanceof User) {
-      $this->logger->debug("User is not logged in.");
+      $this->logger->debug('User is not logged in.');
+
       return false;
     }
 
-    /** @var Ownable */ $entity = $subject;
-    $this->logger->debug("Check if entity owner matches user.", [
+/** @var Ownable */ $entity = $subject;
+    $this->logger->debug('Check if entity owner matches user.', [
       'entity_owner' => $entity->getOwner()?->getId(),
       'user_id' => $user->getId(),
     ]);
     $owner = $entity->getOwner();
-    assert($owner !== null);
-    if ($owner == $user) {
+    assert(null !== $owner);
+    if ($owner === $user) {
       return true;
     }
 
-    $this->logger->debug("Check if relationship exists");
+    $this->logger->debug('Check if relationship exists');
     $capability = RelationshipCapability::from($attribute);
     $relationship = $this->relationshipRepository->findActiveRelationship($user, $owner, $capability->permissionsRequired());
     if ($relationship) {
@@ -55,4 +62,3 @@ class UserVoter extends Voter
     return false;
   }
 }
-

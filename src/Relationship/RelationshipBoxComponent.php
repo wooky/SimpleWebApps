@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Relationship;
+
+use function assert;
 
 use SimpleWebApps\Entity\Relationship;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -18,8 +23,8 @@ class RelationshipBoxComponent
   public function getName(): string
   {
     $name = $this->isFromUser ? $this->relationship->getToUser()?->getUsername() : $this->relationship->getFromUser()?->getUsername();
-    assert($name !== null);
+    assert(null !== $name);
+
     return $name;
   }
 }
-

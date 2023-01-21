@@ -1,9 +1,12 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Auth;
 
 use SimpleWebApps\Entity\User;
 
 interface Ownable
 {
-  function getOwner(): ?User;
+  public function getOwner(): ?User;
 }

@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SimpleWebApps\Entity;
+
+use function assert;
 
 use Doctrine\ORM\Mapping as ORM;
 use SimpleWebApps\Repository\UserRepository;
@@ -14,98 +18,99 @@ use Symfony\Component\Uid\Ulid;
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\Column(type: "ulid", unique: true)]
-    #[ORM\GeneratedValue(strategy: "CUSTOM")]
-    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    private ?Ulid $id = null;
+  #[ORM\Id]
+  #[ORM\Column(type: 'ulid', unique: true)]
+  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
+  private ?Ulid $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $username = null;
+  #[ORM\Column(length: 180, unique: true)]
+  private ?string $username = null;
 
-    /**
-     * @var string[]
-     */
-    #[ORM\Column]
-    private array $roles = [];
+  /**
+   * @var string[]
+   */
+  #[ORM\Column]
+  private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
+  /**
+   * @var string The hashed password
+   */
+  #[ORM\Column]
+  private ?string $password = null;
 
-    public function getId(): ?Ulid
-    {
-        return $this->id;
-    }
+  public function getId(): ?Ulid
+  {
+    return $this->id;
+  }
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
+  public function getUsername(): ?string
+  {
+    return $this->username;
+  }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
+  public function setUsername(string $username): self
+  {
+    $this->username = $username;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        assert($this->username !== null);
-        return $this->username;
-    }
+  /**
+   * A visual identifier that represents this user.
+   *
+   * @see UserInterface
+   */
+  public function getUserIdentifier(): string
+  {
+    assert(null !== $this->username);
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+    return $this->username;
+  }
 
-        return array_unique($roles);
-    }
+  /**
+   * @see UserInterface
+   */
+  public function getRoles(): array
+  {
+    $roles = $this->roles;
+    // guarantee every user at least has ROLE_USER
+    $roles[] = 'ROLE_USER';
 
-    /**
-     * @param string[] $roles
-     */
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+    return array_unique($roles);
+  }
 
-        return $this;
-    }
+  /**
+   * @param string[] $roles
+   */
+  public function setRoles(array $roles): self
+  {
+    $this->roles = $roles;
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
+    return $this;
+  }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+  /**
+   * @see PasswordAuthenticatedUserInterface
+   */
+  public function getPassword(): ?string
+  {
+    return $this->password;
+  }
 
-        return $this;
-    }
+  public function setPassword(string $password): self
+  {
+    $this->password = $password;
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+    return $this;
+  }
+
+  /**
+   * @see UserInterface
+   */
+  public function eraseCredentials(): void
+  {
+    // If you store any temporary, sensitive data on the user, clear it here
+    // $this->plainPassword = null;
+  }
 }

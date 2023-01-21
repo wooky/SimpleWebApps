@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SimpleWebApps\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use SimpleWebApps\Entity\WeightRecord;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * @extends ServiceEntityRepository<WeightRecord>
@@ -16,45 +17,47 @@ use Symfony\Component\Uid\Ulid;
  */
 class WeightRecordRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, WeightRecord::class);
+  public function __construct(ManagerRegistry $registry)
+  {
+    parent::__construct($registry, WeightRecord::class);
+  }
+
+  /**
+   * @param string[] $owners Owner ULIDs as binary text
+   *
+   * @return WeightRecord[]
+   */
+  public function getDataPoints(array $owners): array
+  {
+    $qb = $this->createQueryBuilder('wr');
+
+    return $qb
+        ->select()
+        ->innerJoin('wr.owner', 'o')
+        ->where($qb->expr()->in('o', '?1'))
+        ->orderBy('wr.date', 'ASC')
+        ->setParameter(1, $owners)
+        ->getQuery()
+        ->getResult();
+  }
+
+  public function save(WeightRecord $entity, bool $flush = false): void
+  {
+    $this->getEntityManager()->persist($entity);
+
+    if ($flush) {
+      $this->getEntityManager()->flush();
     }
+  }
 
-    /**
-     * @param string[] $owners Owner ULIDs as binary text
-     * @return WeightRecord[]
-     */
-    public function getDataPoints(array $owners): array
-    {
-        $qb = $this->createQueryBuilder('wr');
-        return $qb
-            ->select()
-            ->innerJoin('wr.owner', 'o')
-            ->where($qb->expr()->in('o', '?1'))
-            ->orderBy('wr.date', 'ASC')
-            ->setParameter(1, $owners)
-            ->getQuery()
-            ->getResult();
+  public function remove(WeightRecord $entity, bool $flush = false): void
+  {
+    $this->getEntityManager()->remove($entity);
+
+    if ($flush) {
+      $this->getEntityManager()->flush();
     }
-
-    public function save(WeightRecord $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(WeightRecord $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+  }
 
 //    /**
 //     * @return WeightRecord[] Returns an array of WeightRecord objects

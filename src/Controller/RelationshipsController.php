@@ -1,4 +1,7 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Controller;
 
 use SimpleWebApps\Auth\RelationshipCapability;
@@ -17,113 +20,114 @@ use Symfony\Component\Uid\Ulid;
 #[Route('/relationships', name: 'relationships_')]
 class RelationshipsController extends AbstractController
 {
-    /**
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     */ 
-    #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(RelationshipRepository $relationshipRepository): Response
-    {
-        /** @var User */ $user = $this->getUser();
-        $relationships = $relationshipRepository->findBidirectionalRelationships($user);
-        $fromUser = [];
-        $toUser = [];
-        foreach ($relationships as $relationship) {
-            if ($relationship->getFromUser() == $user) {
-                $fromUser[] = $relationship;
-            } else {
-                $toUser[] = $relationship;
-            }
-            
-        }
-        return $this->render('relationships/index.html.twig', [
-            'from_user' => $fromUser,
-            'to_user' => $toUser,
-        ]);
+  /**
+   * @SuppressWarnings(PHPMD.ElseExpression)
+   */
+  #[Route('/', name: 'index', methods: ['GET'])]
+  public function index(RelationshipRepository $relationshipRepository): Response
+  {
+/** @var User */ $user = $this->getUser();
+    $relationships = $relationshipRepository->findBidirectionalRelationships($user);
+    $fromUser = [];
+    $toUser = [];
+    foreach ($relationships as $relationship) {
+      if ($relationship->getFromUser() === $user) {
+        $fromUser[] = $relationship;
+      } else {
+        $toUser[] = $relationship;
+      }
     }
 
-    #[Route('/invite', name: 'invite', methods: ['GET', 'POST'])]
-    public function invite(Request $request, UserRepository $userRepository, RelationshipRepository $relationshipRepository): Response
-    {
-        $form = $this->createForm(InviteFormType::class);
-        $form->handleRequest($request);
+    return $this->render('relationships/index.html.twig', [
+        'from_user' => $fromUser,
+        'to_user' => $toUser,
+    ]);
+  }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $toUserField = $form->get(InviteFormType::TO_USER);
-            /** @var Ulid */ $toUserId = $toUserField->getData();
-            /** @var User */ $fromUser = $this->getUser();
-            if ($fromUser->getId() == $toUserId) {
-                $toUserField->addError(new FormError("Cannot create relationship with yourself."));
-            }
-            
-            $toUser = $userRepository->find($toUserId);
-            if (!$toUser) {
-                $toUserField->addError(new FormError("User not found."));
-            } else if ($relationshipRepository->findOneBy(['fromUser' => $fromUser, 'toUser' => $toUser])) {
-                $toUserField->addError(new FormError("Relationship already exists"));
-            }
+  #[Route('/invite', name: 'invite', methods: ['GET', 'POST'])]
+  public function invite(Request $request, UserRepository $userRepository, RelationshipRepository $relationshipRepository): Response
+  {
+    $form = $this->createForm(InviteFormType::class);
+    $form->handleRequest($request);
 
-            if ($form->isValid()) {
-                /** @var RelationshipCapability */ $capability = $form->get(InviteFormType::CAPABILITY)->getData();
-                $relationship = (new Relationship())
-                    ->setFromUser($fromUser)
-                    ->setToUser($toUser)
-                    ->setCapability($capability)
-                    ;
+    if ($form->isSubmitted() && $form->isValid()) {
+      $toUserField = $form->get(InviteFormType::TO_USER);
+/** @var Ulid */ $toUserId = $toUserField->getData();
+/** @var User */ $fromUser = $this->getUser();
+      if ($fromUser->getId() === $toUserId) {
+        $toUserField->addError(new FormError('Cannot create relationship with yourself.'));
+      }
 
-                $relationshipRepository->save($relationship, true);
+      $toUser = $userRepository->find($toUserId);
+      if (!$toUser) {
+        $toUserField->addError(new FormError('User not found.'));
+      } elseif ($relationshipRepository->findOneBy(['fromUser' => $fromUser, 'toUser' => $toUser])) {
+        $toUserField->addError(new FormError('Relationship already exists'));
+      }
 
-                return $this->redirectToRoute('relationships_invite');
-            }
-        }
+      if ($form->isValid()) {
+/** @var RelationshipCapability */ $capability = $form->get(InviteFormType::CAPABILITY)->getData();
+        $relationship = (new Relationship())
+            ->setFromUser($fromUser)
+            ->setToUser($toUser)
+            ->setCapability($capability)
+        ;
 
-        return $this->render('relationships/invite.html.twig', [
-            'form' => $form,
-        ]);
+        $relationshipRepository->save($relationship, true);
+
+        return $this->redirectToRoute('relationships_invite');
+      }
     }
 
-    #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
-    public function approve(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
-    {
-        if ($relationship->getToUser() != $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
+    return $this->render('relationships/invite.html.twig', [
+        'form' => $form,
+    ]);
+  }
 
-        /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
-            $relationship->setActive(true);
-            $relationshipRepository->save($relationship, true);
-        }
-
-        return new Response();
+  #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
+  public function approve(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
+  {
+    if ($relationship->getToUser() !== $this->getUser()) {
+      throw $this->createAccessDeniedException();
     }
 
-    #[Route('/{id}/delete', name: 'pre_delete', methods: ['GET'])]
-    public function preDelete(Relationship $relationship): Response
-    {
-        $id = $relationship->getId();
-        return $this->render('modal/pre_delete.html.twig', [
-            'id' => $id,
-            'subject' => 'relationships.subject',
-            'delete_path' => $this->generateUrl('relationships_delete', ['id' => $id]),
-        ]);
+/** @var ?string */ $token = $request->request->get('_token');
+    if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
+      $relationship->setActive(true);
+      $relationshipRepository->save($relationship, true);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
-    public function delete(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
-    {
-        /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
-            $this->verifyRelationshipBelongsToUser($relationship);
-            $relationshipRepository->remove($relationship, true);
-        }
+    return new Response();
+  }
 
-        return $this->redirectToRoute('relationships_index', [], Response::HTTP_SEE_OTHER);
+  #[Route('/{id}/delete', name: 'pre_delete', methods: ['GET'])]
+  public function preDelete(Relationship $relationship): Response
+  {
+    $id = $relationship->getId();
+
+    return $this->render('modal/pre_delete.html.twig', [
+        'id' => $id,
+        'subject' => 'relationships.subject',
+        'delete_path' => $this->generateUrl('relationships_delete', ['id' => $id]),
+    ]);
+  }
+
+  #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
+  public function delete(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
+  {
+/** @var ?string */ $token = $request->request->get('_token');
+    if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
+      $this->verifyRelationshipBelongsToUser($relationship);
+      $relationshipRepository->remove($relationship, true);
     }
 
-    private function verifyRelationshipBelongsToUser(Relationship $relationship): void
-    {
-        if ($relationship->getFromUser() != $this->getUser() && $relationship->getToUser() != $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
+    return $this->redirectToRoute('relationships_index', [], Response::HTTP_SEE_OTHER);
+  }
+
+  private function verifyRelationshipBelongsToUser(Relationship $relationship): void
+  {
+    if ($relationship->getFromUser() !== $this->getUser() && $relationship->getToUser() !== $this->getUser()) {
+      throw $this->createAccessDeniedException();
     }
+  }
 }

@@ -1,4 +1,7 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -7,15 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-  #[Route("/", name: "index", methods: ['GET'])]
+  #[Route('/', name: 'index', methods: ['GET'])]
   public function index(): Response
   {
-    return $this->render("index/index.html.twig");
+    return $this->render('index/index.html.twig');
   }
 
-  #[Route("/navbar/{ulid}", name: "navbar", methods: ['GET'])]
-  public function navbar(string $ulid = ""): Response
+  #[Route('/navbar/{ulid}', name: 'navbar', methods: ['GET'])]
+  public function navbar(string $ulid = ''): Response
   {
-    return $this->render("index/navbar.html.twig", ['ulid' => $ulid]);
+    return $this->render('index/navbar.html.twig', ['ulid' => $ulid]);
   }
 }

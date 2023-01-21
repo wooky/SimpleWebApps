@@ -1,5 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\WeightTracker;
+
+use function assert;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
@@ -33,16 +38,16 @@ class WeightRecordBroadcaster
     $this->mercureBroadcaster = new Broadcaster('default', $hub);
   }
 
-  /**
+    /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
-  {
-    $owner = $weightRecord->getOwner();
-    assert($owner !== null);
-    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
-    $this->broadcast($affectedUsers);
-  }
+    {
+      $owner = $weightRecord->getOwner();
+      assert(null !== $owner);
+      $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
+      $this->broadcast($affectedUsers);
+    }
 
   /**
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -50,7 +55,7 @@ class WeightRecordBroadcaster
   public function onRelationshipChange(Relationship $relationship, LifecycleEventArgs $event): void
   {
     $fromUser = $relationship->getFromUser();
-    assert($fromUser !== null);
+    assert(null !== $fromUser);
     $affectedUsers = [$fromUser];
     $this->broadcast($affectedUsers);
   }
@@ -65,10 +70,11 @@ class WeightRecordBroadcaster
         'topics' => self::getTopics($user),
         'rendered_action' => json_encode($this->weightTrackerService->getRenderableDataSets($user)),
         'private' => true,
-        'topic' => '' // TODO https://github.com/symfony/ux/pull/653
+        'topic' => '', // TODO https://github.com/symfony/ux/pull/653
       ];
       /**
-       * TODO https://github.com/symfony/ux/pull/653
+       * TODO https://github.com/symfony/ux/pull/653.
+       *
        * @psalm-suppress InvalidArgument
        */
       $this->mercureBroadcaster->broadcast($user, '', $options); // first 2 parameters are not important
@@ -80,7 +86,6 @@ class WeightRecordBroadcaster
    */
   public static function getTopics(User $user): array
   {
-    return [self::TOPIC_PREFIX . ((string) $user->getId())];
+    return [self::TOPIC_PREFIX.((string) $user->getId())];
   }
 }
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SimpleWebApps\Controller;
 
 use SimpleWebApps\Auth\RelationshipCapability;
@@ -18,104 +20,107 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/weight-tracker', name: 'weight_tracker_')]
 class WeightTrackerController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(WeightTrackerService $weightTrackerService): Response
-    {
-        /** @var User */ $user = $this->getUser();
-        return $this->render('weight_tracker/index.html.twig', [
-            'chart_topics' => WeightRecordBroadcaster::getTopics($user),
-            'points' => $weightTrackerService->getRenderableDataSets($user),
-        ]);
+  #[Route('/', name: 'index', methods: ['GET'])]
+  public function index(WeightTrackerService $weightTrackerService): Response
+  {
+/** @var User */ $user = $this->getUser();
+
+    return $this->render('weight_tracker/index.html.twig', [
+        'chart_topics' => WeightRecordBroadcaster::getTopics($user),
+        'points' => $weightTrackerService->getRenderableDataSets($user),
+    ]);
+  }
+
+  #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+  public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
+  {
+/** @var User */ $user = $this->getUser();
+    $weightRecord = (new WeightRecord())->setOwner($user);
+    $form = $this->createNewEditForm($request, $weightRecord);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
+      $weightRecordRepository->save($weightRecord, true);
+
+      return $this->closeModalOrRedirect($request, 'weight_tracker_index');
     }
 
-    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
-    {
-        /** @var User */ $user = $this->getUser();
-        $weightRecord = (new WeightRecord())->setOwner($user);
-        $form = $this->createNewEditForm($request, $weightRecord);
+    return $this->render('modal/new.html.twig', [
+        'form' => $form,
+        'subject' => 'weight_tracker.subject',
+    ]);
+  }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
-            $weightRecordRepository->save($weightRecord, true);
-
-            return $this->closeModalOrRedirect($request, 'weight_tracker_index');
-        }
-
-        return $this->render('modal/new.html.twig', [
-            'form' => $form,
-            'subject' => 'weight_tracker.subject',
-        ]);
+  #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+  public function edit(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
+  {
+    if (!$this->isGranted(RelationshipCapability::Write->value, $weightRecord)) {
+      return $this->render('modal/forbidden.html.twig', [
+          'subject' => 'weight_tracker.subject',
+      ])
+          ->setStatusCode(Response::HTTP_FORBIDDEN);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
-    {
-        if (!$this->isGranted(RelationshipCapability::Write->value, $weightRecord)) {
-            return $this->render('modal/forbidden.html.twig', [
-                'subject' => 'weight_tracker.subject',
-            ])
-                ->setStatusCode(Response::HTTP_FORBIDDEN);
-        }
+    $form = $this->createNewEditForm($request, $weightRecord);
 
-        $form = $this->createNewEditForm($request, $weightRecord);
+    if ($form->isSubmitted() && $form->isValid()) {
+      $weightRecordRepository->save($weightRecord, true);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $weightRecordRepository->save($weightRecord, true);
-
-            return $this->closeModalOrRedirect($request, 'weight_tracker_index');
-        }
-
-        $id = $weightRecord->getId();
-        return $this->render('modal/edit.html.twig', [
-            'id' => $id,
-            'form' => $form,
-            'subject' => 'weight_tracker.subject',
-            'pre_delete_path' => $this->generateUrl('weight_tracker_pre_delete', ['id' => $id]),
-        ]);
+      return $this->closeModalOrRedirect($request, 'weight_tracker_index');
     }
 
-    #[Route('/{id}/delete', name: 'pre_delete', methods: ['POST'])]
-    public function preDelete(WeightRecord $weightRecord): Response
-    {
-        $id = $weightRecord->getId();
-        return $this->render('modal/pre_delete.html.twig', [
-            'id' => $id,
-            'subject' => 'weight_tracker.subject',
-            'delete_path' => $this->generateUrl('weight_tracker_delete', ['id' => $id]),
-        ]);
+    $id = $weightRecord->getId();
+
+    return $this->render('modal/edit.html.twig', [
+        'id' => $id,
+        'form' => $form,
+        'subject' => 'weight_tracker.subject',
+        'pre_delete_path' => $this->generateUrl('weight_tracker_pre_delete', ['id' => $id]),
+    ]);
+  }
+
+  #[Route('/{id}/delete', name: 'pre_delete', methods: ['POST'])]
+  public function preDelete(WeightRecord $weightRecord): Response
+  {
+    $id = $weightRecord->getId();
+
+    return $this->render('modal/pre_delete.html.twig', [
+        'id' => $id,
+        'subject' => 'weight_tracker.subject',
+        'delete_path' => $this->generateUrl('weight_tracker_delete', ['id' => $id]),
+    ]);
+  }
+
+  #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
+  public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
+  {
+/** @var ?string */ $token = $request->request->get('_token');
+    if ($this->isCsrfTokenValid('delete'.((string) $weightRecord->getId()), $token)) {
+      $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
+      $weightRecordRepository->remove($weightRecord, true);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
-    public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
-    {
-        /** @var ?string */ $token = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('delete'.((string) $weightRecord->getId()), $token)) {
-            $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
-            $weightRecordRepository->remove($weightRecord, true);
-        }
+    return $this->closeModalOrRedirect($request, 'weight_tracker_index');
+  }
 
-        return $this->closeModalOrRedirect($request, 'weight_tracker_index');
+  private function closeModalOrRedirect(Request $request, string $route): Response
+  {
+    if ('app-modal' === $request->headers->get('Turbo-Frame')) {
+      return $this->render('modal/close.html.twig');
     }
 
-    private function closeModalOrRedirect(Request $request, string $route): Response
-    {
-        if ($request->headers->get('Turbo-Frame') === "app-modal") {
-            return $this->render('modal/close.html.twig');
-        }
+    return $this->redirectToRoute($route, status: Response::HTTP_SEE_OTHER);
+  }
 
-        return $this->redirectToRoute($route, status: Response::HTTP_SEE_OTHER);
-    }
-
-    private function createNewEditForm(
+  private function createNewEditForm(
         Request $request,
         WeightRecord $weightRecord,
-    ): FormInterface
-    {
-        $form = $this->createForm(WeightRecordType::class, $weightRecord, [
-            WeightRecordType::IS_OWNER_DISABLED => $weightRecord->getIdOrNull() !== null,
-        ]);
-        $form->handleRequest($request);
-        return $form;
-    }
+    ): FormInterface {
+    $form = $this->createForm(WeightRecordType::class, $weightRecord, [
+        WeightRecordType::IS_OWNER_DISABLED => null !== $weightRecord->getIdOrNull(),
+    ]);
+    $form->handleRequest($request);
+
+    return $form;
+  }
 }
