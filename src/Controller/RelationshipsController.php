@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types = 1);
 namespace SimpleWebApps\Controller;
 
 use SimpleWebApps\Auth\RelationshipCapability;
@@ -18,6 +17,9 @@ use Symfony\Component\Uid\Ulid;
 #[Route('/relationships', name: 'relationships_')]
 class RelationshipsController extends AbstractController
 {
+    /**
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */ 
     #[Route('/', name: 'index', methods: ['GET'])]
     public function index(RelationshipRepository $relationshipRepository): Response
     {

@@ -4,7 +4,6 @@ namespace SimpleWebApps\WeightTracker;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use RuntimeException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -34,7 +33,10 @@ class WeightRecordBroadcaster
     $this->mercureBroadcaster = new Broadcaster('default', $hub);
   }
 
-  public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
+  /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
   {
     $owner = $weightRecord->getOwner();
     assert($owner !== null);
@@ -42,6 +44,9 @@ class WeightRecordBroadcaster
     $this->broadcast($affectedUsers);
   }
 
+  /**
+   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+   */
   public function onRelationshipChange(Relationship $relationship, LifecycleEventArgs $event): void
   {
     $fromUser = $relationship->getFromUser();

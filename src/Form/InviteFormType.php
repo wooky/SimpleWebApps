@@ -15,6 +15,9 @@ class InviteFormType extends AbstractType
     const TO_USER = 'toUser';
     const CAPABILITY = 'capability';
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
