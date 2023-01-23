@@ -11,7 +11,7 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 
-class WeightTrackerService
+readonly class WeightTrackerService
 {
   public function __construct(
     private UserRepository $userRepository,

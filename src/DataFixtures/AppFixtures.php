@@ -24,7 +24,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class AppFixtures extends Fixture
 {
   public function __construct(
-    private UserPasswordHasherInterface $userPasswordHasher,
+    private readonly UserPasswordHasherInterface $userPasswordHasher,
   ) {
     // Do nothing.
   }
@@ -43,6 +43,7 @@ final class AppFixtures extends Fixture
     $slaveWrite = $this->createUser($manager, 'slave-write');
     $slaveReadPending = $this->createUser($manager, 'slave-read-pending');
     $slaveWritePending = $this->createUser($manager, 'slave-write-pending');
+    $subSlave = $this->createUser($manager, 'sub-slave');
     $loner = $this->createUser($manager, 'loner');
 
     $this
@@ -50,6 +51,7 @@ final class AppFixtures extends Fixture
       ->createRelationship($manager, $master, $slaveWrite, RelationshipCapability::Write, true)
       ->createRelationship($manager, $master, $slaveReadPending, RelationshipCapability::Read, false)
       ->createRelationship($manager, $master, $slaveWritePending, RelationshipCapability::Write, false)
+      ->createRelationship($manager, $slaveRead, $subSlave, RelationshipCapability::Write, true)
     ;
 
     $this

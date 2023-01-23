@@ -15,8 +15,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class UserVoter extends Voter
 {
   public function __construct(
-    private RelationshipRepository $relationshipRepository,
-    private LoggerInterface $logger,
+    private readonly RelationshipRepository $relationshipRepository,
+    private readonly LoggerInterface $logger,
   ) {
     // Do nothing.
   }

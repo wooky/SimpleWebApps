@@ -22,13 +22,13 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 #[AsEntityListener(event: Events::postPersist, method: 'onRelationshipChange', entity: Relationship::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'onRelationshipChange', entity: Relationship::class)]
 #[AsEntityListener(event: Events::postRemove, method: 'onRelationshipChange', entity: Relationship::class)]
-class WeightRecordBroadcaster
+readonly class WeightRecordBroadcaster
 {
   private const TOPIC_PREFIX = 'weight_record_';
 
   public function __construct(
-    private readonly WeightTrackerService $weightTrackerService,
-    private readonly UserRepository $userRepository,
+    private WeightTrackerService $weightTrackerService,
+    private UserRepository $userRepository,
     private BroadcasterInterface $broadcaster
   ) {
     // Do nothing.

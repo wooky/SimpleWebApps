@@ -17,7 +17,7 @@ use SimpleWebApps\Entity\WeightRecord;
  */
 class WeightRecordRepository extends ServiceEntityRepository
 {
-  public function __construct(ManagerRegistry $registry)
+  public function __construct(readonly ManagerRegistry $registry)
   {
     parent::__construct($registry, WeightRecord::class);
   }
