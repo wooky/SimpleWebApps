@@ -14,8 +14,6 @@ use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Repository\UserRepository;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 #[AsEntityListener(event: Events::postPersist, method: 'onWeightRecordChange', entity: WeightRecord::class)]
@@ -28,14 +26,12 @@ class WeightRecordBroadcaster
 {
   private const TOPIC_PREFIX = 'weight_record_';
 
-  private readonly BroadcasterInterface $mercureBroadcaster;
-
   public function __construct(
     private readonly WeightTrackerService $weightTrackerService,
     private readonly UserRepository $userRepository,
-    HubInterface $hub,
+    private BroadcasterInterface $broadcaster
   ) {
-    $this->mercureBroadcaster = new Broadcaster('default', $hub);
+    // Do nothing.
   }
 
     /**
@@ -70,14 +66,11 @@ class WeightRecordBroadcaster
         'topics' => self::getTopics($user),
         'rendered_action' => json_encode($this->weightTrackerService->getRenderableDataSets($user)),
         'private' => true,
-        'topic' => '', // TODO https://github.com/symfony/ux/pull/653
       ];
       /**
-       * TODO https://github.com/symfony/ux/pull/653.
-       *
        * @psalm-suppress InvalidArgument
        */
-      $this->mercureBroadcaster->broadcast($user, '', $options); // first 2 parameters are not important
+      $this->broadcaster->broadcast($user, '', $options); // first 2 parameters are not important
     }
   }
 

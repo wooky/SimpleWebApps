@@ -7287,16 +7287,16 @@
         },
         {
             "name": "symfony/ux-turbo",
-            "version": "v2.6.1",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "0e16016aeb0e0b837649812b5d6de2f3a662931c"
+                "reference": "6ee931812684f7bf39b12444a54e9af32fae40a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/0e16016aeb0e0b837649812b5d6de2f3a662931c",
-                "reference": "0e16016aeb0e0b837649812b5d6de2f3a662931c",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/6ee931812684f7bf39b12444a54e9af32fae40a0",
+                "reference": "6ee931812684f7bf39b12444a54e9af32fae40a0",
                 "shasum": ""
             },
             "require": {
@@ -7362,7 +7362,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/v2.6.1"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.7.0"
             },
             "funding": [
                 {
@@ -7378,20 +7378,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-02T14:42:01+00:00"
+            "time": "2023-01-19T21:20:17+00:00"
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.6.1",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
-                "reference": "1ba7df58bace3b8af532881c97e99c85c6a9a935"
+                "reference": "d304d6b8b27821f7d7e62cbdff21e417636d87bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/1ba7df58bace3b8af532881c97e99c85c6a9a935",
-                "reference": "1ba7df58bace3b8af532881c97e99c85c6a9a935",
+                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/d304d6b8b27821f7d7e62cbdff21e417636d87bc",
+                "reference": "d304d6b8b27821f7d7e62cbdff21e417636d87bc",
                 "shasum": ""
             },
             "require": {
@@ -7407,7 +7407,8 @@
             "require-dev": {
                 "symfony/framework-bundle": "^5.4|^6.0",
                 "symfony/phpunit-bridge": "^6.0",
-                "symfony/twig-bundle": "^5.4|^6.0"
+                "symfony/twig-bundle": "^5.4|^6.0",
+                "symfony/webpack-encore-bundle": "^1.15"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -7439,7 +7440,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.6.1"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.7.0"
             },
             "funding": [
                 {
@@ -7455,7 +7456,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-22T21:09:47+00:00"
+            "time": "2023-01-19T15:55:42+00:00"
         },
         {
             "name": "symfony/validator",
@@ -11674,16 +11675,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "5.4.0",
+            "version": "5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "62db5d4f6a7ae0a20f7cc5a4952d730272fc0863"
+                "reference": "e784128902dfe01d489c4123d69918a9f3c1eac5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/62db5d4f6a7ae0a20f7cc5a4952d730272fc0863",
-                "reference": "62db5d4f6a7ae0a20f7cc5a4952d730272fc0863",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/e784128902dfe01d489c4123d69918a9f3c1eac5",
+                "reference": "e784128902dfe01d489c4123d69918a9f3c1eac5",
                 "shasum": ""
             },
             "require": {
@@ -11706,11 +11707,10 @@
                 "netresearch/jsonmapper": "^1.0 || ^2.0 || ^3.0 || ^4.0",
                 "nikic/php-parser": "^4.13",
                 "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
-                "sebastian/diff": "^4.0",
+                "sebastian/diff": "^4.0 || ^5.0",
                 "spatie/array-to-xml": "^2.17.0",
                 "symfony/console": "^4.1.6 || ^5.0 || ^6.0",
-                "symfony/filesystem": "^5.4 || ^6.0",
-                "symfony/polyfill-php80": "^1.25"
+                "symfony/filesystem": "^5.4 || ^6.0"
             },
             "provide": {
                 "psalm/psalm": "self.version"
@@ -11773,9 +11773,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/5.4.0"
+                "source": "https://github.com/vimeo/psalm/tree/5.6.0"
             },
-            "time": "2022-12-19T21:31:12+00:00"
+            "time": "2023-01-23T20:32:47+00:00"
         },
         {
             "name": "weirdan/doctrine-psalm-plugin",
