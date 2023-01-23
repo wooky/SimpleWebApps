@@ -33,7 +33,8 @@ class WeightRecordType extends AbstractType
   {
     assert(isset($options[self::IS_OWNER_DISABLED]));
 
-/** @var User */ $user = $this->security->getUser();
+    $user = $this->security->getUser();
+    assert($user instanceof User);
     $builder
         ->add('owner', EntityType::class, [
             'label' => 'auth.username',

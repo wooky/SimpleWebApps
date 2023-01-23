@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use function assert;
+use function is_string;
+
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -26,7 +29,8 @@ class RelationshipsController extends AbstractController
   #[Route('/', name: 'index', methods: ['GET'])]
   public function index(RelationshipRepository $relationshipRepository): Response
   {
-/** @var User */ $user = $this->getUser();
+    $user = $this->getUser();
+    assert($user instanceof User);
     $relationships = $relationshipRepository->findBidirectionalRelationships($user);
     $fromUser = [];
     $toUser = [];
@@ -52,8 +56,9 @@ class RelationshipsController extends AbstractController
 
     if ($form->isSubmitted() && $form->isValid()) {
       $toUserField = $form->get(InviteFormType::TO_USER);
-/** @var Ulid */ $toUserId = $toUserField->getData();
-/** @var User */ $fromUser = $this->getUser();
+      $toUserId = $toUserField->getData();
+      $fromUser = $this->getUser();
+      assert($toUserId instanceof Ulid && $fromUser instanceof User);
       if ($fromUser->getId() === $toUserId) {
         $toUserField->addError(new FormError('Cannot create relationship with yourself.'));
       }
@@ -66,7 +71,8 @@ class RelationshipsController extends AbstractController
       }
 
       if ($form->isValid()) {
-/** @var RelationshipCapability */ $capability = $form->get(InviteFormType::CAPABILITY)->getData();
+        $capability = $form->get(InviteFormType::CAPABILITY)->getData();
+        assert($capability instanceof RelationshipCapability);
         $relationship = (new Relationship())
             ->setFromUser($fromUser)
             ->setToUser($toUser)
@@ -91,7 +97,8 @@ class RelationshipsController extends AbstractController
       throw $this->createAccessDeniedException();
     }
 
-/** @var ?string */ $token = $request->request->get('_token');
+    $token = $request->request->get('_token');
+    assert(is_string($token) || null === $token);
     if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
       $relationship->setActive(true);
       $relationshipRepository->save($relationship, true);
@@ -115,7 +122,8 @@ class RelationshipsController extends AbstractController
   #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
   public function delete(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
   {
-/** @var ?string */ $token = $request->request->get('_token');
+    $token = $request->request->get('_token');
+    assert(is_string($token) || null === $token);
     if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
       $this->verifyRelationshipBelongsToUser($relationship);
       $relationshipRepository->remove($relationship, true);

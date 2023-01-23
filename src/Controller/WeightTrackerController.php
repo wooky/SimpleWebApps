@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use function assert;
+use function is_string;
+
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
@@ -23,7 +26,8 @@ class WeightTrackerController extends AbstractController
   #[Route('/', name: 'index', methods: ['GET'])]
   public function index(WeightTrackerService $weightTrackerService): Response
   {
-/** @var User */ $user = $this->getUser();
+    $user = $this->getUser();
+    assert($user instanceof User);
 
     return $this->render('weight_tracker/index.html.twig', [
         'chart_topics' => WeightRecordBroadcaster::getTopics($user),
@@ -34,7 +38,8 @@ class WeightTrackerController extends AbstractController
   #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
   public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
   {
-/** @var User */ $user = $this->getUser();
+    $user = $this->getUser();
+    assert($user instanceof User);
     $weightRecord = (new WeightRecord())->setOwner($user);
     $form = $this->createNewEditForm($request, $weightRecord);
 
@@ -94,7 +99,8 @@ class WeightTrackerController extends AbstractController
   #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
   public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
   {
-/** @var ?string */ $token = $request->request->get('_token');
+    $token = $request->request->get('_token');
+    assert(is_string($token) || null === $token);
     if ($this->isCsrfTokenValid('delete'.((string) $weightRecord->getId()), $token)) {
       $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
       $weightRecordRepository->remove($weightRecord, true);

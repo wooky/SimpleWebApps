@@ -41,12 +41,12 @@ class UserVoter extends Voter
       return false;
     }
 
-/** @var Ownable */ $entity = $subject;
+    assert($subject instanceof Ownable);
     $this->logger->debug('Check if entity owner matches user.', [
-      'entity_owner' => $entity->getOwner()?->getId(),
+      'entity_owner' => $subject->getOwner()?->getId(),
       'user_id' => $user->getId(),
     ]);
-    $owner = $entity->getOwner();
+    $owner = $subject->getOwner();
     assert(null !== $owner);
     if ($owner === $user) {
       return true;

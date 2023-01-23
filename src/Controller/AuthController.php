@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use function assert;
+use function is_string;
+
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\LoginFormType;
 use SimpleWebApps\Form\ProfileFormType;
@@ -67,13 +70,15 @@ class AuthController extends AbstractController
   #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
   public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
   {
-/** @var User */ $user = $this->getUser();
+    $user = $this->getUser();
+    assert($user instanceof User);
     $form = $this->createForm(ProfileFormType::class, $user);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
       // encode the plain password
-/** @var ?string */ $plainPassword = $form->get('plainPassword')->getData();
+      $plainPassword = $form->get('plainPassword')->getData();
+      assert(is_string($plainPassword) || null === $plainPassword);
       if ($plainPassword) {
         $user->setPassword(
           $userPasswordHasher->hashPassword(
