@@ -39,7 +39,7 @@ readonly class WeightTrackerService
       ];
     }
 
-    $dataPoints = $this->weightRecordRepository->getDataPoints($userIds);
+    $dataPoints = $this->weightRecordRepository->findBy(['owner' => $userIds], orderBy: ['date' => 'ASC']);
     foreach ($dataPoints as $dataPoint) {
       $username = $dataPoint->getOwner()?->getUsername();
       assert(null !== $username);

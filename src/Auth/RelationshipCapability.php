@@ -15,17 +15,6 @@ enum RelationshipCapability: string implements TranslatableInterface
   /**
    * @return self[]
    */
-  public function withPermissionsGranted(): array
-  {
-    return match ($this) {
-      self::Read => [self::Read],
-      self::Write => [self::Read, self::Write],
-    };
-  }
-
-  /**
-   * @return self[]
-   */
   public function permissionsRequired(): array
   {
     return match ($this) {
