@@ -6,37 +6,43 @@ namespace SimpleWebApps\WeightTracker;
 
 use function assert;
 
+use ChartDataPoint;
+use ChartDataSet;
+use RuntimeException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 
-readonly class WeightTrackerService
+class WeightTrackerService
 {
   public function __construct(
-    private UserRepository $userRepository,
-    private WeightRecordRepository $weightRecordRepository,
+    private readonly UserRepository $userRepository,
+    private readonly WeightRecordRepository $weightRecordRepository,
   ) {
     // Do nothing.
   }
 
+  /**
+   * @return ChartDataSet[]
+   */
   public function getRenderableDataSets(User $self): array
   {
     $users = $this->userRepository->getControlledUsersIncludingSelf($self, RelationshipCapability::Read->permissionsRequired());
-    $userIds = [];
-    $dataSets = [];
+/** @var string[] */ $userIds = [];
+/** @var array<string, ChartDataSet> */ $dataSets = [];
     foreach ($users as $user) {
       $username = $user->getUsername();
       assert(null !== $username);
       $userId = $user->getId()?->toBinary();
       assert(null !== $userId);
       $userIds[] = $userId;
-      $dataSets[$username] = [
-        'label' => $username,
-        'data' => [],
-        '__self' => $user === $self,
+      $dataSets[$username] = new ChartDataSet(
+        label: $username,
+        data: [],
+        __self: $user === $self,
         // TODO editable
-      ];
+      );
     }
 
     $dataPoints = $this->weightRecordRepository->findBy(['owner' => $userIds], orderBy: ['date' => 'ASC']);
@@ -45,11 +51,11 @@ readonly class WeightTrackerService
       assert(null !== $username);
       $timestamp = $dataPoint->getDate()?->getTimestamp();
       assert(null !== $timestamp);
-      $dataSets[$username]['data'][] = [
-        'id' => $dataPoint->getId(),
-        'x' => $timestamp * 1000,
-        'y' => $dataPoint->getWeight(),
-      ];
+      $dataSets[$username]->data[] = new ChartDataPoint(
+        id: $dataPoint->getId(),
+        x: $timestamp * 1000,
+        y: $dataPoint->getWeight() ?? throw new RuntimeException('Data point has no weight'),
+      );
     }
 
     return array_values($dataSets);

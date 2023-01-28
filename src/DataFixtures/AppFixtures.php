@@ -23,6 +23,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 final class AppFixtures extends Fixture
 {
+  public const WEIGHT_RECORDS_PER_USER = 31;
+
   public function __construct(
     private readonly UserPasswordHasherInterface $userPasswordHasher,
   ) {
@@ -101,7 +103,7 @@ final class AppFixtures extends Fixture
     $dateIterator = new DatePeriod(
       new DateTimeImmutable('2022-01-01 00:00:00 UTC'),
       new DateInterval('P1D'),
-      new DateTimeImmutable('2022-01-31 00:00:00 UTC'),
+      new DateTimeImmutable('2022-01-'.(string) self::WEIGHT_RECORDS_PER_USER.' 00:00:00 UTC'),
       DatePeriod::INCLUDE_END_DATE,
     );
     foreach ($dateIterator as $date) {

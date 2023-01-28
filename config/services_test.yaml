@@ -1,0 +1,7 @@
+services:
+  Symfony\UX\Turbo\Broadcaster\BroadcasterInterface:
+    public: true
+
+  SimpleWebApps\WeightTracker\WeightTrackerService:
+    public: true
+    autowire: true
