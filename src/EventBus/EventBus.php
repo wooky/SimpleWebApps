@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SimpleWebApps\EventBus;
 
 use function assert;
-use function in_array;
 
 use Psr\Log\LoggerInterface;
 use Socket;
@@ -38,7 +37,7 @@ class EventBus implements EventBusInterface
     }
     $payload = $this->serializer->serialize($event, 'json');
     assert(strlen($payload) <= self::MAX_SIZE);
-    $result = $sock ? @socket_sendto($sock, $payload, strlen($payload), 0, self::HOST, self::PORT) : false;
+    $result = @socket_sendto($sock, $payload, strlen($payload), 0, self::HOST, self::PORT);
     $this->logger->debug('Posted event', [
       'payload' => $payload,
       'result' => $result,
@@ -47,7 +46,7 @@ class EventBus implements EventBusInterface
     return false !== $result;
   }
 
-  public function get(string $userId): iterable
+  public function get(): iterable
   {
     $sock = $this->bind();
     if (!$sock) {
@@ -75,12 +74,7 @@ class EventBus implements EventBusInterface
       $this->logger->debug('Parsed event', [
         'event' => $event,
       ]);
-      if (in_array($userId, $event->users, true)) {
-        $this->logger->debug('Yielding with event', [
-          'event' => $event,
-        ]);
-        yield $event->payload;
-      }
+      yield $event;
     }
   }
 

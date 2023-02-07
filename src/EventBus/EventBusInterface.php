@@ -9,7 +9,7 @@ interface EventBusInterface
   public function post(Event $event): bool;
 
   /**
-   * @return iterable<string>
+   * @return iterable<Event>
    */
-  public function get(string $userId): iterable;
+  public function get(): iterable;
 }

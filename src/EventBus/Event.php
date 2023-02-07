@@ -11,6 +11,7 @@ readonly class Event
    */
   public function __construct(
     public array $users,
+    public string $topic,
     public string $payload,
   ) {
     // Do nothing.

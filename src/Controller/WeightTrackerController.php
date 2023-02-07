@@ -10,15 +10,15 @@ use function is_string;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
-use SimpleWebApps\EventBus\EventBusInterface;
+use SimpleWebApps\EventBus\EventStreamRenderer;
 use SimpleWebApps\Form\WeightRecordType;
 use SimpleWebApps\Repository\WeightRecordRepository;
+use SimpleWebApps\WeightTracker\WeightRecordBroadcaster;
 use SimpleWebApps\WeightTracker\WeightTrackerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/weight-tracker', name: 'weight_tracker_')]
@@ -108,29 +108,15 @@ class WeightTrackerController extends AbstractController
   }
 
   #[Route('/events', name: 'events', methods: ['GET'])]
-  public function events(WeightTrackerService $weightTrackerService, EventBusInterface $eventBus): Response
+  public function events(WeightTrackerService $weightTrackerService, EventStreamRenderer $renderer): Response
   {
     $user = $this->getUser();
     assert($user instanceof User);
     $userId = $user->getId();
     assert(null !== $userId);
-    $response = new StreamedResponse(function () use ($weightTrackerService, $eventBus, $user, $userId) {
-      $initialPayload = json_encode($weightTrackerService->getRenderableDataSets($user));
-      session_write_close();
-      echo 'data: '.$initialPayload."\n\n";
-      @ob_flush();
-      flush();
-      foreach ($eventBus->get((string) $userId) as $payload) {
-        echo 'data: '.$payload."\n\n";
-        @ob_flush();
-        flush();
-      }
-    });
-    $response->headers->set('Content-Type', 'text/event-stream');
-    $response->headers->set('Cache-Control', 'no-cache');
-    $response->headers->set('X-Accel-Buffering', 'no');
+    $initialPayload = json_encode($weightTrackerService->getRenderableDataSets($user));
 
-    return $response;
+    return $renderer->createResponse((string) $userId, [WeightRecordBroadcaster::TOPIC], [$initialPayload]);
   }
 
   private function closeModalOrRedirect(Request $request, string $route): Response

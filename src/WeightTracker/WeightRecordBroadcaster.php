@@ -25,6 +25,8 @@ use SimpleWebApps\Repository\UserRepository;
 #[AsEntityListener(event: Events::postRemove, method: 'onRelationshipChange', entity: Relationship::class)]
 readonly class WeightRecordBroadcaster
 {
+  public const TOPIC = 'weight_tracker';
+
   public function __construct(
     private WeightTrackerService $weightTrackerService,
     private UserRepository $userRepository,
@@ -63,7 +65,7 @@ readonly class WeightRecordBroadcaster
     foreach ($affectedUsers as $user) {
       $users = [(string) $user->getId()];
       $payload = json_encode($this->weightTrackerService->getRenderableDataSets($user));
-      $this->eventBus->post(new Event($users, $payload));
+      $this->eventBus->post(new Event($users, self::TOPIC, $payload));
     }
   }
 }
