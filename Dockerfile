@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 ARG NPMVER=v18.13.0
 
 RUN \
