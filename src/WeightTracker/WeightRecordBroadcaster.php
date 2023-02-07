@@ -13,8 +13,9 @@ use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
+use SimpleWebApps\EventBus\Event;
+use SimpleWebApps\EventBus\EventBusInterface;
 use SimpleWebApps\Repository\UserRepository;
-use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 #[AsEntityListener(event: Events::postPersist, method: 'onWeightRecordChange', entity: WeightRecord::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'onWeightRecordChange', entity: WeightRecord::class)]
@@ -24,12 +25,10 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 #[AsEntityListener(event: Events::postRemove, method: 'onRelationshipChange', entity: Relationship::class)]
 readonly class WeightRecordBroadcaster
 {
-  private const TOPIC_PREFIX = 'weight_record_';
-
   public function __construct(
     private WeightTrackerService $weightTrackerService,
     private UserRepository $userRepository,
-    private BroadcasterInterface $broadcaster
+    private EventBusInterface $eventBus
   ) {
     // Do nothing.
   }
@@ -62,23 +61,9 @@ readonly class WeightRecordBroadcaster
   private function broadcast(array $affectedUsers): void
   {
     foreach ($affectedUsers as $user) {
-      $options = [
-        'topics' => self::getTopics($user),
-        'rendered_action' => json_encode($this->weightTrackerService->getRenderableDataSets($user)),
-        'private' => true,
-      ];
-      /**
-       * @psalm-suppress InvalidArgument
-       */
-      $this->broadcaster->broadcast($user, '', $options); // first 2 parameters are not important
+      $users = [(string) $user->getId()];
+      $payload = json_encode($this->weightTrackerService->getRenderableDataSets($user));
+      $this->eventBus->post(new Event($users, $payload));
     }
-  }
-
-  /**
-   * @return string[]
-   */
-  public static function getTopics(User $user): array
-  {
-    return [self::TOPIC_PREFIX.((string) $user->getId())];
   }
 }

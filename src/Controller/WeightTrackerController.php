@@ -12,7 +12,6 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Form\WeightRecordType;
 use SimpleWebApps\Repository\WeightRecordRepository;
-use SimpleWebApps\WeightTracker\WeightRecordBroadcaster;
 use SimpleWebApps\WeightTracker\WeightTrackerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -30,8 +29,7 @@ class WeightTrackerController extends AbstractController
     assert($user instanceof User);
 
     return $this->render('weight_tracker/index.html.twig', [
-        'chart_topics' => WeightRecordBroadcaster::getTopics($user),
-        'points' => $weightTrackerService->getRenderableDataSets($user),
+      'points' => $weightTrackerService->getRenderableDataSets($user),
     ]);
   }
 

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import { visit, TurboBeforeStreamRenderEvent } from "@hotwired/turbo";
+import { visit } from "@hotwired/turbo";
 import { Chart } from "chart.js/auto";
 import "chartjs-adapter-moment";
 import moment from "moment-timezone";
@@ -43,7 +43,7 @@ export default class extends Controller {
       },
     });
 
-    this.eventSource = new EventSource(this.eventSourceUrlValue, {withCredentials: true});
+    this.eventSource = new EventSource(this.eventSourceUrlValue);
     this.eventSource.onmessage = (e) => this.dataUpdated(e);
     // addEventListener("turbo:before-stream-render", (e) => this.turboStream(e));
   }
