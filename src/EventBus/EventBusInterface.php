@@ -1,12 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\EventBus;
 
 interface EventBusInterface
 {
-  function post(Event $event): bool;
+  public function post(Event $event): bool;
 
   /**
    * @return iterable<string>
    */
-  function get(string $userId): iterable;
+  public function get(string $userId): iterable;
 }

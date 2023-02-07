@@ -1,8 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SimpleWebApps\EventBus;
+
+use function assert;
+use function in_array;
 
 use Psr\Log\LoggerInterface;
 use Socket;
+
+use function strlen;
+
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -29,12 +38,13 @@ class EventBus implements EventBusInterface
     }
     $payload = $this->serializer->serialize($event, 'json');
     assert(strlen($payload) <= self::MAX_SIZE);
-    $result = $sock ? @\socket_sendto($sock, $payload, strlen($payload), 0, self::HOST, self::PORT) : false;
+    $result = $sock ? @socket_sendto($sock, $payload, strlen($payload), 0, self::HOST, self::PORT) : false;
     $this->logger->debug('Posted event', [
       'payload' => $payload,
       'result' => $result,
     ]);
-    return $result !== false;
+
+    return false !== $result;
   }
 
   public function get(string $userId): iterable
@@ -43,14 +53,14 @@ class EventBus implements EventBusInterface
     if (!$sock) {
       return;
     }
-    
+
     $host = '';
     $port = 0;
     $message = null;
     $this->logger->debug('Listening for events');
     while (true) {
       $result = socket_recvfrom($sock, $message, self::MAX_SIZE, 0, $host, $port);
-      if ($result === false) {
+      if (false === $result) {
         $this->logger->error('Unable to receive data from socket');
         continue;
       }
@@ -76,25 +86,30 @@ class EventBus implements EventBusInterface
 
   private function bind(): ?Socket
   {
-    $sock = \socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+    $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
     if (!$sock) {
       $this->logger->error('Failed to create listening socket', [
         'socketLastError' => socket_last_error(),
       ]);
+
       return null;
     }
-    if (!\socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1)) {
+    if (!socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1)) {
       $this->logger->error('Failed to set socket reuse option');
+
       return null;
     }
-    if (!\socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1)) {
+    if (!socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1)) {
       $this->logger->error('Failed to set socket broadcast option');
+
       return null;
     }
-    if (!@\socket_bind($sock, self::HOST, self::PORT)) {
+    if (!@socket_bind($sock, self::HOST, self::PORT)) {
       $this->logger->error('Failed to bind socket');
+
       return null;
     }
+
     return $sock;
   }
 }

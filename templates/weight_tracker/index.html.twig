@@ -20,9 +20,8 @@
     </div>
   </div>
   <div {{ stimulus_controller('weight_tracker') }}
-    data-weight-tracker-event-source-url-value="{{ path('events_index')|e('html_attr') }}"
-    data-weight-tracker-points-value="{{ points|json_encode|e('html_attr') }}"
-    data-weight-tracker-point-click-path-value="{{ path('weight_tracker_edit', {id: '{{id}}'}) }}"
+    data-weight-tracker-event-source-url-value="{{ path('weight_tracker_events')|e('html_attr') }}"
+    data-weight-tracker-point-click-path-value="{{ path('weight_tracker_edit', {id: '{{id}}'})|e('html_attr') }}"
   >
     <canvas data-weight-tracker-target="chart"></canvas>
   </div>

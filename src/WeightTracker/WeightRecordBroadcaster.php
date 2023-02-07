@@ -33,16 +33,16 @@ readonly class WeightRecordBroadcaster
     // Do nothing.
   }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
-    {
-      $owner = $weightRecord->getOwner();
-      assert(null !== $owner);
-      $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
-      $this->broadcast($affectedUsers);
-    }
+  /**
+   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+   */
+  public function onWeightRecordChange(WeightRecord $weightRecord, LifecycleEventArgs $event): void
+  {
+    $owner = $weightRecord->getOwner();
+    assert(null !== $owner);
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
+    $this->broadcast($affectedUsers);
+  }
 
   /**
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)

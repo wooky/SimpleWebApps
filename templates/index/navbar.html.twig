@@ -4,9 +4,10 @@
       <a class="navbar-item" href="{{ path('index') }}">{% trans %}SimpleWebApps{% endtrans %}</a>
     </div>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div {{ stimulus_controller('stream') }}
+    {# TODO #}
+    {# <div {{ stimulus_controller('stream') }}
       data-mercure-url="{{ mercure('user_' ~ ulid, {'subscribe': 'user_' ~ ulid}) }}"
-    ></div>
+    ></div> #}
     <div class="navbar-end">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">

@@ -8,23 +8,14 @@ export default class extends Controller {
   static targets = ['chart'];
   static values = {
     'eventSourceUrl': String,
-    'points': Array,
     'pointClickPath': String,
   };
 
   connect() {
     moment.tz.setDefault("UTC");
-    const points = this.pointsValue;
-    for (let i = 0; i < points.length; i++) {
-      if (!points[i].__self) {
-        points[i].hidden = true;
-      }
-    }
     this.chart = new Chart(this.chartTarget, {
       type: 'line',
-      data: {
-        datasets: points,
-      },
+      data: {},
       options: {
         parsing: false,
         scales: {
