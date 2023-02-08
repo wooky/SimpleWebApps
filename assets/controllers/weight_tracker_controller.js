@@ -36,7 +36,6 @@ export default class extends Controller {
 
     this.eventSource = new EventSource(this.eventSourceUrlValue);
     this.eventSource.onmessage = (e) => this.dataUpdated(e);
-    // addEventListener("turbo:before-stream-render", (e) => this.turboStream(e));
   }
 
   disconnect() {
@@ -60,8 +59,55 @@ export default class extends Controller {
    * @param {MessageEvent} e
    */
   dataUpdated(e) {
-    const data = JSON.parse(e.data);
-    this.chart.data.datasets = data;
+    const payload = JSON.parse(e.data);
+    switch (payload.command) {
+      case 'initial-data':{
+        this.chart.data.datasets = payload.data;
+        break;
+      }
+      case 'weight-record-created': {
+        const idx = this.chart.data.datasets.findIndex(ds => ds.id === payload.data.owner);
+        if (idx === -1) {
+          console.warn('Cannot find user', payload);
+          break;
+        }
+        this.chart.data.datasets[idx].data.push(payload.data);
+        this.chart.data.datasets[idx].data.sort((a, b) => a.x - b.x);
+        break;
+      }
+      case 'weight-record-updated': {
+        const setIdx = this.chart.data.datasets.findIndex(ds => ds.id === payload.data.owner);
+        if (setIdx === -1) {
+          console.warn('Cannot find user', payload);
+          break;
+        }
+        const dataIdx = this.chart.data.datasets[setIdx].data.findIndex(d => d.id === payload.data.id);
+        if (dataIdx === -1) {
+          console.warn('Cannot find existing data point', payload);
+          break;
+        }
+        this.chart.data.datasets[setIdx].data[dataIdx] = payload.data;
+        this.chart.data.datasets[setIdx].data.sort((a, b) => a.x - b.x);
+        break;
+      }
+      case 'weight-record-deleted': {
+        const idxs = this.chart.data.datasets.map((ds, i) => [i, ds.data.findIndex(d => d.id === payload.id)]).find(([setIdx, dataIdx]) => dataIdx !== -1);
+        if (idxs === undefined) {
+          console.warn('Cannot find existing data point');
+          break;
+        }
+        const [setIdx, dataIdx] = idxs;
+        this.chart.data.datasets[setIdx].data.splice(dataIdx, 1);
+        break;
+      }
+      case 'relationship-updated':
+      case 'relationship-deleted':
+        // TODO
+        break;
+      default:
+        console.warn('Unhandled command', payload);
+    }
+    
     this.chart.update();
   }
 }

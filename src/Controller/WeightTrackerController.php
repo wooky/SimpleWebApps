@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace SimpleWebApps\Controller;
 
 use function assert;
+
+use InvalidArgumentException;
+
 use function is_string;
 
 use SimpleWebApps\Auth\RelationshipCapability;
@@ -12,9 +15,10 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\EventBus\EventStreamRenderer;
 use SimpleWebApps\Form\WeightRecordType;
+use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use SimpleWebApps\WeightTracker\WeightRecordBroadcaster;
-use SimpleWebApps\WeightTracker\WeightTrackerService;
+use SimpleWebApps\WeightTracker\WeightRecordCommandRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,15 +112,18 @@ class WeightTrackerController extends AbstractController
   }
 
   #[Route('/events', name: 'events', methods: ['GET'])]
-  public function events(WeightTrackerService $weightTrackerService, EventStreamRenderer $renderer): Response
+  public function events(UserRepository $userRepository, WeightRecordRepository $weightRecordRepository, WeightRecordCommandRenderer $commandRenderer, EventStreamRenderer $streamRenderer): Response
   {
     $user = $this->getUser();
     assert($user instanceof User);
     $userId = $user->getId();
     assert(null !== $userId);
-    $initialPayload = json_encode($weightTrackerService->getRenderableDataSets($user));
+    $controlledUsers = $userRepository->getControlledUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $controlledUserIds = array_map(fn (User $user) => $user->getId()?->toBinary() ?? throw new InvalidArgumentException('User has no ID'), $controlledUsers);
+    $weightRecords = $weightRecordRepository->getDataPoints($controlledUserIds);
+    $initialPayload = json_encode($commandRenderer->initialData($user, $weightRecords));
 
-    return $renderer->createResponse((string) $userId, [WeightRecordBroadcaster::TOPIC], [$initialPayload]);
+    return $streamRenderer->createResponse((string) $userId, [WeightRecordBroadcaster::TOPIC], [$initialPayload]);
   }
 
   private function closeModalOrRedirect(Request $request, string $route): Response
