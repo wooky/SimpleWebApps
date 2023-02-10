@@ -23,16 +23,13 @@ export default class StreamController extends Controller {
   }
 
   listenForTopic(topic, callback) {
-    if (this.topic !== topic) {
-      this._closeConnection();
-      this._openConnection(topic);
-      this.es.addEventListener(topic, callback, false);
-    }
+    this._closeConnection();
+    this._openConnection(topic);
+    this.es.addEventListener(topic, callback, false);
   }
 
   _openConnection(topic) {
-    this.topic = topic;
-    const url = this.eventSourceUrlValue.replace(encodeURIComponent("{{topics}}"), this.topic);
+    const url = this.eventSourceUrlValue.replace(encodeURIComponent("{{topics}}"), topic);
     this.es = new EventSource(url);
     connectStreamSource(this.es);
   }
