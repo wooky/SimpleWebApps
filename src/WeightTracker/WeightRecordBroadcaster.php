@@ -9,12 +9,17 @@ use function assert;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+
+use function in_array;
+
+use InvalidArgumentException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventBusInterface;
+use SimpleWebApps\EventBus\EventStreamInitialPayloadListener;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Component\Uid\Ulid;
@@ -31,7 +36,7 @@ use Symfony\Component\Uid\Ulid;
 /**
  * TODO https://github.com/doctrine/orm/issues/2326 once this gets resolved, add readonly to class.
  */
-class WeightRecordBroadcaster
+class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
 {
   public const TOPIC = 'weight_tracker';
 
@@ -47,6 +52,21 @@ class WeightRecordBroadcaster
     private readonly WeightRecordCommandRenderer $commandRenderer,
   ) {
     // Do nothing.
+  }
+
+  public function initiallyConnected(string $userId, array $topics): ?Event
+  {
+    if (!in_array(self::TOPIC, $topics, true)) {
+      return null;
+    }
+    $user = $this->userRepository->find($userId);
+    assert(null !== $user);
+    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $controlledUserIds = array_map(fn (User $user) => $user->getId()?->toBinary() ?? throw new InvalidArgumentException('User has no ID'), $controlledUsers);
+    $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
+    $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
+
+    return new Event([], self::TOPIC, $initialPayload);
   }
 
   /**

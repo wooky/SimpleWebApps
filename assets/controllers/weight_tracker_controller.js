@@ -7,9 +7,9 @@ import moment from "moment-timezone";
 export default class extends Controller {
   static targets = ['chart'];
   static values = {
-    'eventSourceUrl': String,
     'pointClickPath': String,
   };
+  static outlets = ['stream'];
 
   connect() {
     moment.tz.setDefault("UTC");
@@ -33,13 +33,18 @@ export default class extends Controller {
         onClick: (e) => this.click(e),
       },
     });
-
-    this.eventSource = new EventSource(this.eventSourceUrlValue);
-    this.eventSource.onmessage = (e) => this.dataUpdated(e);
   }
 
   disconnect() {
-    this.eventSource.close();
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource.removeEventListener('weight_tracker', e => this.dataUpdated(e), false);
+      this.eventSource = undefined;
+    }
+  }
+
+  streamOutletConnected(outlet) {
+    outlet.listenForEvents('weight_tracker', e => this.dataUpdated(e));
   }
 
   /**
