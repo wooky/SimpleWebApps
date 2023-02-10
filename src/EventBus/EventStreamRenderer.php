@@ -43,10 +43,10 @@ class EventStreamRenderer
    */
   private function waitLoop(string $userId, array $topics): void
   {
-    @ob_flush();
-    flush();
+    self::flush();
     foreach ($this->initialPayloadListeners as $listener) {
-      if ($event = $listener->initiallyConnected($userId, $topics)) {
+      $event = $listener->initiallyConnected($userId, $topics);
+      if ($event) {
         self::writePayload($event);
       }
     }
@@ -61,7 +61,14 @@ class EventStreamRenderer
   {
     echo 'event: '.$event->topic."\n";
     echo 'data: '.$event->payload."\n\n";
-    @ob_flush();
+    self::flush();
+  }
+
+  private static function flush(): void
+  {
+    if (ob_get_level()) {
+      ob_flush();
+    }
     flush();
   }
 }

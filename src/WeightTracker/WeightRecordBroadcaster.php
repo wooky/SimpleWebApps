@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace SimpleWebApps\WeightTracker;
 
 use function assert;
-
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-
 use function in_array;
 
 use InvalidArgumentException;
@@ -19,31 +14,16 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventBusInterface;
-use SimpleWebApps\EventBus\EventStreamInitialPayloadListener;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Component\Uid\Ulid;
 
-#[AsEntityListener(event: Events::postPersist, method: 'onWeightRecordCreated', entity: WeightRecord::class)]
-#[AsEntityListener(event: Events::postUpdate, method: 'onWeightRecordUpdated', entity: WeightRecord::class)]
-#[AsEntityListener(event: Events::postRemove, method: 'onWeightRecordDeleted', entity: WeightRecord::class)]
-#[AsEntityListener(event: Events::preRemove, method: 'onWeightRecordPreRemoved', entity: WeightRecord::class)]
-// skip relationship create as it'll initially be in the pending state.
-// TODO listen on preUpdate so we don't send unnecessary data
-#[AsEntityListener(event: Events::postUpdate, method: 'onRelationshipUpdated', entity: Relationship::class)]
-#[AsEntityListener(event: Events::postRemove, method: 'onRelationshipDeleted', entity: Relationship::class)]
-#[AsEntityListener(event: Events::preRemove, method: 'onRelationshipPreRemoved', entity: Relationship::class)]
 /**
  * TODO https://github.com/doctrine/orm/issues/2326 once this gets resolved, add readonly to class.
  */
-class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
+class WeightRecordBroadcaster
 {
   public const TOPIC = 'weight_tracker';
-
-  /**
-   * TODO https://github.com/doctrine/orm/issues/2326 hacky af.
-   */
-  private ?Ulid $lastIdRemoved = null;
 
   public function __construct(
     private readonly UserRepository $userRepository,
@@ -54,7 +34,7 @@ class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
     // Do nothing.
   }
 
-  public function initiallyConnected(string $userId, array $topics): ?Event
+  public function createInitialPayloadEvent(string $userId, array $topics): ?Event
   {
     if (!in_array(self::TOPIC, $topics, true)) {
       return null;
@@ -69,36 +49,19 @@ class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
     return new Event([], self::TOPIC, $initialPayload);
   }
 
-  /**
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onWeightRecordCreated(WeightRecord $weightRecord, LifecycleEventArgs $event): void
+  public function onWeightRecordCreated(WeightRecord $weightRecord): void
   {
     $this->onWeightRecordChange($weightRecord, $this->commandRenderer->weightRecordCreated($weightRecord));
   }
 
-  /**
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onWeightRecordUpdated(WeightRecord $weightRecord, LifecycleEventArgs $event): void
+  public function onWeightRecordUpdated(WeightRecord $weightRecord): void
   {
     $this->onWeightRecordChange($weightRecord, $this->commandRenderer->weightRecordUpdated($weightRecord));
   }
 
-  public function onWeightRecordPreRemoved(WeightRecord $weightRecord, LifecycleEventArgs $event): void
+  public function onWeightRecordDeleted(WeightRecord $weightRecord, Ulid $weightRecordId): void
   {
-    $this->lastIdRemoved = $weightRecord->getId();
-  }
-
-  /**
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onWeightRecordDeleted(WeightRecord $weightRecord, LifecycleEventArgs $event): void
-  {
-    if ($this->lastIdRemoved) {
-      $this->onWeightRecordChange($weightRecord, $this->commandRenderer->weightRecordDeleted($this->lastIdRemoved));
-      $this->lastIdRemoved = null;
-    }
+    $this->onWeightRecordChange($weightRecord, $this->commandRenderer->weightRecordDeleted($weightRecordId));
   }
 
   private function onWeightRecordChange(WeightRecord $weightRecord, array $payload): void
@@ -109,40 +72,21 @@ class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
     $this->broadcast($affectedUsers, $payload);
   }
 
-  /**
-   * TODO.
-   *
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onRelationshipUpdated(Relationship $relationship, LifecycleEventArgs $event): void
+  public function onRelationshipActivated(Relationship $relationship): void
   {
     $user = $relationship->getToUser();
     assert(null !== $user);
     $userId = $user->getId()?->toBinary();
     assert(null !== $userId);
     $weightRecords = $this->weightRecordRepository->getDataPoints([$userId]);
-    $this->onRelationshipChange($relationship, $this->commandRenderer->relationshipUpdated($user, $weightRecords));
+    $this->onRelationshipChange($relationship, $this->commandRenderer->relationshipActivated($user, $weightRecords));
   }
 
-  /**
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onRelationshipPreRemoved(Relationship $relationship, LifecycleEventArgs $event): void
+  public function onRelationshipRemoved(Relationship $relationship): void
   {
-    $this->lastIdRemoved = $relationship->getToUser()?->getId();
-  }
-
-  /**
-   * TODO.
-   *
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-   */
-  public function onRelationshipDeleted(Relationship $relationship, LifecycleEventArgs $event): void
-  {
-    if ($this->lastIdRemoved) {
-      $this->onRelationshipChange($relationship, $this->commandRenderer->relationshipDeleted($this->lastIdRemoved));
-      $this->lastIdRemoved = null;
-    }
+    $userId = $relationship->getToUser()?->getId();
+    assert(null !== $userId);
+    $this->onRelationshipChange($relationship, $this->commandRenderer->relationshipDeleted($userId));
   }
 
   private function onRelationshipChange(Relationship $relationship, array $payload): void
@@ -153,15 +97,20 @@ class WeightRecordBroadcaster implements EventStreamInitialPayloadListener
     $this->broadcast($affectedUsers, $payload);
   }
 
+  public function onUsernameChanged(User $user): void
+  {
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $payload = $this->commandRenderer->usernameChanged($user);
+    $this->broadcast($affectedUsers, $payload);
+  }
+
   /**
    * @param User[] $affectedUsers
    */
   private function broadcast(array $affectedUsers, array $payloadArray): void
   {
+    $users = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = json_encode($payloadArray);
-    foreach ($affectedUsers as $user) {
-      $users = [(string) $user->getId()];
-      $this->eventBus->post(new Event($users, self::TOPIC, $payload));
-    }
+    $this->eventBus->post(new Event($users, self::TOPIC, $payload));
   }
 }

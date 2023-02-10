@@ -80,6 +80,7 @@ export default class extends Controller {
      *     data: ?{
      *         owner: ?string,
      *     },
+     *     username: ?string,
      * }}
      */
     const payload = JSON.parse(e.data);
@@ -128,10 +129,28 @@ export default class extends Controller {
         this.chart.data.datasets[setIdx].data.splice(dataIdx, 1);
         break;
       }
-      case 'relationship-updated':
-      case 'relationship-deleted':
-        // TODO
+      case 'relationship-activated': {
+        this.chart.data.datasets.push(payload.data);
         break;
+      }
+      case 'relationship-deleted': {
+        const idx = this.chart.data.datasets.findIndex(ds => ds.id === payload.id);
+        if (idx === -1) {
+          console.warn('Cannot find user', payload);
+          break;
+        }
+        this.chart.data.datasets.splice(idx, 1);
+        break;
+      }
+      case 'username-updated': {
+        const idx = this.chart.data.datasets.findIndex(ds => ds.id === payload.id);
+        if (idx === -1) {
+          console.warn('Cannot find user', payload);
+          break;
+        }
+        this.chart.data.datasets[idx].label = payload.username;
+        break;
+      }
       default:
         console.warn('Unhandled command', payload);
     }

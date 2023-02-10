@@ -15,6 +15,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
+/**
+ * @SuppressWarnings(PHPMD.ErrorControlOperator)
+ */
 class EventBus implements EventBusInterface
 {
   private const HOST = '127.255.255.255';

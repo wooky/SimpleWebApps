@@ -69,21 +69,30 @@ class WeightRecordCommandRenderer
   /**
    * @param WeightRecord[] $weightRecords
    */
-  public function relationshipUpdated(User $user, array $weightRecords): array
+  public function relationshipActivated(User $user, array $weightRecords): array
   {
     $dataPoints = array_map(fn (WeightRecord $weightRecord) => $this->dataRenderer->dataPoint($weightRecord), $weightRecords);
 
     return [
-      'command' => 'relationship-created',
-      'data' => $this->dataRenderer->dataSet($user, $dataPoints),
+      'command' => 'relationship-activated',
+      'data' => $this->dataRenderer->dataSet($user, $dataPoints, true),
     ];
   }
 
-  public function relationshipDeleted(Ulid $ulid): array
+  public function relationshipDeleted(Ulid $userUlid): array
   {
     return [
       'command' => 'relationship-deleted',
-      'id' => (string) $ulid,
+      'id' => (string) $userUlid,
+    ];
+  }
+
+  public function usernameChanged(User $user): array
+  {
+    return [
+      'command' => 'username-updated',
+      'id' => (string) $user->getId(),
+      'username' => $user->getUsername(),
     ];
   }
 }
