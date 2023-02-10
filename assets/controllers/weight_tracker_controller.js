@@ -3,6 +3,7 @@ import { visit } from "@hotwired/turbo";
 import { Chart } from "chart.js/auto";
 import "chartjs-adapter-moment";
 import moment from "moment-timezone";
+import StreamController from "./stream_controller";
 
 export default class extends Controller {
   static targets = ['chart'];
@@ -10,6 +11,11 @@ export default class extends Controller {
     'pointClickPath': String,
   };
   static outlets = ['stream'];
+
+  initialize() {
+    /** @type { HTMLCanvasElement } */ this.chartTarget;
+    /** @type { String } */ this.pointClickPathValue;
+  }
 
   connect() {
     moment.tz.setDefault("UTC");
@@ -43,8 +49,11 @@ export default class extends Controller {
     }
   }
 
+  /**
+   * @param {StreamController} outlet 
+   */
   streamOutletConnected(outlet) {
-    outlet.listenForEvents('weight_tracker', e => this.dataUpdated(e));
+    outlet.listenForTopic('weight_tracker', e => this.dataUpdated(e));
   }
 
   /**
@@ -64,10 +73,24 @@ export default class extends Controller {
    * @param {MessageEvent} e
    */
   dataUpdated(e) {
+    /**
+     * @type {{
+     *     command: string,
+     *     id: ?string,
+     *     data: ?{
+     *         owner: ?string,
+     *     },
+     * }}
+     */
     const payload = JSON.parse(e.data);
     switch (payload.command) {
-      case 'initial-data':{
-        this.chart.data.datasets = payload.data;
+      case 'initial-data': {
+        if (!this.gotInitialData) {
+          this.chart.data.datasets = payload.data;
+          this.gotInitialData = true;
+        } else {
+          console.log('Ignoring initial data as chart is already populated');
+        }
         break;
       }
       case 'weight-record-created': {
