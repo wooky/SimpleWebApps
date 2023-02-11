@@ -7,6 +7,7 @@ namespace SimpleWebApps\Relationship;
 use function assert;
 
 use SimpleWebApps\Entity\Relationship;
+use SimpleWebApps\Entity\User;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
@@ -20,11 +21,11 @@ class RelationshipBoxComponent
   public bool $isFromUser;
 
   #[ExposeInTemplate]
-  public function getName(): string
+  public function getUser(): User
   {
-    $name = $this->isFromUser ? $this->relationship->getToUser()?->getUsername() : $this->relationship->getFromUser()?->getUsername();
-    assert(null !== $name);
+    $user = $this->isFromUser ? $this->relationship->getToUser() : $this->relationship->getFromUser();
+    assert(null !== $user);
 
-    return $name;
+    return $user;
   }
 }

@@ -19,9 +19,9 @@ class EventStreamRenderer
   public function __construct(
     private EventBusInterface $eventBus,
     #[TaggedIterator('SimpleWebApps.EventStreamInitialPayloadListener')] private iterable $initialPayloadListeners,
-    LoggerInterface $logger,
+    private LoggerInterface $logger,
   ) {
-    $logger->debug('yes', ['listeners' => $initialPayloadListeners]);
+    // Do nothing.
   }
 
   /**
@@ -51,7 +51,11 @@ class EventStreamRenderer
       }
     }
     foreach ($this->eventBus->get() as $event) {
-      if (in_array($userId, $event->users, true) && in_array($event->topic, $topics, true)) {
+      $shouldWrite = match ($event->scope) {
+        EventScope::SpecifiedTopic => in_array($userId, $event->users, true) && in_array($event->topic, $topics, true),
+        EventScope::AllTopics => in_array($userId, $event->users, true),
+      };
+      if ($shouldWrite) {
         self::writePayload($event);
       }
     }

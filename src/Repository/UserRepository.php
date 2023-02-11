@@ -90,6 +90,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ->getResult();
   }
 
+  /**
+   * @return User[]
+   */
+  public function getAllInterestedParties(User $self): array
+  {
+    $qb = $this->createQueryBuilder('u');
+
+    return $qb
+      ->distinct()
+      ->leftJoin(Relationship::class, 'rel', Expr\Join::WITH, $qb->expr()->orX(
+        $qb->expr()->eq('rel.fromUser', 'u.id'),
+        $qb->expr()->eq('rel.toUser', 'u.id'),
+      ))
+      ->where($qb->expr()->orX(
+        $qb->expr()->eq('rel.fromUser', '?1'),
+        $qb->expr()->eq('rel.toUser', '?1'),
+      ))
+      ->setParameter(1, $self->getId(), 'ulid')
+      ->getQuery()
+      ->getResult();
+  }
+
   public function save(User $entity, bool $flush = false): void
   {
     $this->getEntityManager()->persist($entity);

@@ -13,6 +13,7 @@ readonly class Event
     public array $users,
     public string $topic,
     public string $payload,
+    public EventScope $scope = EventScope::SpecifiedTopic,
   ) {
     // Do nothing.
   }

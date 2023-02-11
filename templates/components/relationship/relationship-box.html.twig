@@ -1,9 +1,6 @@
-{% set ulid = isFromUser ? relationship.toUser.id : relationship.fromUser.id %}
 <div class="panel-block">
   <div class="column py-0">
-    <span id="simplewebapps-username-{{ ulid }}">
-      {{ name }}
-    </span>
+    {{ component('user:username', {'user': user}) }}
   </div>
   <div class="column is-narrow py-0">
     {% if not relationship.active %}{% trans %}relationships.pending{% endtrans %} - {% endif %}

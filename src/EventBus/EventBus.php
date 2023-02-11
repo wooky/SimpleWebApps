@@ -12,6 +12,7 @@ use Socket;
 use function strlen;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -29,7 +30,7 @@ class EventBus implements EventBusInterface
   public function __construct(
     private LoggerInterface $logger,
   ) {
-    $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+    $this->serializer = new Serializer([new BackedEnumNormalizer(), new ObjectNormalizer()], [new JsonEncoder()]);
   }
 
   public function post(Event $event): bool
