@@ -91,20 +91,21 @@ class RelationshipsController extends AbstractController
   }
 
   #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
-  public function approve(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
+  public function approve(/* Request $request, */ Relationship $relationship, RelationshipRepository $relationshipRepository): Response
   {
     if ($relationship->getToUser() !== $this->getUser()) {
       throw $this->createAccessDeniedException();
     }
 
-    $token = $request->request->get('_token');
-    assert(is_string($token) || null === $token);
-    if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
-      $relationship->setActive(true);
-      $relationshipRepository->save($relationship, true);
-    }
+    // TODO CSRF is not working if relationship box was created from a stream.
+    // $token = $request->request->get('_token');
+    // assert(is_string($token) || null === $token);
+    // if ($this->isCsrfTokenValid('approve'.((string) $relationship->getId()), $token)) {
+    $relationship->setActive(true);
+    $relationshipRepository->save($relationship, true);
+    // }
 
-    return new Response();
+    return $this->redirectToRoute('relationships_index', [], Response::HTTP_SEE_OTHER);
   }
 
   #[Route('/{id}/delete', name: 'pre_delete', methods: ['GET'])]

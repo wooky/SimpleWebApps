@@ -13,6 +13,9 @@
         'isFromUser': true,
       }) }}
     {% endfor %}
+    {% include 'relationships/_no-users.html.twig' with {'id': 'from-users-bottom'} only %}
+  </div>
+  <div class="panel">
     <div class="panel-block is-block">
       <h3 class="subtitle">{% trans %}relationships.ask_user{% endtrans %}</h3>
       <turbo-frame id="relationships-invite" src="{{ path('relationships_invite') }}"></turbo-frame>
@@ -26,6 +29,7 @@
         'isFromUser': false,
       }) }}
     {% endfor %}
+    {% include 'relationships/_no-users.html.twig' with {'id': 'to-users-bottom'} only %}
   </div>
 </div>
 {% endblock %}

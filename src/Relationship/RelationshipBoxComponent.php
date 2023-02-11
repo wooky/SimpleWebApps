@@ -14,9 +14,11 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 /**
  * @psalm-suppress MissingConstructor
  */
-#[AsTwigComponent('relationship:relationship-box')]
+#[AsTwigComponent(self::NAME)]
 class RelationshipBoxComponent
 {
+  public const NAME = 'relationship:relationship-box';
+
   public Relationship $relationship;
   public bool $isFromUser;
 
@@ -27,5 +29,16 @@ class RelationshipBoxComponent
     assert(null !== $user);
 
     return $user;
+  }
+
+  #[ExposeInTemplate]
+  public function getHtmlId(): string
+  {
+    return self::htmlId((string) $this->relationship->getId());
+  }
+
+  public static function htmlId(string $relationshipId): string
+  {
+    return "simplewebapps-relationship-$relationshipId";
   }
 }

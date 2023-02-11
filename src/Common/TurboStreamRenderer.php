@@ -25,11 +25,29 @@ class TurboStreamRenderer
 
   public function renderClass(TurboStreamAction $action, string $class, string $payload, array $context): string
   {
-    $targets = '.'.$class;
+    $attributes = "targets=\".$class\"";
+
+    return $this->render($action, $attributes, $payload, $context);
+  }
+
+  public function renderTwigComponentId(TurboStreamAction $action, string $target, string $component, array $context): string
+  {
+    return $this->renderId($action, $target, $this->componentRenderer->createAndRender($component, $context), []);
+  }
+
+  public function renderId(TurboStreamAction $action, string $target, string $payload, array $context): string
+  {
+    $attributes = "target=\"$target\"";
+
+    return $this->render($action, $attributes, $payload, $context);
+  }
+
+  private function render(TurboStreamAction $action, string $attributes, string $payload, array $context): string
+  {
     $strippedPayload = str_replace("\n", '', $payload);
 
     return $this->twig
-      ->createTemplate("<turbo-stream action=\"{$action->value}\" targets=\"$targets\"><template>$strippedPayload</template></turbo-stream>")
+      ->createTemplate("<turbo-stream action=\"{$action->value}\" $attributes><template>$strippedPayload</template></turbo-stream>")
       ->render($context)
     ;
   }

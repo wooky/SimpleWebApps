@@ -11,7 +11,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 /**
  * @psalm-suppress MissingConstructor
  */
-#[AsTwigComponent(UsernameComponent::NAME)]
+#[AsTwigComponent(self::NAME)]
 class UsernameComponent
 {
   public const NAME = 'user:username';

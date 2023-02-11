@@ -38,6 +38,7 @@ relationships:
   from_user: 'Users I have access to'
   to_user: 'Users that have access to me'
   ask_user: 'Ask a user to give access'
+  no_users: 'No users.'
   invite: 'Invite'
   pending: 'Pending'
   approve: 'Approve request'
