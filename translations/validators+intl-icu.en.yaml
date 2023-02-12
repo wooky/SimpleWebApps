@@ -1,6 +1,9 @@
 auth:
   didnt_agree_terms: 'You should agree to our terms.'
-  username_exists: 'There is already an account with this username'
+  username_exists: 'There is already an account with this username.'
 
 relationships:
   to_self: 'Cannot create relationship to yourself.'
+
+weight_record:
+  date_exists: 'A record for this date already exists.'
