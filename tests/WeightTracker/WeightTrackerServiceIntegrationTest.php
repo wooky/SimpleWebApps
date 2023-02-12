@@ -27,18 +27,18 @@ class WeightTrackerServiceIntegrationTest extends KernelTestCase
     $slaveWrite = $this->userRepository->findOneBy(['username' => 'slave-write']);
 
     $dataSets = $this->service->getRenderableDataSets($master);
-    static::assertSame(3, count($dataSets));
+    static::assertCount(3, $dataSets);
 
     static::assertSame($master->getUsername(), $dataSets[0]->label);
-    static::assertSame(AppFixtures::WEIGHT_RECORDS_PER_USER, count($dataSets[0]->data));
+    static::assertCount(AppFixtures::WEIGHT_RECORDS_PER_USER, $dataSets[0]->data);
     static::assertTrue($dataSets[0]->__self);
 
     static::assertSame($slaveRead->getUsername(), $dataSets[1]->label);
-    static::assertSame(AppFixtures::WEIGHT_RECORDS_PER_USER, count($dataSets[1]->data));
+    static::assertCount(AppFixtures::WEIGHT_RECORDS_PER_USER, $dataSets[1]->data);
     static::assertFalse($dataSets[1]->__self);
 
     static::assertSame($slaveWrite->getUsername(), $dataSets[2]->label);
-    static::assertSame(AppFixtures::WEIGHT_RECORDS_PER_USER, count($dataSets[2]->data));
+    static::assertCount(AppFixtures::WEIGHT_RECORDS_PER_USER, $dataSets[2]->data);
     static::assertFalse($dataSets[2]->__self);
   }
 }
