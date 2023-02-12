@@ -6,6 +6,8 @@ namespace SimpleWebApps\EventBus;
 
 readonly class Event
 {
+  public string $sseEvent;
+
   /**
    * @param string[] $users
    */
@@ -14,7 +16,8 @@ readonly class Event
     public string $topic,
     public string $payload,
     public EventScope $scope = EventScope::SpecifiedTopic,
+    ?string $sseEvent = null,
   ) {
-    // Do nothing.
+    $this->sseEvent = $sseEvent ?? $topic;
   }
 }

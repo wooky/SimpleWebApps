@@ -31,6 +31,7 @@ class IndexController extends AbstractController
   public function events(Request $request, EventStreamRenderer $renderer): Response
   {
     $topics = explode(',', $request->query->get('topics', ''));
+    assert(!empty($topics));
     $user = $this->getUser();
     assert($user instanceof User);
     $userId = $user->getId();

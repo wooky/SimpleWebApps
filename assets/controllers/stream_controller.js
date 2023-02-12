@@ -8,7 +8,9 @@ export default class StreamController extends Controller {
 
   initialize() {
     /** @type { String } */ this.eventSourceUrlValue;
-    this._openConnection('');
+    document.documentElement.addEventListener('turbo:load', () => this._establishConnection());
+    this._establishConnection();
+    this.initialConnection = true;
   }
 
   connect() {
@@ -22,16 +24,32 @@ export default class StreamController extends Controller {
     this.disconnectTask = setTimeout(() => this._closeConnection(), 5000);
   }
 
-  listenForTopic(topic, callback) {
-    this._closeConnection();
-    this._openConnection(topic);
-    this.es.addEventListener(topic, callback, false);
+  listenForTopic(topics, callback) {
+    this.topics = topics;
+    this.eventListener = callback;
+    if (this.initialConnection) {
+      this._establishConnection();
+    }
   }
 
-  _openConnection(topic) {
-    const url = this.eventSourceUrlValue.replace(encodeURIComponent("{{topics}}"), topic);
-    this.es = new EventSource(url);
-    connectStreamSource(this.es);
+  _establishConnection() {
+    const topics = document.querySelector('meta[name="simplewebapps:topics"]').content;
+    if (this.eventListener || topics !== 'message' || topics !== this.topics) {
+      this._closeConnection();
+    }
+    if (topics) {
+      this.topics = topics;
+    }
+    if (!this.es) {
+      const url = this.eventSourceUrlValue.replace(encodeURIComponent("{{topics}}"), this.topics);
+      this.es = new EventSource(url);
+      connectStreamSource(this.es);
+    }
+    if (this.eventListener) {
+      this.es.addEventListener(this.topics, this.eventListener, false);
+      this.eventListener = undefined;
+    }
+    this.initialConnection = false;
   }
 
   _closeConnection() {

@@ -63,7 +63,7 @@ class EventStreamRenderer
 
   private static function writePayload(Event $event): void
   {
-    echo 'event: '.$event->topic."\n";
+    echo 'event: '.$event->sseEvent."\n";
     echo 'data: '.$event->payload."\n\n";
     self::flush();
   }

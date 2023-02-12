@@ -41,14 +41,6 @@ export default class extends Controller {
     });
   }
 
-  disconnect() {
-    if (this.eventSource) {
-      this.eventSource.close();
-      this.eventSource.removeEventListener('weight_tracker', e => this.dataUpdated(e), false);
-      this.eventSource = undefined;
-    }
-  }
-
   /**
    * @param {StreamController} outlet 
    */

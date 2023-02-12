@@ -21,6 +21,8 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 #[AsEventListener(event: RelationshipRemovedEvent::class, method: 'onRelationshipRemoved')]
 final class RelationshipBroadcaster
 {
+  public const TOPIC = 'relationships';
+
   public function __construct(
     private EventBusInterface $eventBus,
     private TurboStreamRenderer $renderer,
@@ -32,25 +34,25 @@ final class RelationshipBroadcaster
   {
     $this->eventBus->post(new Event(
       [(string) $relationship->getFromUser()?->getId()],
-      TurboStreamRenderer::MESSAGE,
+      self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Before,
         'from-users-bottom',
         RelationshipBoxComponent::NAME,
         ['relationship' => $relationship, 'isFromUser' => true]
       ),
-      EventScope::AllTopics
+      sseEvent: TurboStreamRenderer::MESSAGE,
     ));
     $this->eventBus->post(new Event(
       [(string) $relationship->getToUser()?->getId()],
-      TurboStreamRenderer::MESSAGE,
+      self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Before,
         'to-users-bottom',
         RelationshipBoxComponent::NAME,
         ['relationship' => $relationship, 'isFromUser' => false]
       ),
-      EventScope::AllTopics
+      sseEvent: TurboStreamRenderer::MESSAGE,
     ));
   }
 
@@ -58,25 +60,25 @@ final class RelationshipBroadcaster
   {
     $this->eventBus->post(new Event(
       [(string) $event->relationship->getFromUser()?->getId()],
-      TurboStreamRenderer::MESSAGE,
+      self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Replace,
         RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
         RelationshipBoxComponent::NAME,
         ['relationship' => $event->relationship, 'isFromUser' => true]
       ),
-      EventScope::AllTopics
+      sseEvent: TurboStreamRenderer::MESSAGE,
     ));
     $this->eventBus->post(new Event(
       [(string) $event->relationship->getToUser()?->getId()],
-      TurboStreamRenderer::MESSAGE,
+      self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Replace,
         RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
         RelationshipBoxComponent::NAME,
         ['relationship' => $event->relationship, 'isFromUser' => false]
       ),
-      EventScope::AllTopics
+      sseEvent: TurboStreamRenderer::MESSAGE,
     ));
   }
 
@@ -87,14 +89,14 @@ final class RelationshipBroadcaster
         (string) $event->relationship->getFromUser()?->getId(),
         (string) $event->relationship->getToUser()?->getId(),
       ],
-      TurboStreamRenderer::MESSAGE,
+      self::TOPIC,
       $this->renderer->renderId(
         TurboStreamAction::Remove,
         RelationshipBoxComponent::htmlId((string) $event->id),
         '',
         []
       ),
-      EventScope::AllTopics
+      sseEvent: TurboStreamRenderer::MESSAGE,
     ));
   }
 }
