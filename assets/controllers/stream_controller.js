@@ -10,7 +10,9 @@ export default class StreamController extends Controller {
     /** @type { String } */ this.eventSourceUrlValue;
     document.documentElement.addEventListener('turbo:load', () => this._establishConnection());
     this._establishConnection();
-    this.initialConnection = true;
+    if (this.initialConnection === undefined) {
+      this.initialConnection = true;
+    }
   }
 
   connect() {
@@ -34,22 +36,22 @@ export default class StreamController extends Controller {
 
   _establishConnection() {
     const topics = document.querySelector('meta[name="simplewebapps:topics"]').content;
-    if (this.eventListener || topics !== 'message' || topics !== this.topics) {
+    if (topics !== 'message' || topics !== this.topics) {
       this._closeConnection();
     }
     if (topics) {
       this.topics = topics;
     }
-    if (!this.es) {
+    if (this.topics && !this.es) {
       const url = this.eventSourceUrlValue.replace(encodeURIComponent("{{topics}}"), this.topics);
       this.es = new EventSource(url);
       connectStreamSource(this.es);
+      this.initialConnection = false;
     }
     if (this.eventListener) {
       this.es.addEventListener(this.topics, this.eventListener, false);
       this.eventListener = undefined;
     }
-    this.initialConnection = false;
   }
 
   _closeConnection() {
