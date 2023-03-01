@@ -20,31 +20,21 @@ final class Version0 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE relationship (id BLOB NOT NULL --(DC2Type:ulid)
-        , from_user BLOB NOT NULL --(DC2Type:ulid)
-        , to_user BLOB NOT NULL --(DC2Type:ulid)
-        , capability VARCHAR(255) NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_200444A0F8050BAA FOREIGN KEY (from_user) REFERENCES user (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_200444A06A7DC786 FOREIGN KEY (to_user) REFERENCES user (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
-        $this->addSql('CREATE INDEX IDX_200444A0F8050BAA ON relationship (from_user)');
-        $this->addSql('CREATE INDEX IDX_200444A06A7DC786 ON relationship (to_user)');
-        $this->addSql('CREATE UNIQUE INDEX link_unique_idx ON relationship (from_user, to_user)');
-        $this->addSql('CREATE TABLE user (id BLOB NOT NULL --(DC2Type:ulid)
-        , username VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
-        , password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649F85E0677 ON user (username)');
-        $this->addSql('CREATE TABLE weight_record (id BLOB NOT NULL --(DC2Type:ulid)
-        , owner_id BLOB NOT NULL --(DC2Type:ulid)
-        , date DATE NOT NULL --(DC2Type:date_immutable)
-        , weight SMALLINT NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_506A8B487E3C61F9 FOREIGN KEY (owner_id) REFERENCES user (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
-        $this->addSql('CREATE INDEX IDX_506A8B487E3C61F9 ON weight_record (owner_id)');
-        $this->addSql('CREATE TABLE messenger_messages (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, body CLOB NOT NULL, headers CLOB NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL)');
-        $this->addSql('CREATE INDEX IDX_75EA56E0FB7336F0 ON messenger_messages (queue_name)');
-        $this->addSql('CREATE INDEX IDX_75EA56E0E3BD61CE ON messenger_messages (available_at)');
-        $this->addSql('CREATE INDEX IDX_75EA56E016BA31DB ON messenger_messages (delivered_at)');
+        $this->addSql('CREATE TABLE relationship (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', from_user BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', to_user BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', capability VARCHAR(255) NOT NULL, active TINYINT(1) NOT NULL, INDEX IDX_200444A0F8050BAA (from_user), INDEX IDX_200444A06A7DC786 (to_user), UNIQUE INDEX link_unique_idx (from_user, to_user), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE user (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', username VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649F85E0677 (username), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE weight_record (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', owner_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', date DATE NOT NULL COMMENT \'(DC2Type:date_immutable)\', weight SMALLINT NOT NULL, INDEX IDX_506A8B487E3C61F9 (owner_id), UNIQUE INDEX weight_record_date_unique_idx (owner_id, date), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL, INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE relationship ADD CONSTRAINT FK_200444A0F8050BAA FOREIGN KEY (from_user) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE relationship ADD CONSTRAINT FK_200444A06A7DC786 FOREIGN KEY (to_user) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE weight_record ADD CONSTRAINT FK_506A8B487E3C61F9 FOREIGN KEY (owner_id) REFERENCES user (id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE relationship DROP FOREIGN KEY FK_200444A0F8050BAA');
+        $this->addSql('ALTER TABLE relationship DROP FOREIGN KEY FK_200444A06A7DC786');
+        $this->addSql('ALTER TABLE weight_record DROP FOREIGN KEY FK_506A8B487E3C61F9');
         $this->addSql('DROP TABLE relationship');
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE weight_record');
