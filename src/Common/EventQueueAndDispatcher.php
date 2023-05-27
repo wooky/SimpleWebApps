@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Common;
 
-use function array_key_exists;
-use function assert;
-
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+use function array_key_exists;
+use function assert;
+
 trait EventQueueAndDispatcher
 {
-/** @var array<string, Event> */ private array $eventQueue = [];
+  /** @var array<string, Event> */ private array $eventQueue = [];
 
   public function __construct(
     private EventDispatcherInterface $eventDispatcher,

@@ -7,14 +7,13 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/annotations": "^1.0",
+        "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.15",
         "sensio/framework-extra-bundle": "^6.1",
-        "symfony/apache-pack": "^1.0",
         "symfony/asset": "6.2.*",
         "symfony/console": "6.2.*",
         "symfony/doctrine-messenger": "6.2.*",
@@ -39,10 +38,11 @@
         "symfony/translation": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
         "symfony/uid": "6.2.*",
-        "symfony/ux-turbo": "^2.6",
-        "symfony/ux-twig-component": "^2.6",
+        "symfony/ux-turbo": "^2.9",
+        "symfony/ux-twig-component": "^2.9",
         "symfony/validator": "6.2.*",
         "symfony/web-link": "6.2.*",
+        "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "6.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -96,7 +96,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "friendsofphp/php-cs-fixer": "^3.13",
+        "friendsofphp/php-cs-fixer": "^3.17",
         "phpmd/phpmd": "^2.13",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-symfony": "^5.0",
@@ -107,7 +107,7 @@
         "symfony/phpunit-bridge": "^6.2",
         "symfony/stopwatch": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*",
-        "vimeo/psalm": "^5.4",
+        "vimeo/psalm": "^5.12",
         "weirdan/doctrine-psalm-plugin": "^2.8"
     }
 }

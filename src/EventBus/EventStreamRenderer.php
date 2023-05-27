@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\EventBus;
 
-use function in_array;
-
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
+use function in_array;
 
 class EventStreamRenderer
 {

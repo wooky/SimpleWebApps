@@ -21,6 +21,9 @@ return (new PhpCsFixer\Config())
     'phpdoc_to_comment' => [
       'ignored_tags' => ['psalm-suppress'],
     ],
+    'nullable_type_declaration_for_default_null_value' => [
+      'use_nullable_type_declaration' => true,
+    ],
   ])
   ->setIndent('  ')
   ->setFinder($finder)

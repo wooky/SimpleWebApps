@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\EventBus;
 
-use function assert;
-
 use Psr\Log\LoggerInterface;
 use Socket;
-
-use function strlen;
-
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+
+use function assert;
+use function strlen;
 
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)

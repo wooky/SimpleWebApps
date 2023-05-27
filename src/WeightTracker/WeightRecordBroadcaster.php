@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\WeightTracker;
 
-use function assert;
-use function in_array;
-
 use InvalidArgumentException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
@@ -17,6 +14,9 @@ use SimpleWebApps\EventBus\EventBusInterface;
 use SimpleWebApps\Repository\UserRepository;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Component\Uid\Ulid;
+
+use function assert;
+use function in_array;
 
 /**
  * TODO https://github.com/doctrine/orm/issues/2326 once this gets resolved, add readonly to class.

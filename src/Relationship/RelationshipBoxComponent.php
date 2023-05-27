@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Relationship;
 
-use function assert;
-
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+
+use function assert;
 
 /**
  * @psalm-suppress MissingConstructor

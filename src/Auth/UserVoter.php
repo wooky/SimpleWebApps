@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Auth;
 
-use function assert;
-
 use Psr\Log\LoggerInterface;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\RelationshipRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+use function assert;
 
 class UserVoter extends Voter
 {

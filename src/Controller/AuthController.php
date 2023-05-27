@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use function assert;
-use function is_string;
-
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\LoginFormType;
 use SimpleWebApps\Form\ProfileFormType;
@@ -19,6 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+use function assert;
+use function is_string;
 
 #[Route(name: 'auth_')]
 class AuthController extends AbstractController

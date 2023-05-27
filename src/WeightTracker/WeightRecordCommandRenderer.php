@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\WeightTracker;
 
-use function array_key_exists;
-use function assert;
-
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use Symfony\Component\Uid\Ulid;
+
+use function array_key_exists;
+use function assert;
 
 class WeightRecordCommandRenderer
 {

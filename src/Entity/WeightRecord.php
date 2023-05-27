@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Entity;
 
-use function assert;
-
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +13,8 @@ use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
+
+use function assert;
 
 #[ORM\Entity(repositoryClass: WeightRecordRepository::class)]
 #[ORM\UniqueConstraint(

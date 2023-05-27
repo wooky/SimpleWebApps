@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use function assert;
-use function is_string;
-
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
@@ -17,6 +14,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use function assert;
+use function is_string;
 
 #[Route('/weight-tracker', name: 'weight_tracker_')]
 class WeightTrackerController extends AbstractController
@@ -114,9 +114,9 @@ class WeightTrackerController extends AbstractController
   }
 
   private function createNewEditForm(
-        Request $request,
-        WeightRecord $weightRecord,
-    ): FormInterface {
+    Request $request,
+    WeightRecord $weightRecord,
+  ): FormInterface {
     $form = $this->createForm(WeightRecordType::class, $weightRecord, [
         WeightRecordType::IS_OWNER_DISABLED => null !== $weightRecord->getIdOrNull(),
     ]);

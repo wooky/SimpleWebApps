@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\WeightTracker;
 
-use function assert;
-
 use InvalidArgumentException;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
+
+use function assert;
 
 class WeightRecordDataRenderer
 {

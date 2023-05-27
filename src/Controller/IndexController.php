@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use function assert;
-
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\EventBus\EventStreamRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use function assert;
 
 class IndexController extends AbstractController
 {
@@ -30,8 +30,9 @@ class IndexController extends AbstractController
   #[Route('/events', name: 'events', methods: ['GET'])]
   public function events(Request $request, EventStreamRenderer $renderer): Response
   {
-    $topics = explode(',', $request->query->get('topics', ''));
-    assert(!empty($topics));
+    $topicsStr = $request->query->get('topics');
+    assert(is_string($topicsStr) && !empty($topicsStr));
+    $topics = explode(',', $topicsStr);
     $user = $this->getUser();
     assert($user instanceof User);
     $userId = $user->getId();

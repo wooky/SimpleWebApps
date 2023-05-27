@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use function assert;
-use function is_string;
-
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -19,6 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Ulid;
+
+use function assert;
+use function is_string;
 
 #[Route('/relationships', name: 'relationships_')]
 class RelationshipsController extends AbstractController

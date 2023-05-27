@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Entity;
 
-use function assert;
-
 use Doctrine\ORM\Mapping as ORM;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -13,6 +11,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
+
+use function assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]

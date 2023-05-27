@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\DataFixtures;
 
-use function assert;
-
 use DateInterval;
 use DatePeriod;
 use DateTimeImmutable;
@@ -17,6 +15,8 @@ use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
+use function assert;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor

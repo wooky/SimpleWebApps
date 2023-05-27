@@ -11,7 +11,6 @@ use SimpleWebApps\Common\TurboStreamRenderer;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventBusInterface;
-use SimpleWebApps\EventBus\EventScope;
 use SimpleWebApps\Relationship\Event\RelationshipActivatedEvent;
 use SimpleWebApps\Relationship\Event\RelationshipRemovedEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;

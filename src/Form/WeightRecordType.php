@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Form;
 
-use function assert;
-
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
@@ -16,6 +14,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function assert;
+
 /**
  * @extends AbstractType<WeightRecord>
  */
@@ -24,8 +24,8 @@ class WeightRecordType extends AbstractType
   public const IS_OWNER_DISABLED = 'is_owner_disabled';
 
   public function __construct(
-        private Security $security,
-    ) {
+    private Security $security,
+  ) {
     // Do nothing.
   }
 
