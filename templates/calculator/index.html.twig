@@ -1,0 +1,88 @@
+{% extends '_reusable/base.html.twig' %}
+
+{% block title %}{% trans %}calculator.title{% endtrans %}{% endblock %}
+{% block topics %}{% endblock %}
+
+{% block body %}
+<div class="container" data-controller="calculator">
+  <div class="columns">
+    <div class="column is-4">
+      <h1 class="title has-text-centered">{{ block('title') }}</h1>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-4" data-calculator-target="display"></div>
+  </div>
+  <div class="columns">
+    <div class="column is-1">
+      <button class="button is-danger" data-action="calculator#reset">AC</button>
+    </div>
+    <div class="column is-1">
+      <button class="button is-danger">CE</button>
+    </div>
+    <div class="column is-1">
+      <button class="button">%</button>
+    </div>
+    <div class="column is-1">
+      <button class="button">&divide;</button>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="7">7</button>
+    </div>
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="8">8</button>
+    </div>
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="9">9</button>
+    </div>
+    <div class="column is-1">
+      <button class="button">&times;</button>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="4">4</button>
+    </div>
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="5">5</button>
+    </div>
+    <div class="column is-1">
+      <button class="button" data-action="calculator#digit" data-calculator-digit-param="6">6</button>
+    </div>
+    <div class="column is-1">
+      <button class="button">-</button>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-3">
+      <div class="columns">
+        <div class="column">
+          <button class="button" data-action="calculator#digit" data-calculator-digit-param="1">1</button>
+        </div>
+        <div class="column">
+          <button class="button" data-action="calculator#digit" data-calculator-digit-param="2">2</button>
+        </div>
+        <div class="column">
+          <button class="button" data-action="calculator#digit" data-calculator-digit-param="3">3</button>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <button class="button" data-action="calculator#digit" data-calculator-digit-param="0">0</button>
+        </div>
+        <div class="column">
+          <button class="button">.</button>
+        </div>
+        <div class="column">
+          <button class="button">=</button>
+        </div>
+      </div>
+    </div>
+    <div class="column is-1">
+      <button class="button">+</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -9,6 +9,9 @@ auth:
   logout: "Log Out"
   agree_terms: "Check here if you agree to our terms"
 
+calculator:
+  title: 'Calculator'
+
 form:
   save: 'Save'
   ulid: 'ULID'
