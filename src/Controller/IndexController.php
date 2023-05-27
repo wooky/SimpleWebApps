@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use function assert;
+use function is_string;
 
 class IndexController extends AbstractController
 {

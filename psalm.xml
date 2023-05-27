@@ -24,14 +24,6 @@
         <extension name=".php" />
         <extension name=".twig" checker="./vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
     </fileExtensions>
-    <issueHandlers>
-        <!-- TODO https://github.com/vimeo/psalm/issues/8810 -->
-        <InvalidCast>
-            <errorLevel type="suppress">
-                <directory name="src/Controller" />
-            </errorLevel>
-        </InvalidCast>
-    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
             <containerXml>var/cache/dev/SimpleWebApps_KernelDevDebugContainer.xml</containerXml>
