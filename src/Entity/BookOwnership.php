@@ -24,7 +24,7 @@ class BookOwnership implements Ownable
   #[ORM\JoinColumn(nullable: false)]
   private ?User $owner = null;
 
-  #[ORM\ManyToOne]
+  #[ORM\ManyToOne(cascade: ['persist'])]
   #[ORM\JoinColumn(nullable: false)]
   private ?Book $book = null;
 

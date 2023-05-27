@@ -26,7 +26,7 @@ class Book
   private ?string $description = null;
 
   #[ORM\Column]
-  private ?bool $hasImage = null;
+  private bool $hasImage = false;
 
   #[ORM\Column]
   private ?bool $isPublic = null;
@@ -60,7 +60,7 @@ class Book
     return $this;
   }
 
-  public function isHasImage(): ?bool
+  public function hasImage(): bool
   {
     return $this->hasImage;
   }

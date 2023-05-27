@@ -9,6 +9,9 @@ auth:
   logout: "Log Out"
   agree_terms: "Check here if you agree to our terms"
 
+books:
+  title: 'Book Library'
+
 calculator:
   title: 'Calculator'
 

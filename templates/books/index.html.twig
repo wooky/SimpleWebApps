@@ -1,0 +1,24 @@
+{% extends '_reusable/base.html.twig' %}
+
+{% block title %}{% trans %}books.title{% endtrans %}{% endblock %}
+{% block topics %}{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="columns">
+    <div class="column">
+      <h1 class="title">{{ block('title') }}</h1>
+    </div>
+    <div class="column is-narrow">
+      <form action="{{ path('books_new') }}" data-turbo-frame="app-modal">
+        <button class="button is-primary" type="submit">
+          <span class="icon">
+            <iconify-icon icon="mdi:plus-circle"></iconify-icon>
+          </span>
+          <span>{% trans %}books.new{% endtrans %}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
