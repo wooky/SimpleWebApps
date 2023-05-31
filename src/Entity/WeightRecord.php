@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,8 +20,7 @@ use function assert;
   name: 'weight_record_date_unique_idx',
   columns: ['owner_id', 'date'],
 )]
-#[UniqueEntity(['owner_id', 'date'], message: 'weight_record.date_exists')]
-class WeightRecord implements Ownable
+class WeightRecord implements Identifiable, Ownable
 {
   #[ORM\Id]
   #[ORM\Column(type: 'ulid', unique: true)]

@@ -4,124 +4,50 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use SimpleWebApps\Auth\RelationshipCapability;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Form\WeightRecordType;
 use SimpleWebApps\Repository\WeightRecordRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use function assert;
-use function is_string;
-
-#[Route('/weight-tracker', name: 'weight_tracker_')]
-class WeightTrackerController extends AbstractController
+/**
+ * @extends AbstractCrudController<WeightRecord>
+ */
+#[Route('/weight-tracker', name: self::CONTROLLER_SHORT_NAME)]
+class WeightTrackerController extends AbstractCrudController
 {
-  #[Route('/', name: 'index', methods: ['GET'])]
+  protected const CONTROLLER_SHORT_NAME = 'weight_tracker';
+  protected const FORM_TYPE = WeightRecordType::class;
+
+  #[Route(self::ROUTE_INDEX_PATH, name: self::ROUTE_INDEX_NAME, methods: ['GET'])]
   public function index(): Response
   {
-    $user = $this->getUser();
-    assert($user instanceof User);
-
     return $this->render('weight_tracker/index.html.twig');
   }
 
-  #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+  #[Route(self::ROUTE_NEW_PATH, name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
   public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
   {
-    $user = $this->getUser();
-    assert($user instanceof User);
-    $weightRecord = (new WeightRecord())->setOwner($user);
-    $form = $this->createNewEditForm($request, $weightRecord);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-      $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
-      $weightRecordRepository->save($weightRecord, true);
-
-      return $this->closeModalOrRedirect($request, 'weight_tracker_index');
-    }
-
-    return $this->render('modal/new.html.twig', [
-        'form' => $form,
-        'subject' => 'weight_tracker.subject',
-    ]);
+    // TODO catch UniqueConstraintViolationException and set 'weight_record.date_exists' message
+    return $this->crudNew($request, $weightRecordRepository, new WeightRecord());
   }
 
-  #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+  #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
   public function edit(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
   {
-    if (!$this->isGranted(RelationshipCapability::Write->value, $weightRecord)) {
-      return $this->render('modal/forbidden.html.twig', [
-          'subject' => 'weight_tracker.subject',
-      ])
-          ->setStatusCode(Response::HTTP_FORBIDDEN);
-    }
-
-    $form = $this->createNewEditForm($request, $weightRecord);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-      $weightRecordRepository->save($weightRecord, true);
-
-      return $this->closeModalOrRedirect($request, 'weight_tracker_index');
-    }
-
-    $id = $weightRecord->getId();
-
-    return $this->render('modal/edit.html.twig', [
-        'id' => $id,
-        'form' => $form,
-        'subject' => 'weight_tracker.subject',
-        'pre_delete_path' => $this->generateUrl('weight_tracker_pre_delete', ['id' => $id]),
-    ]);
+    return $this->crudEdit($request, $weightRecordRepository, $weightRecord);
   }
 
-  #[Route('/{id}/delete', name: 'pre_delete', methods: ['POST'])]
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
   public function preDelete(WeightRecord $weightRecord): Response
   {
-    $id = $weightRecord->getId();
-
-    return $this->render('modal/pre_delete.html.twig', [
-        'id' => $id,
-        'subject' => 'weight_tracker.subject',
-        'delete_path' => $this->generateUrl('weight_tracker_delete', ['id' => $id]),
-    ]);
+    return $this->crudPreDelete($weightRecord);
   }
 
-  #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
   public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
   {
-    $token = $request->request->get('_token');
-    assert(is_string($token) || null === $token);
-    if ($this->isCsrfTokenValid('delete'.((string) $weightRecord->getId()), $token)) {
-      $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $weightRecord);
-      $weightRecordRepository->remove($weightRecord, true);
-    }
-
-    return $this->closeModalOrRedirect($request, 'weight_tracker_index');
-  }
-
-  private function closeModalOrRedirect(Request $request, string $route): Response
-  {
-    if ('app-modal' === $request->headers->get('Turbo-Frame')) {
-      return $this->render('modal/close.html.twig');
-    }
-
-    return $this->redirectToRoute($route, status: Response::HTTP_SEE_OTHER);
-  }
-
-  private function createNewEditForm(
-    Request $request,
-    WeightRecord $weightRecord,
-  ): FormInterface {
-    $form = $this->createForm(WeightRecordType::class, $weightRecord, [
-        WeightRecordType::IS_OWNER_DISABLED => null !== $weightRecord->getIdOrNull(),
-    ]);
-    $form->handleRequest($request);
-
-    return $form;
+    return $this->crudDelete($request, $weightRecordRepository, $weightRecord);
   }
 }

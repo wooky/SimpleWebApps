@@ -9,4 +9,6 @@ use SimpleWebApps\Entity\User;
 interface Ownable
 {
   public function getOwner(): ?User;
+
+  public function setOwner(?User $owner): self;
 }

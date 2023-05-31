@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use SimpleWebApps\Entity\WeightRecord;
 
 /**
- * @extends ServiceEntityRepository<WeightRecord>
- *
- * @method WeightRecord|null find($id, $lockMode = null, $lockVersion = null)
- * @method WeightRecord|null findOneBy(array $criteria, array $orderBy = null)
- * @method WeightRecord[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends AbstractRepository<WeightRecord>
  */
-class WeightRecordRepository extends ServiceEntityRepository
+class WeightRecordRepository extends AbstractRepository
 {
   public function __construct(readonly ManagerRegistry $registry)
   {
@@ -39,24 +34,6 @@ class WeightRecordRepository extends ServiceEntityRepository
         ->setParameter(1, $owners)
         ->getQuery()
         ->getResult();
-  }
-
-  public function save(WeightRecord $entity, bool $flush = false): void
-  {
-    $this->getEntityManager()->persist($entity);
-
-    if ($flush) {
-      $this->getEntityManager()->flush();
-    }
-  }
-
-  public function remove(WeightRecord $entity, bool $flush = false): void
-  {
-    $this->getEntityManager()->remove($entity);
-
-    if ($flush) {
-      $this->getEntityManager()->flush();
-    }
   }
 
 //    /**

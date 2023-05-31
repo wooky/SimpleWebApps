@@ -11,8 +11,10 @@ use SimpleWebApps\Repository\BookOwnershipRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
+use function assert;
+
 #[ORM\Entity(repositoryClass: BookOwnershipRepository::class)]
-class BookOwnership implements Ownable
+class BookOwnership implements Identifiable, Ownable
 {
   #[ORM\Id]
   #[ORM\Column(type: 'ulid', unique: true)]
@@ -31,7 +33,14 @@ class BookOwnership implements Ownable
   #[ORM\Column(type: 'string', enumType: BookOwnershipState::class)]
   private ?BookOwnershipState $state = null;
 
-  public function getId(): ?Ulid
+  public function getId(): Ulid
+  {
+    assert(null !== $this->id);
+
+    return $this->id;
+  }
+
+  public function getIdOrNull(): ?Ulid
   {
     return $this->id;
   }
