@@ -4,19 +4,22 @@
       <a class="navbar-item" href="{{ path('index') }}">{% trans %}SimpleWebApps{% endtrans %}</a>
     </div>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div id="simplewebapps-stream" {{ stimulus_controller('stream') }}
-      data-stream-event-source-url-value="{{ path('events', {'topics': '{{topics}}'}) }}"
-    ></div>
-    <div class="navbar-end">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          {{ component('user:username', {'user': app.user}) }}
-        </a>
-        <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href="{{ path('auth_profile') }}">{% trans %}profile.title{% endtrans %}</a>
-          <a class="navbar-item" href="{{ path('relationships_index') }}">{% trans %}relationships.title{% endtrans %}</a>
-          <hr class="navbar-divider">
-          <a class="navbar-item" href="{{ path('app_logout') }}">{% trans %}auth.logout{% endtrans %}</a>
+    <div class="navbar-menu">
+      <div id="simplewebapps-stream" {{ stimulus_controller('stream') }}
+        data-stream-event-source-url-value="{{ path('events', {'topics': '{{topics}}'}) }}"
+      ></div>
+      <div class="navbar-start"></div>
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            {{ component('user:username', {'user': app.user}) }}
+          </a>
+          <div class="navbar-dropdown is-right">
+            <a class="navbar-item" href="{{ path('auth_profile') }}">{% trans %}profile.title{% endtrans %}</a>
+            <a class="navbar-item" href="{{ path('relationships_index') }}">{% trans %}relationships.title{% endtrans %}</a>
+            <hr class="navbar-divider">
+            <a class="navbar-item" href="{{ path('app_logout') }}">{% trans %}auth.logout{% endtrans %}</a>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,34 @@
 <div {{ attributes }}>
+  <div>
+    View
+    <select
+      data-model="currentUser"
+      data-action="live#action"
+      data-action-name="refresh"
+    >
+      <option value="" {% if not currentUser %}selected{% endif %}>public</option>
+    {% for user in users %}
+      <option
+        value="{{ user.id }}"
+        {% if user == currentUser %}selected{% endif %}
+      >{{user.username}}'s</option>
+    {% endfor %}
+    </select>
+    books, displaying
+    <select
+      data-model="ownership"
+      data-action="live#action"
+      data-action-name="refresh"
+    >
+      <option value="" {% if not ownership %}selected{% endif %}>all</option>
+    {% for own in this.allOwnershipStates %}
+      <option
+        value="{{ own.value }}"
+        {% if own == ownership %}selected{% endif %}
+      >{{ own.value }}</option>
+    {% endfor %}
+    </select>
+  </div>
   <div class="columns">
   {% for book in books %}
     {{ component('book:card', {book: book}) }}

@@ -11,6 +11,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use SimpleWebApps\Auth\RelationshipCapability;
+use SimpleWebApps\Book\BookOwnershipState;
+use SimpleWebApps\Entity\Book;
+use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
@@ -63,6 +66,13 @@ final class AppFixtures extends Fixture
       ->createWeightRecords($manager, $loner, fn () => 150)
     ;
 
+    $this
+      ->createBookWithOwners($manager, 'Master Book', 'Master Description', true, [$master, $slaveRead, $slaveWrite, $slaveReadPending, $slaveWritePending])
+      ->createBookWithOwners($manager, 'Private Book', 'Private Description', false, [$master])
+      ->createBookWithOwners($manager, 'Slave Book', null, true, [$slaveRead, $slaveWrite])
+      ->createBookWithOwners($manager, 'Private Slave Book', 'Shhhhh!', false, [$slaveRead, $slaveWrite])
+    ;
+
     $manager->flush();
   }
 
@@ -93,11 +103,6 @@ final class AppFixtures extends Fixture
    */
   private function createWeightRecords(ObjectManager $manager, User $owner, callable $weightGen): self
   {
-    /**
-     * TODO https://github.com/vimeo/psalm/issues/9147.
-     *
-     * @psalm-suppress InvalidArgument
-     */
     $dateIterator = new DatePeriod(
       new DateTimeImmutable('2022-01-01 00:00:00 UTC'),
       new DateInterval('P1D'),
@@ -111,6 +116,30 @@ final class AppFixtures extends Fixture
         ->setWeight($weightGen($date))
       ;
       $manager->persist($weightRecord);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @param User[] $owners
+   */
+  private function createBookWithOwners(ObjectManager $manager, string $title, ?string $description, bool $isPublic, array $owners): self
+  {
+    $book = (new Book())
+      ->setTitle($title)
+      ->setDescription($description)
+      ->setIsPublic($isPublic)
+    ;
+    $manager->persist($book);
+
+    foreach ($owners as $owner) {
+      $bookOwnership = (new BookOwnership())
+        ->setBook($book)
+        ->setOwner($owner)
+        ->setState(BookOwnershipState::Own)
+      ;
+      $manager->persist($bookOwnership);
     }
 
     return $this;
