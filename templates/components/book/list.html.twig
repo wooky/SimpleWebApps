@@ -1,0 +1,7 @@
+<div {{ attributes }}>
+  <div class="columns">
+  {% for book in books %}
+    {{ component('book:card', {book: book}) }}
+  {% endfor %}
+  </div>
+</div>
