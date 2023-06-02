@@ -4,41 +4,37 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use SimpleWebApps\Entity\Book;
+use SimpleWebApps\Entity\BookOwnership;
+use SimpleWebApps\Entity\User;
 
 /**
- * @extends ServiceEntityRepository<Book>
- *
- * @method Book|null find($id, $lockMode = null, $lockVersion = null)
- * @method Book|null findOneBy(array $criteria, array $orderBy = null)
- * @method Book[]    findAll()
- * @method Book[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends AbstractRepository<Book>
  */
-class BookRepository extends ServiceEntityRepository
+class BookRepository extends AbstractRepository
 {
   public function __construct(ManagerRegistry $registry)
   {
     parent::__construct($registry, Book::class);
   }
 
-  public function save(Book $entity, bool $flush = false): void
+  /**
+   * @return Book[]
+   */
+  public function findBooksNotBelongingToUser(User $user): array
   {
-    $this->getEntityManager()->persist($entity);
+    $qb = $this->createQueryBuilder('b');
 
-    if ($flush) {
-      $this->getEntityManager()->flush();
-    }
-  }
-
-  public function remove(Book $entity, bool $flush = false): void
-  {
-    $this->getEntityManager()->remove($entity);
-
-    if ($flush) {
-      $this->getEntityManager()->flush();
-    }
+    return $qb
+      ->distinct()
+      ->leftJoin(BookOwnership::class, 'bo', Join::WITH, $qb->expr()->andX($qb->expr()->eq('bo.book', 'b'), $qb->expr()->eq('bo.owner', '?1')))
+      ->where($qb->expr()->isNull('bo.owner'))
+      ->andWhere($qb->expr()->eq('b.isPublic', true))
+      ->setParameter(1, $user->getId(), 'ulid')
+      ->getQuery()
+      ->getResult();
   }
 
 //    /**

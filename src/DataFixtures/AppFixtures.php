@@ -23,6 +23,8 @@ use function assert;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class AppFixtures extends Fixture
 {

@@ -14,6 +14,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class BookType extends AbstractType
 {
+  /**
+   * TODO https://github.com/phpmd/phpmd/issues/515.
+   *
+   * @SuppressWarnings(PHPMD.UnusedFormalParameters)
+   */
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder

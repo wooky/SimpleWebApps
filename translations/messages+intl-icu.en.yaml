@@ -11,6 +11,16 @@ auth:
 
 books:
   title: 'Book Library'
+  subject: 'book'
+  new: 'New Book'
+  filter1: 'For'
+  filter2: ', view'
+  view_filter:
+    all: 'all books'
+    own: 'owned books'
+    wishlist: 'wishlisted books'
+    public: 'all public books'
+    public_absent: 'all public books not in user''s library'
 
 calculator:
   title: 'Calculator'

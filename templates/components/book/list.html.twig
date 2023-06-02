@@ -1,33 +1,35 @@
 <div {{ attributes }}>
   <div>
-    View
-    <select
-      data-model="currentUser"
-      data-action="live#action"
-      data-action-name="refresh"
-    >
-      <option value="" {% if not currentUser %}selected{% endif %}>public</option>
-    {% for user in users %}
-      <option
-        value="{{ user.id }}"
-        {% if user == currentUser %}selected{% endif %}
-      >{{user.username}}'s</option>
-    {% endfor %}
-    </select>
-    books, displaying
-    <select
-      data-model="ownership"
-      data-action="live#action"
-      data-action-name="refresh"
-    >
-      <option value="" {% if not ownership %}selected{% endif %}>all</option>
-    {% for own in this.allOwnershipStates %}
-      <option
-        value="{{ own.value }}"
-        {% if own == ownership %}selected{% endif %}
-      >{{ own.value }}</option>
-    {% endfor %}
-    </select>
+    <span class="is-size-5">{{ 'books.filter1' | trans }}</span>
+    <span class="select">
+      <select
+        data-model="currentUser"
+        data-action="live#action"
+        data-action-name="refresh"
+      >
+      {% for user in users %}
+        <option
+          value="{{ user.id }}"
+          {% if user == currentUser %}selected{% endif %}
+        >{{ user.username }}</option>
+      {% endfor %}
+      </select>
+    </span>
+    <span class="is-size-5">{{ 'books.filter2' | trans }}</span>
+    <span class="select">
+      <select
+        data-model="viewFilter"
+        data-action="live#action"
+        data-action-name="refresh"
+      >
+      {% for vf in this.viewFilters %}
+        <option
+          value="{{ vf.value }}"
+          {% if vf == viewFilter %}selected{% endif %}
+        >{{ ('books.view_filter.' ~ vf.value) | trans }}</option>
+      {% endfor %}
+      </select>
+    </span>
   </div>
   <div class="columns">
   {% for book in books %}

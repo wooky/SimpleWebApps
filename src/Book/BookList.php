@@ -8,6 +8,7 @@ use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\BookOwnershipRepository;
+use SimpleWebApps\Repository\BookRepository;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -26,15 +27,16 @@ class BookList
   public array $users;
 
   #[LiveProp(writable: true)]
-  public ?User $currentUser;
+  public User $currentUser;
 
   #[LiveProp(writable: true)]
-  public ?BookOwnershipState $ownership = null;
+  public BookViewFilter $viewFilter = BookViewFilter::All;
 
   /** @var Book[] */
   public array $books;
 
   public function __construct(
+    private BookRepository $bookRepository,
     private BookOwnershipRepository $bookOwnershipRepository,
     UserRepository $userRepository,
     Security $security,
@@ -51,21 +53,38 @@ class BookList
   public function refresh(): void
   {
     // FIXME need to verify user has permission to view selected user's books!
+    $this->books = [];
+
+    $this->books = match ($this->viewFilter) {
+      BookViewFilter::Public => $this->bookRepository->findBy(['isPublic' => true]),
+      BookViewFilter::PublicAbsent => $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
+      default => $this->queryUserBooks()
+    };
+  }
+
+  /**
+   * @return Book[]
+   */
+  private function queryUserBooks(): array
+  {
     $queryCriteria = [
       'owner' => $this->currentUser,
     ];
-    if ($this->ownership) {
-      $queryCriteria['state'] = $this->ownership;
+    $ownershipState = $this->viewFilter->toOwnershipState();
+    if ($ownershipState) {
+      $queryCriteria['state'] = $ownershipState;
     }
 
-    $this->books = [];
+    $books = [];
     foreach ($this->bookOwnershipRepository->findBy($queryCriteria) as $bookOwner) {
-      $this->books[] = $bookOwner->getBook();
+      $books[] = $bookOwner->getBook();
     }
+
+    return $books;
   }
 
-  public function getAllOwnershipStates(): array
+  public function getViewFilters(): array
   {
-    return BookOwnershipState::cases();
+    return BookViewFilter::cases();
   }
 }

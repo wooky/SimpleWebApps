@@ -49,6 +49,11 @@ abstract class AbstractCrudController extends AbstractController
   {
     $user = $this->getUser();
     assert($user instanceof User);
+    /**
+     * TODO https://github.com/vimeo/psalm/issues/7496.
+     *
+     * @psalm-suppress PossiblyUndefinedMethod
+     */
     $entity->setOwner($user);
     $form = $this->createNewEditForm($request, $entity);
 
