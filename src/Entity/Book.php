@@ -10,8 +10,10 @@ use SimpleWebApps\Repository\BookRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
+use function assert;
+
 #[ORM\Entity(repositoryClass: BookRepository::class)]
-class Book
+class Book implements Identifiable
 {
   #[ORM\Id]
   #[ORM\Column(type: 'ulid', unique: true)]
@@ -31,7 +33,14 @@ class Book
   #[ORM\Column]
   private ?bool $isPublic = null;
 
-  public function getId(): ?Ulid
+  public function getId(): Ulid
+  {
+    assert(null !== $this->id);
+
+    return $this->id;
+  }
+
+  public function getIdOrNull(): ?Ulid
   {
     return $this->id;
   }

@@ -7,18 +7,19 @@ namespace SimpleWebApps\Controller;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Form\WeightRecordType;
 use SimpleWebApps\Repository\WeightRecordRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @extends AbstractCrudController<WeightRecord>
- */
 #[Route('/weight-tracker', name: self::CONTROLLER_SHORT_NAME)]
-class WeightTrackerController extends AbstractCrudController
+class WeightTrackerController extends AbstractController
 {
-  protected const CONTROLLER_SHORT_NAME = 'weight_tracker';
-  protected const FORM_TYPE = WeightRecordType::class;
+  /** @use CrudMixin<WeightRecord> */
+  use CrudMixin;
+
+  public const CONTROLLER_SHORT_NAME = 'weight_tracker';
 
   #[Route(self::ROUTE_INDEX_PATH, name: self::ROUTE_INDEX_NAME, methods: ['GET'])]
   public function index(): Response
@@ -30,7 +31,7 @@ class WeightTrackerController extends AbstractCrudController
   public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
   {
     // TODO catch UniqueConstraintViolationException and set 'weight_record.date_exists' message
-    return $this->crudNew($request, $weightRecordRepository, new WeightRecord());
+    return $this->crudNewAndClose($request, $weightRecordRepository, (new WeightRecord())->setOwner($this->forceGetUser()));
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
@@ -49,5 +50,20 @@ class WeightTrackerController extends AbstractCrudController
   public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
   {
     return $this->crudDelete($request, $weightRecordRepository, $weightRecord);
+  }
+
+  protected function createNewEditForm(Request $request, $entity): FormInterface
+  {
+    $form = $this->createForm(WeightRecordType::class, $entity, [
+      WeightRecordType::IS_OWNER_DISABLED => null !== $entity->getIdOrNull(),
+    ]);
+    $form->handleRequest($request);
+
+    return $form;
+  }
+
+  protected static function getControllerShortName(): string
+  {
+    return self::CONTROLLER_SHORT_NAME;
   }
 }

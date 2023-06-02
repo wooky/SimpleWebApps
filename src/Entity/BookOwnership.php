@@ -31,7 +31,7 @@ class BookOwnership implements Identifiable, Ownable
   private ?Book $book = null;
 
   #[ORM\Column(type: 'string', enumType: BookOwnershipState::class)]
-  private ?BookOwnershipState $state = null;
+  private BookOwnershipState $state = BookOwnershipState::Own;
 
   public function getId(): Ulid
   {
@@ -69,7 +69,7 @@ class BookOwnership implements Identifiable, Ownable
     return $this;
   }
 
-  public function getState(): ?BookOwnershipState
+  public function getState(): BookOwnershipState
   {
     return $this->state;
   }
