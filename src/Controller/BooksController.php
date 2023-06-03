@@ -33,6 +33,19 @@ class BooksController extends AbstractController
     return $this->crudNewAndClose($request, $bookOwnershipRepository, (new BookOwnership())->setOwner($this->forceGetUser()));
   }
 
+  #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
+  public function edit(Request $request, BookOwnership $bookOwnership, BookOwnershipRepository $bookOwnershipRepository): Response
+  {
+    return $this->crudEdit($request, $bookOwnershipRepository, $bookOwnership);
+  }
+
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
+  public function preDelete(BookOwnership $bookOwnership): Response
+  {
+    // TODO
+    return new Response($bookOwnership->getBook()?->getTitle());
+  }
+
   protected function createNewEditForm(Request $request, $entity): FormInterface
   {
     $form = $this->createForm(BookOwnershipType::class, $entity, [

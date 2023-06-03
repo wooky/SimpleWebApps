@@ -27,11 +27,11 @@ trait CrudMixin
   protected const ROUTE_EDIT_PATH = '/{id}/edit';
   protected const ROUTE_DELETE_PATH = '/{id}/delete';
 
-  protected const ROUTE_INDEX_NAME = '_index';
-  protected const ROUTE_NEW_NAME = '_new';
-  protected const ROUTE_EDIT_NAME = '_edit';
-  protected const ROUTE_PREDELETE_NAME = '_pre_delete';
-  protected const ROUTE_DELETE_NAME = '_delete';
+  public const ROUTE_INDEX_NAME = '_index';
+  public const ROUTE_NEW_NAME = '_new';
+  public const ROUTE_EDIT_NAME = '_edit';
+  public const ROUTE_PREDELETE_NAME = '_pre_delete';
+  public const ROUTE_DELETE_NAME = '_delete';
 
   private const SUBJECT_SUFFIX = '.subject';
 

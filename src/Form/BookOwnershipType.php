@@ -9,6 +9,7 @@ use SimpleWebApps\Entity\BookOwnership;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,7 +34,10 @@ class BookOwnershipType extends AbstractType
   {
     assert(isset($options[self::IS_OWNER_DISABLED]));
     $builder
-      ->add('book', BookType::class)
+      ->add('book', TextType::class, [
+        'disabled' => true,
+        'getter' => fn (BookOwnership $bookOwnership) => $bookOwnership->getBook()?->getTitle(),
+      ])
     ;
     $this->addOwnerField($builder, $this->security, ['disabled' => $options[self::IS_OWNER_DISABLED]]);
     $builder

@@ -45,7 +45,7 @@ class BookLibraryController extends AbstractController
       ;
       $bookOwnershipRepository->save($bookOwnership, true);
 
-      return $this->closeModalOrRedirect($request);
+      return $this->redirectToRoute(BooksController::CONTROLLER_SHORT_NAME.BooksController::ROUTE_EDIT_NAME, ['id' => $bookOwnership->getId()]);
     }
 
     return $response;
