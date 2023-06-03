@@ -33,11 +33,9 @@ class BookLibraryController extends AbstractController
     BookOwnershipRepository $bookOwnershipRepository,
   ): Response {
     $book = new Book();
-    $response = $this->crudNewAndTrue($request, $bookRepository, $book, false);
-    if (true === $response) {
-      // TODO optimize
-      $form = $this->createNewEditForm($request, $book);
-      $user = $form->get(BookType::OWNER_FIELD)->getData();
+    $response = $this->crudNewAndForm($request, $bookRepository, $book, false);
+    if ($response instanceof FormInterface) {
+      $user = $response->get(BookType::OWNER_FIELD)->getData();
       assert($user instanceof User);
       $bookOwnership = (new BookOwnership())
         ->setBook($book)
@@ -51,9 +49,28 @@ class BookLibraryController extends AbstractController
     return $response;
   }
 
+  #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
+  public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
+  {
+    return $this->crudEdit($request, $bookRepository, $book);
+  }
+
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
+  public function preDelete(Book $book): Response
+  {
+    // TODO
+    return new Response($book->getTitle());
+  }
+
+  /**
+   * @param Book $entity
+   */
   protected function createNewEditForm(Request $request, $entity): FormInterface
   {
-    $form = $this->createForm(BookType::class, $entity);
+    $form = $this->createForm(BookType::class, $entity, [
+      BookType::ADD_OWNER_FIELD => null === $entity->getIdOrNull(),
+      BookType::IS_PUBLIC_DISABLED => null !== $entity->getIdOrNull() && $entity->isPublic(),
+    ]);
     $form->handleRequest($request);
 
     return $form;

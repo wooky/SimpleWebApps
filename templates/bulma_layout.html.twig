@@ -270,8 +270,8 @@
         <div class="field-body">
             <div class="field">
                 {{- form_widget(form) -}}
-                {%- if form.vars.attr.help_text is defined -%}
-                    <p class="help">{{ form.vars.attr.help_text }}</p>
+                {%- if form.vars.help is defined -%}
+                    <p class="help">{{ form.vars.help }}</p>
                 {%- endif -%}
             </div>
         </div>

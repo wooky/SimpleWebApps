@@ -60,16 +60,18 @@ trait CrudMixin
    */
   protected function crudNewAndClose(Request $request, $repository, $entity): Response
   {
-    $response = $this->crudNewAndTrue($request, $repository, $entity);
+    $response = $this->crudNewAndForm($request, $repository, $entity);
 
-    return (true === $response) ? $this->closeModalOrRedirect($request) : $response;
+    return ($response instanceof Response) ? $response : $this->closeModalOrRedirect($request);
   }
 
   /**
+   * Return form on success, response on failure. TODO wtf why am I making this hack why oh why.
+   *
    * @param AbstractRepository<T> $repository
    * @param T                     $entity
    */
-  protected function crudNewAndTrue(Request $request, $repository, $entity, bool $flush = true): Response|true
+  protected function crudNewAndForm(Request $request, $repository, $entity, bool $flush = true): Response|FormInterface
   {
     $form = $this->createNewEditForm($request, $entity);
 
@@ -79,7 +81,7 @@ trait CrudMixin
       }
       $repository->save($entity, $flush);
 
-      return true;
+      return $form;
     }
 
     return $this->render('modal/new.html.twig', [
