@@ -57,12 +57,14 @@ class BookOwnership implements Identifiable, Ownable
     return $this;
   }
 
-  public function getBook(): ?Book
+  public function getBook(): Book
   {
+    assert(null !== $this->book);
+
     return $this->book;
   }
 
-  public function setBook(?Book $book): self
+  public function setBook(Book $book): self
   {
     $this->book = $book;
 

@@ -43,7 +43,7 @@ class BooksController extends AbstractController
   public function preDelete(BookOwnership $bookOwnership): Response
   {
     // TODO
-    return new Response($bookOwnership->getBook()?->getTitle());
+    return new Response($bookOwnership->getBook()->getTitle());
   }
 
   protected function createNewEditForm(Request $request, $entity): FormInterface

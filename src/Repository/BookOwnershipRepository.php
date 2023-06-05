@@ -9,6 +9,11 @@ use SimpleWebApps\Entity\BookOwnership;
 
 /**
  * @extends AbstractRepository<BookOwnership>
+ * TODO psalm ignores inherited @methods, but why?
+ *
+ * @method ?BookOwnership  find($id, $lockMode = null, $lockVersion = null)
+ * @method ?BookOwnership  findOneBy(array $criteria, array $orderBy = null)
+ * @method BookOwnership[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class BookOwnershipRepository extends AbstractRepository
 {

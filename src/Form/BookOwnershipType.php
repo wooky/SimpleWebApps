@@ -36,7 +36,7 @@ class BookOwnershipType extends AbstractType
     $builder
       ->add('book', TextType::class, [
         'disabled' => true,
-        'getter' => fn (BookOwnership $bookOwnership) => $bookOwnership->getBook()?->getTitle(),
+        'getter' => fn (BookOwnership $bookOwnership) => $bookOwnership->getBook()->getTitle(),
       ])
     ;
     $this->addOwnerField($builder, $this->security, ['disabled' => $options[self::IS_OWNER_DISABLED]]);

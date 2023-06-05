@@ -84,6 +84,14 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "check": [
+            "php-cs-fixer fix --dry-run --allow-risky=yes",
+            "phpmd src/ ansi rulesets.xml",
+            "psalm"
+        ],
+        "fix": [
+            "php-cs-fixer fix --allow-risky=yes"
         ]
     },
     "conflict": {
