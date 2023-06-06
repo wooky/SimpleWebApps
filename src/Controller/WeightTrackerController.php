@@ -30,7 +30,6 @@ class WeightTrackerController extends AbstractController
   #[Route(self::ROUTE_NEW_PATH, name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
   public function new(Request $request, WeightRecordRepository $weightRecordRepository): Response
   {
-    // TODO catch UniqueConstraintViolationException and set 'weight_record.date_exists' message
     return $this->crudNewAndClose($request, $weightRecordRepository, (new WeightRecord())->setOwner($this->forceGetUser()));
   }
 
