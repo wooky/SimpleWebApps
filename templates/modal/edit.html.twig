@@ -6,6 +6,8 @@
 {% block modal_body %} {{ form_widget(form) }}{% endblock %}
 {% block modal_footer %}
 <button class="button is-success" type="submit">{% trans %}modal.edit.edit{% endtrans %}</button>
+{% if pre_delete_path is defined %}
 <button class="button is-danger" formaction="{{ pre_delete_path }}">{% trans %}modal.delete.delete{% endtrans %}</button>
+{% endif %}
 {% endblock %}
 {% block after_modal %}{{ form_end(form) }}{% endblock %}

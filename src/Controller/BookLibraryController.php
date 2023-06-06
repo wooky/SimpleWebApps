@@ -52,14 +52,7 @@ class BookLibraryController extends AbstractController
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
   public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
   {
-    return $this->crudEdit($request, $bookRepository, $book);
-  }
-
-  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
-  public function preDelete(Book $book): Response
-  {
-    // TODO
-    return new Response($book->getTitle());
+    return $this->crudEdit($request, $bookRepository, $book, isDeletable: false);
   }
 
   /**

@@ -39,6 +39,8 @@ trait CrudMixin
 
   abstract protected function denyAccessUnlessGranted(mixed $attribute, mixed $subject = null, string $message = 'Access Denied.'): void;
 
+  abstract protected function render(string $view, array $parameters = []): Response;
+
   abstract protected static function getControllerShortName(): string;
 
   /**
@@ -94,7 +96,7 @@ trait CrudMixin
    * @param AbstractRepository<T> $repository
    * @param T                     $entity
    */
-  protected function crudEdit(Request $request, $repository, $entity): Response
+  protected function crudEdit(Request $request, $repository, $entity, bool $isDeletable = true): Response
   {
     if ($entity instanceof Ownable && !$this->isGranted(RelationshipCapability::Write->value, $entity)) {
       return $this->render('modal/forbidden.html.twig', [
@@ -112,13 +114,16 @@ trait CrudMixin
     }
 
     $id = $entity->getId();
-
-    return $this->render('modal/edit.html.twig', [
+    $parameters = [
         'id' => $id,
         'form' => $form,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
-        'pre_delete_path' => $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]),
-    ]);
+    ];
+    if ($isDeletable) {
+      $parameters['pre_delete_path'] = $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]);
+    }
+
+    return $this->render('modal/edit.html.twig', $parameters);
   }
 
   /**
