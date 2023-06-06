@@ -9,6 +9,14 @@ auth:
   logout: "Log Out"
   agree_terms: "Check here if you agree to our terms"
   remember_me: 'Keep me logged in'
+  mfa:
+    title: 'Multi-Factor Authentication (MFA)'
+    enabled: 'MFA is enabled.'
+    disabled: 'MFA is disabled.'
+    scan_code: 'Scan this code with your Google Authenticator application. Note that this code will not reappear.'
+    button_generate: 'Generate Google Authenticator QR code'
+    button_regenerate: 'Regenerate Google Authenticator QR code'
+    button_remove: 'Remove Google Authenticator MFA'
 
 books:
   title: 'Book Library'

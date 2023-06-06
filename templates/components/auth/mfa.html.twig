@@ -1,0 +1,26 @@
+<div {{ attributes }}>
+{% if qrContents %}
+  <div>
+    {# TODO don't rely on external APIs for code #}
+    <img src="https://chart.googleapis.com/chart?cht=qr&amp;chs=300x300&amp;chl={{ qrContents|url_encode }}">
+    <p>{{ 'auth.mfa.scan_code'|trans }}</p>
+  </div>
+{% endif %}
+{% if user.googleAuthenticatorEnabled %}
+  <p>{{ 'auth.mfa.enabled'|trans }}</p>
+  <button class="button is-primary"
+    data-action="live#action"
+    data-action-name="generate"
+  >{{ 'auth.mfa.button_regenerate'|trans }}</button>
+  <button class="button is-danger"
+    data-action="live#action"
+    data-action-name="remove"
+  >{{ 'auth.mfa.button_remove'|trans }}</button>
+{% else %}
+  <p>{{ 'auth.mfa.disabled'|trans }}</p>
+  <button class="button is-primary"
+    data-action="live#action"
+    data-action-name="generate"
+  >{{ 'auth.mfa.button_generate'|trans }}</button>
+{% endif %}
+</div>

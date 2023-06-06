@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -16,7 +17,7 @@ use function assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
   #[ORM\Id]
   #[ORM\Column(type: 'ulid', unique: true)]
@@ -38,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    */
   #[ORM\Column]
   private ?string $password = null;
+
+  #[ORM\Column(length: 64, nullable: true)]
+  private ?string $googleAuthenticatorSecret = null;
 
   public function getId(): ?Ulid
   {
@@ -112,5 +116,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   {
     // If you store any temporary, sensitive data on the user, clear it here
     // $this->plainPassword = null;
+  }
+
+  public function getGoogleAuthenticatorSecret(): ?string
+  {
+    return $this->googleAuthenticatorSecret;
+  }
+
+  public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): self
+  {
+    $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
+
+    return $this;
+  }
+
+  public function isGoogleAuthenticatorEnabled(): bool
+  {
+    return null !== $this->googleAuthenticatorSecret;
+  }
+
+  public function getGoogleAuthenticatorUsername(): string
+  {
+    return $this->getUserIdentifier();
   }
 }

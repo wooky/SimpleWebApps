@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container">
-  <h1 class="title">{{ block('title') }}</h1>
+  <h1 class="title is-size-3">{{ block('title') }}</h1>
   {{ form_start(form) }}
     {{ form_widget(form) }}
 
@@ -14,5 +14,8 @@
       </div>
     </div>
   {{ form_end(form) }}
+
+  <h2 class="title is-size-4">{{ 'auth.mfa.title'|trans }}</h2>
+  {{ component('auth:mfa', {user: user}) }}
 </div>
 {% endblock %}

@@ -94,7 +94,8 @@ class AuthController extends AbstractController
     }
 
     return $this->render('profile/index.html.twig', [
-        'form' => $form,
+      'form' => $form,
+      'user' => $user,
     ]);
   }
 }
