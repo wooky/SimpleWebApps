@@ -7,12 +7,10 @@ namespace SimpleWebApps\Controller;
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Identifiable;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\AbstractRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 use function assert;
 use function is_string;
@@ -35,8 +33,6 @@ trait CrudMixin
 
   private const SUBJECT_SUFFIX = '.subject';
 
-  abstract protected function getUser(): ?UserInterface;
-
   abstract protected function denyAccessUnlessGranted(mixed $attribute, mixed $subject = null, string $message = 'Access Denied.'): void;
 
   abstract protected function render(string $view, array $parameters = []): Response;
@@ -47,14 +43,6 @@ trait CrudMixin
    * @param T $entity
    */
   abstract protected function createNewEditForm(Request $request, $entity): FormInterface;
-
-  protected function forceGetUser(): User
-  {
-    $user = $this->getUser();
-    assert($user instanceof User);
-
-    return $user;
-  }
 
   /**
    * @param AbstractRepository<T> $repository

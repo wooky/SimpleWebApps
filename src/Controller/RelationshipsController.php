@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Uid\Ulid;
 
 use function assert;
@@ -27,10 +28,8 @@ class RelationshipsController extends AbstractController
    * @SuppressWarnings(PHPMD.ElseExpression)
    */
   #[Route('/', name: 'index', methods: ['GET'])]
-  public function index(RelationshipRepository $relationshipRepository): Response
+  public function index(RelationshipRepository $relationshipRepository, #[CurrentUser] User $user): Response
   {
-    $user = $this->getUser();
-    assert($user instanceof User);
     $relationships = $relationshipRepository->findBidirectionalRelationships($user);
     $fromUser = [];
     $toUser = [];
@@ -49,16 +48,19 @@ class RelationshipsController extends AbstractController
   }
 
   #[Route('/invite', name: 'invite', methods: ['GET', 'POST'])]
-  public function invite(Request $request, UserRepository $userRepository, RelationshipRepository $relationshipRepository): Response
-  {
+  public function invite(
+    Request $request,
+    UserRepository $userRepository,
+    RelationshipRepository $relationshipRepository,
+    #[CurrentUser] User $fromUser,
+  ): Response {
     $form = $this->createForm(InviteFormType::class);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
       $toUserField = $form->get(InviteFormType::TO_USER);
       $toUserId = $toUserField->getData();
-      $fromUser = $this->getUser();
-      assert($toUserId instanceof Ulid && $fromUser instanceof User);
+      assert($toUserId instanceof Ulid);
       if ($fromUser->getId() === $toUserId) {
         $toUserField->addError(new FormError('Cannot create relationship with yourself.'));
       }

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use function assert;
@@ -68,10 +69,12 @@ class AuthController extends AbstractController
   }
 
   #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
-  public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
-  {
-    $user = $this->getUser();
-    assert($user instanceof User);
+  public function profile(
+    Request $request,
+    UserPasswordHasherInterface $userPasswordHasher,
+    UserRepository $userRepository,
+    #[CurrentUser] User $user,
+  ): Response {
     $form = $this->createForm(ProfileFormType::class, $user);
     $form->handleRequest($request);
 
