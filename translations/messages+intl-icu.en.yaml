@@ -8,6 +8,7 @@ auth:
   register: "Register"
   logout: "Log Out"
   agree_terms: "Check here if you agree to our terms"
+  remember_me: 'Keep me logged in'
 
 books:
   title: 'Book Library'

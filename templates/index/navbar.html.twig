@@ -3,7 +3,7 @@
     <div class="navbar-brand is-hoverable">
       <a class="navbar-item" href="{{ path('index') }}">{% trans %}SimpleWebApps{% endtrans %}</a>
     </div>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <div class="navbar-menu">
       <div id="simplewebapps-stream" {{ stimulus_controller('stream') }}
         data-stream-event-source-url-value="{{ path('events', {'topics': '{{topics}}'}) }}"

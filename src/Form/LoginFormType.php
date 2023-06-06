@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,6 +30,10 @@ class LoginFormType extends AbstractType
       ])
       ->add('_password', PasswordType::class, [
         'label' => 'auth.password',
+      ])
+      ->add('_remember_me', CheckboxType::class, [
+        'label' => 'auth.remember_me',
+        'required' => false,
       ])
     ;
   }
