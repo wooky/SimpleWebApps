@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
+use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\BookOwnershipType;
 use SimpleWebApps\Repository\BookOwnershipRepository;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +30,19 @@ class BooksController extends AbstractController
     return $this->render('books/index.html.twig');
   }
 
-  #[Route(self::ROUTE_NEW_PATH, name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
-  public function new(Request $request, BookOwnershipRepository $bookOwnershipRepository): Response
-  {
-    return $this->crudNewAndClose($request, $bookOwnershipRepository, (new BookOwnership())->setOwner($this->forceGetUser()));
+  #[Route(self::ROUTE_NEW_PATH.'/{bookid}/{ownerid}', name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
+  public function new(
+    Request $request,
+    #[MapEntity(id: 'bookid')] Book $book,
+    #[MapEntity(id: 'ownerid')] User $owner,
+    BookOwnershipRepository $bookOwnershipRepository
+  ): Response {
+    $entity = (new BookOwnership())
+      ->setOwner($owner)
+      ->setBook($book)
+    ;
+
+    return $this->crudNewAndClose($request, $bookOwnershipRepository, $entity);
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]

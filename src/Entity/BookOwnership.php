@@ -9,11 +9,14 @@ use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Book\BookOwnershipState;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Ulid;
 
 use function assert;
 
 #[ORM\Entity(repositoryClass: BookOwnershipRepository::class)]
+#[ORM\UniqueConstraint(fields: ['owner', 'book'])]
+#[UniqueEntity(['owner', 'book'], message: 'books.ownership_exists')]
 class BookOwnership implements Identifiable, Ownable
 {
   #[ORM\Id]

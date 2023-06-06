@@ -21,7 +21,15 @@
       <form action="{{ path('books_edit', {id: bookOwnership.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-link" type="submit" title="{{ 'books.edit'|trans }}">
           <span class="icon">
-            <iconify-icon icon="mdi:bookshelf"></iconify-icon>
+            <iconify-icon icon="mdi:library-edit"></iconify-icon>
+          </span>
+        </button>
+      </form>
+    {% else %}
+      <form action="{{ path('books_new', {bookid: bookOwnership.book.id, ownerid: bookOwnership.owner.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
+        <button class="button is-primary" type="submit" title="{{ 'books.add'|trans }}">
+          <span class="icon">
+            <iconify-icon icon="mdi:library-add"></iconify-icon>
           </span>
         </button>
       </form>

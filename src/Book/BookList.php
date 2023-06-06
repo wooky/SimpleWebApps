@@ -73,7 +73,10 @@ class BookList
   {
     $bookOwnerships = [];
     foreach ($books as $book) {
-      $bookOwnerships[] = (new BookOwnership())->setBook($book);
+      $bookOwnerships[] = (new BookOwnership())
+        ->setBook($book)
+        ->setOwner($this->currentUser)
+      ;
     }
 
     return $bookOwnerships;

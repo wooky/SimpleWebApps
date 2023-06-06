@@ -2,6 +2,9 @@ auth:
   didnt_agree_terms: 'You should agree to our terms.'
   username_exists: 'There is already an account with this username.'
 
+books:
+  ownership_exists: 'The selected user already has the book.'
+
 relationships:
   to_self: 'Cannot create relationship to yourself.'
 
