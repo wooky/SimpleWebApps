@@ -73,6 +73,10 @@ relationships:
     user_ulid: 'User ULID'
     read: 'Read Only'
     write: 'Read and Write'
+  error:
+    to_self: 'Cannot create relationship to yourself.'
+    user_not_found: 'User not found.'
+    duplicate: 'Relationship already exists.'
 
 weight_tracker:
   title: 'Weight Tracker'

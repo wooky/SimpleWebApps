@@ -5,8 +5,5 @@ auth:
 books:
   ownership_exists: 'The selected user already has the book.'
 
-relationships:
-  to_self: 'Cannot create relationship to yourself.'
-
 weight_record:
   date_exists: 'A record for this date already exists.'

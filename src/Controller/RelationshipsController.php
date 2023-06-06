@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function assert;
 use function is_string;
@@ -53,6 +54,7 @@ class RelationshipsController extends AbstractController
     UserRepository $userRepository,
     RelationshipRepository $relationshipRepository,
     #[CurrentUser] User $fromUser,
+    TranslatorInterface $translator,
   ): Response {
     $form = $this->createForm(InviteFormType::class);
     $form->handleRequest($request);
@@ -61,15 +63,15 @@ class RelationshipsController extends AbstractController
       $toUserField = $form->get(InviteFormType::TO_USER);
       $toUserId = $toUserField->getData();
       assert($toUserId instanceof Ulid);
-      if ($fromUser->getId() === $toUserId) {
-        $toUserField->addError(new FormError('Cannot create relationship with yourself.'));
+      if ($fromUser->getId()?->equals($toUserId)) {
+        $toUserField->addError(new FormError($translator->trans('relationships.error.to_self')));
       }
 
       $toUser = $userRepository->find($toUserId);
       if (!$toUser) {
-        $toUserField->addError(new FormError('User not found.'));
+        $toUserField->addError(new FormError($translator->trans('relationships.error.user_not_found')));
       } elseif ($relationshipRepository->findOneBy(['fromUser' => $fromUser, 'toUser' => $toUser])) {
-        $toUserField->addError(new FormError('Relationship already exists'));
+        $toUserField->addError(new FormError($translator->trans('relationships.error.duplicate')));
       }
 
       if ($form->isValid()) {
