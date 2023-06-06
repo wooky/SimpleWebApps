@@ -1,4 +1,3 @@
-{% set ulid = app.user ? app.user.id : '' %}
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
     <head>
@@ -18,7 +17,12 @@
         <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
     </head>
     <body>
-        <turbo-frame id="simplewebapps-navbar-{{ ulid }}" src="{{ path('navbar', {'ulid': ulid}) }}" target="_top" data-turbo-permanent></turbo-frame>
+        <turbo-frame
+            id="simplewebapps-navbar-{{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'user' : 'anon' }}"
+            src="{{ path('navbar') }}"
+            target="_top"
+            data-turbo-permanent
+        ></turbo-frame>
         {% block body %}{% endblock %}
         <turbo-frame id="app-modal"></turbo-frame>
     </body>
