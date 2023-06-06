@@ -5,3 +5,4 @@ scheb_two_factor:
         - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
     google:
         enabled: true
+        template: auth/mfa.html.twig
