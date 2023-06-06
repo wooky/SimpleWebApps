@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Book\BookOwnershipState;
 use SimpleWebApps\Repository\BookOwnershipRepository;
@@ -17,6 +18,7 @@ use function assert;
 #[ORM\Entity(repositoryClass: BookOwnershipRepository::class)]
 #[ORM\UniqueConstraint(fields: ['owner', 'book'])]
 #[UniqueEntity(['owner', 'book'], message: 'books.ownership_exists')]
+#[Gedmo\Loggable]
 class BookOwnership implements Identifiable, Ownable
 {
   #[ORM\Id]
@@ -34,6 +36,7 @@ class BookOwnership implements Identifiable, Ownable
   private ?Book $book = null;
 
   #[ORM\Column(type: 'string', enumType: BookOwnershipState::class)]
+  #[Gedmo\Versioned]
   private BookOwnershipState $state = BookOwnershipState::Own;
 
   public function getId(): Ulid

@@ -7,6 +7,7 @@ namespace SimpleWebApps\Entity;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Repository\WeightRecordRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -22,6 +23,7 @@ use function assert;
   columns: ['owner_id', 'date'],
 )]
 #[UniqueEntity(['owner', 'date'], errorPath: 'date', message: 'weight_record.date_exists')]
+#[Gedmo\Loggable]
 class WeightRecord implements Identifiable, Ownable
 {
   #[ORM\Id]
@@ -35,9 +37,11 @@ class WeightRecord implements Identifiable, Ownable
   private ?User $owner = null;
 
   #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+  #[Gedmo\Versioned]
   private ?DateTimeImmutable $date = null;
 
   #[ORM\Column(type: Types::SMALLINT)]
+  #[Gedmo\Versioned]
   #[Assert\Positive]
   private ?int $weight = null;
 

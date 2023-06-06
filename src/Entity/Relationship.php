@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Repository\RelationshipRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
   columns: ['from_user', 'to_user']
 )]
 #[Assert\Expression('this.fromUser != this.toUser', message: 'relationships.to_self')]
+#[Gedmo\Loggable]
 class Relationship
 {
   #[ORM\Id]
@@ -34,9 +36,11 @@ class Relationship
   private ?User $toUser = null;
 
   #[ORM\Column(type: 'string', enumType: RelationshipCapability::class)]
+  #[Gedmo\Versioned]
   private ?RelationshipCapability $capability = null;
 
   #[ORM\Column]
+  #[Gedmo\Versioned]
   private bool $active = false;
 
   public function getId(): ?Ulid

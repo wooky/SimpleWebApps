@@ -6,6 +6,7 @@ namespace SimpleWebApps\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Repository\BookRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -13,6 +14,7 @@ use Symfony\Component\Uid\Ulid;
 use function assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+#[Gedmo\Loggable]
 class Book implements Identifiable
 {
   #[ORM\Id]
@@ -22,15 +24,19 @@ class Book implements Identifiable
   private ?Ulid $id = null;
 
   #[ORM\Column(length: 255)]
+  #[Gedmo\Versioned]
   private ?string $title = null;
 
   #[ORM\Column(type: Types::TEXT, nullable: true)]
+  #[Gedmo\Versioned]
   private ?string $description = null;
 
   #[ORM\Column]
+  #[Gedmo\Versioned]
   private bool $hasImage = false;
 
   #[ORM\Column]
+  #[Gedmo\Versioned]
   private ?bool $isPublic = null;
 
   public function getId(): Ulid

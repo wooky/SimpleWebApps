@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -17,6 +18,7 @@ use function assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
+#[Gedmo\Loggable]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
   #[ORM\Id]
@@ -26,21 +28,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
   private ?Ulid $id = null;
 
   #[ORM\Column(length: 180, unique: true)]
+  #[Gedmo\Versioned]
   private ?string $username = null;
 
   /**
    * @var string[]
    */
   #[ORM\Column]
+  #[Gedmo\Versioned]
   private array $roles = [];
 
   /**
    * @var string The hashed password
    */
   #[ORM\Column]
+  #[Gedmo\Versioned]
   private ?string $password = null;
 
   #[ORM\Column(length: 64, nullable: true)]
+  #[Gedmo\Versioned]
   private ?string $googleAuthenticatorSecret = null;
 
   public function getId(): ?Ulid
