@@ -41,9 +41,14 @@ class BookType extends AbstractType
       ]);
     }
     $builder
-        ->add('title')
-        ->add('description')
+        ->add('title', options: [
+          'label' => 'book_library.title',
+        ])
+        ->add('description', options: [
+          'label' => 'book_library.description',
+        ])
         ->add('isPublic', options: [
+          'label' => 'book_library.is_public',
           'disabled' => $options[self::IS_PUBLIC_DISABLED],
           'help' => new TranslatableMessage('book_library.public_warning'),
         ])

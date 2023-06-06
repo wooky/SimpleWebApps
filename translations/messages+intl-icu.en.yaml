@@ -20,16 +20,29 @@ auth:
 
 books:
   title: 'Book Library'
-  subject: 'book'
-  new: 'New Book'
+  subject: 'book assignment'
+  new: 'New Book Assignment'
+  edit: 'Edit Book Assignment'
   filter1: 'For'
   filter2: ', view'
-  view_filter:
-    all: 'all books'
+  ownership:
     own: 'owned books'
     wishlist: 'wishlisted books'
+  view_filter:
+    all: 'all books'
     public: 'all public books'
     public_absent: 'all public books not in user''s library'
+  book: 'Book'
+  state: 'State'
+
+book_library:
+  subject: 'book'
+  new: 'New Book'
+  edit: 'Edit Book'
+  title: 'Title'
+  description: 'Description'
+  is_public: 'Public?'
+  public_warning: 'Once made public, you will not be able to make it private'
 
 calculator:
   title: 'Calculator'

@@ -14,6 +14,6 @@ enum BookOwnershipState: string implements TranslatableInterface
 
   public function trans(TranslatorInterface $translator, ?string $locale = null): string
   {
-    return $translator->trans('book.ownership.'.$this->value, locale: $locale);
+    return $translator->trans('books.ownership.'.$this->value, locale: $locale);
   }
 }
