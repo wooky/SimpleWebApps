@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Book;
 
-use SimpleWebApps\Entity\Book;
+use SimpleWebApps\Entity\BookOwnership;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -15,5 +15,5 @@ class BookCard
 {
   public const NAME = 'book:card';
 
-  public Book $book;
+  public BookOwnership $bookOwnership;
 }

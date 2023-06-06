@@ -6,6 +6,7 @@ namespace SimpleWebApps\Book;
 
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
+use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\BookRepository;
@@ -32,8 +33,8 @@ class BookList
   #[LiveProp(writable: true)]
   public BookViewFilter $viewFilter = BookViewFilter::All;
 
-  /** @var Book[] */
-  public array $books;
+  /** @var BookOwnership[] */
+  public array $bookOwnerships;
 
   public function __construct(
     private BookRepository $bookRepository,
@@ -53,17 +54,33 @@ class BookList
   public function refresh(): void
   {
     // FIXME need to verify user has permission to view selected user's books!
-    $this->books = [];
 
-    $this->books = match ($this->viewFilter) {
-      BookViewFilter::Public => $this->bookRepository->findBy(['isPublic' => true]),
-      BookViewFilter::PublicAbsent => $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
+    $this->bookOwnerships = match ($this->viewFilter) {
+      BookViewFilter::Public => $this->wrapInEmptyOwnerships($this->bookRepository->findBy(['isPublic' => true])),
+      BookViewFilter::PublicAbsent => $this->wrapInEmptyOwnerships($this->bookRepository->findBooksNotBelongingToUser($this->currentUser)),
       default => $this->queryUserBooks()
     };
   }
 
   /**
-   * @return Book[]
+   * TODO.
+   *
+   * @param Book[] $books
+   *
+   * @return BookOwnership[]
+   */
+  private function wrapInEmptyOwnerships(array $books): array
+  {
+    $bookOwnerships = [];
+    foreach ($books as $book) {
+      $bookOwnerships[] = (new BookOwnership())->setBook($book);
+    }
+
+    return $bookOwnerships;
+  }
+
+  /**
+   * @return BookOwnership[]
    */
   private function queryUserBooks(): array
   {
@@ -75,12 +92,7 @@ class BookList
       $queryCriteria['state'] = $ownershipState;
     }
 
-    $books = [];
-    foreach ($this->bookOwnershipRepository->findBy($queryCriteria) as $bookOwner) {
-      $books[] = $bookOwner->getBook();
-    }
-
-    return $books;
+    return $this->bookOwnershipRepository->findBy($queryCriteria);
   }
 
   public function getViewFilters(): array

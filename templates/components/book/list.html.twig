@@ -32,8 +32,8 @@
     </span>
   </div>
   <div class="columns is-multiline">
-  {% for book in books %}
-    {{ component('book:card', {book: book}) }}
+  {% for bookOwnership in bookOwnerships %}
+    {{ component('book:card', {bookOwnership: bookOwnership}) }}
   {% endfor %}
   </div>
 </div>

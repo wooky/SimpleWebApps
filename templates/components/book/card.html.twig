@@ -1,29 +1,31 @@
-<div id="book-{{ book.id }}" class="column is-3" style="height: 100%" {#TODO#}>
+<div id="book-{{ bookOwnership.book.id }}" class="column is-3" style="height: 100%" {#TODO#}>
   <div class="card">
     <div class="card-image">
       <img src="https://bulma.io/images/placeholders/1280x960.png">
     </div>
     <div class="card-content">
       <div class="content">
-        <div class="title is-4">{{ book.title }}</div>
-        <div>{{ book.description }}</div>
+        <div class="title is-4">{{ bookOwnership.book.title }}</div>
+        <div>{{ bookOwnership.book.description }}</div>
       </div>
     </div>
     <footer class="card-footer">
-      <form action="{{ path('book_library_edit', {id: book.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
+      <form action="{{ path('book_library_edit', {id: bookOwnership.book.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-link" type="submit" title="{{ 'book_library.edit'|trans }}">
           <span class="icon">
             <iconify-icon icon="mdi:book-edit"></iconify-icon>
           </span>
         </button>
       </form>
-      <form data-turbo-frame="app-modal" class="card-footer-item">
+    {% if bookOwnership.idOrNull %}
+      <form action="{{ path('books_edit', {id: bookOwnership.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-link" type="submit" title="{{ 'books.edit'|trans }}">
           <span class="icon">
             <iconify-icon icon="mdi:bookshelf"></iconify-icon>
           </span>
         </button>
       </form>
+    {% endif %}
     </footer>
   </div>
 </div>
