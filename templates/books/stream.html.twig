@@ -3,3 +3,7 @@
   <template>{{ include('books/card_content.html.twig') }}</template>
 </turbo-stream>
 {% endblock %}
+
+{% block book_deleted %}
+<turbo-stream action="remove" target="{{ id }}"></turbo-stream>
+{% endblock %}

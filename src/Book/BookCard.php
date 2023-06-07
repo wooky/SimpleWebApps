@@ -7,6 +7,7 @@ namespace SimpleWebApps\Book;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
+use Symfony\Component\Uid\Ulid;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
@@ -23,23 +24,23 @@ class BookCard
   #[ExposeInTemplate]
   public function getCardHtmlId(): string
   {
-    return self::cardHtmlId($this->bookOwnership->getBook());
+    return self::cardHtmlId($this->bookOwnership->getBook()->getId());
   }
 
   #[ExposeInTemplate]
   public function getContentHtmlId(): string
   {
-    return self::contentHtmlId($this->bookOwnership->getBook());
+    return self::contentHtmlId($this->bookOwnership->getBook()->getId());
   }
 
-  public static function cardHtmlId(Book $book): string
+  public static function cardHtmlId(Ulid $bookId): string
   {
-    return "book-{$book->getId()}";
+    return "book-$bookId";
   }
 
-  public static function contentHtmlId(Book $book): string
+  public static function contentHtmlId(Ulid $bookId): string
   {
-    return "book-content-{$book->getId()}";
+    return "book-content-$bookId";
   }
 
   /**

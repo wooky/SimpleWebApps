@@ -14,8 +14,12 @@ use SimpleWebApps\EventBus\EventBusInterface;
 use SimpleWebApps\EventBus\EventScope;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\UserRepository;
+use Symfony\Component\Uid\Ulid;
 use Twig\Environment;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BookBroadcaster
 {
   public const TOPIC = 'books';
@@ -36,7 +40,7 @@ class BookBroadcaster
     $content = $this->twig
       ->load(self::STREAM_TEMPLATE)
       ->renderBlock('book_updated', [
-        'id' => BookCard::contentHtmlId($book),
+        'id' => BookCard::contentHtmlId($book->getId()),
         'bookOwnership' => BookCard::wrapInEmptyOwnership($book),
       ]);
 
@@ -57,5 +61,18 @@ class BookBroadcaster
       $this->userRepository->getControllingUsersIncludingSelf($bookOwners, RelationshipCapability::Read->permissionsRequired())
     );
     $this->eventBus->post(new Event($affectedUsers, self::TOPIC, $content));
+  }
+
+  public function onBookDeleted(Book $book, Ulid $bookId): void
+  {
+    // Broadcast only if the book was public, since a private book card got automatically removed once the book ownership got removed.
+    if ($book->isPublic()) {
+      $content = $this->twig
+        ->load(self::STREAM_TEMPLATE)
+        ->renderBlock('book_deleted', [
+          'id' => BookCard::cardHtmlId($bookId),
+        ]);
+      $this->eventBus->post(new Event([], self::TOPIC, $content, EventScope::AllUsersOfSpecifiedTopic));
+    }
   }
 }
