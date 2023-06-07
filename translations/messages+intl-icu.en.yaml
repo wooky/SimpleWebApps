@@ -34,6 +34,7 @@ books:
     public_absent: 'all public books not in user''s library'
   book: 'Book'
   state: 'State'
+  no_more_owners: 'This book will be purged as there are no more owners.'
 
 book_library:
   subject: 'book'

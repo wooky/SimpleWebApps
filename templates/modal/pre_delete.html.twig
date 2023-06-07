@@ -4,7 +4,10 @@
 
 {% block before_modal %}<form method="DELETE" action="{{ delete_path }}">{% endblock %}
 {% block modal_body %}
-{{ 'modal.delete.message'|trans({'subject': subject|trans}) }}
+<p>{{ 'modal.delete.message'|trans({'subject': subject|trans}) }}</p>
+{% if extra_footer %}
+<p>{{ extra_footer }}</p>
+{% endif %}
 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
 {% endblock %}
 {% block modal_footer %}<button class="button is-danger">{% trans %}modal.delete.delete{% endtrans %}</button>{% endblock %}

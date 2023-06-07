@@ -26,6 +26,7 @@ enum BookViewFilter: string implements TranslatableInterface
     if ($state) {
       return $state->trans($translator, $locale);
     }
+
     return $translator->trans('books.view_filter.'.$this->value, locale: $locale);
   }
 }

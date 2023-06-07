@@ -14,6 +14,7 @@ use SimpleWebApps\Entity\BookOwnership;
  * @method ?BookOwnership  find($id, $lockMode = null, $lockVersion = null)
  * @method ?BookOwnership  findOneBy(array $criteria, array $orderBy = null)
  * @method BookOwnership[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method int             count(array $criteria)
  */
 class BookOwnershipRepository extends AbstractRepository
 {

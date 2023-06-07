@@ -33,7 +33,7 @@ class BookLibraryController extends AbstractController
     BookOwnershipRepository $bookOwnershipRepository,
   ): Response {
     $book = new Book();
-    $response = $this->crudNewAndForm($request, $bookRepository, $book, false);
+    $response = $this->crudNewAndForm($request, $bookRepository, $book, flush: false);
     if ($response instanceof FormInterface) {
       $user = $response->get(BookType::OWNER_FIELD)->getData();
       assert($user instanceof User);

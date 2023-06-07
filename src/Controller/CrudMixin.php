@@ -106,10 +106,8 @@ trait CrudMixin
         'id' => $id,
         'form' => $form,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
+        'pre_delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]) : null,
     ];
-    if ($isDeletable) {
-      $parameters['pre_delete_path'] = $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]);
-    }
 
     return $this->render('modal/edit.html.twig', $parameters);
   }
@@ -117,7 +115,7 @@ trait CrudMixin
   /**
    * @param T $entity
    */
-  protected function crudPreDelete($entity): Response
+  protected function crudPreDelete($entity, ?string $extraFooter = null): Response
   {
     $id = $entity->getId();
 
@@ -125,6 +123,7 @@ trait CrudMixin
         'id' => $id,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
         'delete_path' => $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id]),
+        'extra_footer' => $extraFooter,
     ]);
   }
 
@@ -134,16 +133,29 @@ trait CrudMixin
    */
   protected function crudDelete(Request $request, $repository, $entity): Response
   {
+    $this->crudDeleteAndTrue($request, $repository, $entity);
+
+    return $this->closeModalOrRedirect($request);
+  }
+
+  /**
+   * @param AbstractRepository<T> $repository
+   * @param T                     $entity
+   */
+  protected function crudDeleteAndTrue(Request $request, $repository, $entity, bool $flush = true): bool
+  {
     $token = $request->request->get('_token');
     assert(is_string($token) || null === $token);
     if ($this->isCsrfTokenValid('delete'.((string) $entity->getId()), $token)) {
       if ($entity instanceof Ownable) {
         $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $entity);
       }
-      $repository->remove($entity, true);
+      $repository->remove($entity, $flush);
+
+      return true;
     }
 
-    return $this->closeModalOrRedirect($request);
+    return false;
   }
 
   protected function closeModalOrRedirect(Request $request): Response

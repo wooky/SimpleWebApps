@@ -9,12 +9,14 @@ use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\BookOwnershipType;
 use SimpleWebApps\Repository\BookOwnershipRepository;
+use SimpleWebApps\Repository\BookRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/books', name: self::CONTROLLER_SHORT_NAME)]
 class BooksController extends AbstractController
@@ -52,10 +54,32 @@ class BooksController extends AbstractController
   }
 
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
-  public function preDelete(BookOwnership $bookOwnership): Response
-  {
-    // TODO
-    return new Response($bookOwnership->getBook()->getTitle());
+  public function preDelete(
+    BookOwnership $bookOwnership,
+    BookOwnershipRepository $bookOwnershipRepository,
+    TranslatorInterface $translator,
+  ): Response {
+    $bookOwners = $bookOwnershipRepository->count(['book' => $bookOwnership->getBook()]);
+    $extraFooter = (1 === $bookOwners) ? $translator->trans('books.no_more_owners') : null;
+
+    return $this->crudPreDelete($bookOwnership, $extraFooter);
+  }
+
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
+  public function delete(
+    Request $request,
+    BookOwnership $bookOwnership,
+    BookOwnershipRepository $bookOwnershipRepository,
+    BookRepository $bookRepository,
+  ): Response {
+    $book = $bookOwnership->getBook();
+    $soleBookOwner = 1 === $bookOwnershipRepository->count(['book' => $book]);
+    $success = $this->crudDeleteAndTrue($request, $bookOwnershipRepository, $bookOwnership, flush: !$soleBookOwner);
+    if ($success && $soleBookOwner) {
+      $bookRepository->remove($book, true);
+    }
+
+    return $this->closeModalOrRedirect($request);
   }
 
   protected function createNewEditForm(Request $request, $entity): FormInterface
