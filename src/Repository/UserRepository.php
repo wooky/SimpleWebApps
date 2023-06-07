@@ -33,11 +33,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
   }
 
   /**
+   * @param User[] $self
    * @param RelationshipCapability[] $capabilitiesAllowed
    *
    * @return User[]
    */
-  public function getControlledUsersIncludingSelf(User $self, array $capabilitiesAllowed): array
+  public function getControlledUsersIncludingSelf(array $self, array $capabilitiesAllowed): array
   {
     return $this->getControlledUsersIncludingSelfQuery($self, $capabilitiesAllowed)
         ->getQuery()
@@ -45,22 +46,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
   }
 
   /**
+   * @param User[] $self
    * @param RelationshipCapability[] $capabilitiesAllowed
    */
-  public function getControlledUsersIncludingSelfQuery(User $self, array $capabilitiesAllowed): QueryBuilder
+  public function getControlledUsersIncludingSelfQuery(array $self, array $capabilitiesAllowed): QueryBuilder
   {
+    $selfIds = array_map(fn(User $user) => $user->getId()?->toBinary(), $self);
     $qb = $this->createQueryBuilder('u');
 
     return $qb
         ->distinct()
-        ->leftJoin(Relationship::class, 'rel', Expr\Join::WITH, 'rel.toUser = u.id')
-        ->where($qb->expr()->eq('u.id', '?1'))
+        ->leftJoin(Relationship::class, 'rel', Expr\Join::WITH, $qb->expr()->eq('rel.toUser', 'u.id'))
+        ->where($qb->expr()->in('u.id', '?1'))
         ->orWhere($qb->expr()->andX(
-          $qb->expr()->eq('rel.fromUser', '?1'),
+          $qb->expr()->in('rel.fromUser', '?1'),
           $qb->expr()->in('rel.capability', '?2'),
           $qb->expr()->eq('rel.active', true),
         ))
-        ->setParameter(1, $self->getId(), 'ulid')
+        ->setParameter(1, $selfIds)
         ->setParameter(2, $capabilitiesAllowed)
     ;
   }

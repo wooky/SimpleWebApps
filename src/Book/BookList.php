@@ -47,7 +47,7 @@ class BookList
     $this->currentUser = $user;
     $this->refresh();
 
-    $this->users = $userRepository->getControlledUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $this->users = $userRepository->getControlledUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
   }
 
   #[LiveAction]

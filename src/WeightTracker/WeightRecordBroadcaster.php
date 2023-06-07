@@ -41,7 +41,7 @@ class WeightRecordBroadcaster
     }
     $user = $this->userRepository->find($userId);
     assert(null !== $user);
-    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
     $controlledUserIds = array_map(fn (User $user) => $user->getId()?->toBinary() ?? throw new InvalidArgumentException('User has no ID'), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
     $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
