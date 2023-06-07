@@ -68,7 +68,7 @@ class WeightRecordBroadcaster
   {
     $owner = $weightRecord->getOwner();
     assert(null !== $owner);
-    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($owner, RelationshipCapability::Read->permissionsRequired());
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf([$owner], RelationshipCapability::Read->permissionsRequired());
     $this->broadcast($affectedUsers, $payload);
   }
 
@@ -99,7 +99,7 @@ class WeightRecordBroadcaster
 
   public function onUsernameChanged(User $user): void
   {
-    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf($user, RelationshipCapability::Read->permissionsRequired());
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
     $payload = $this->commandRenderer->usernameChanged($user);
     $this->broadcast($affectedUsers, $payload);
   }
