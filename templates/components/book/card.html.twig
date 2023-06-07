@@ -1,14 +1,6 @@
-<div id="book-{{ bookOwnership.book.id }}" class="column is-3" style="height: 100%" {#TODO#}>
+<div id="{{ cardHtmlId }}" class="column is-3" style="height: 100%" {#TODO#}>
   <div class="card">
-    <div class="card-image">
-      <img src="https://bulma.io/images/placeholders/1280x960.png">
-    </div>
-    <div class="card-content">
-      <div class="content">
-        <div class="title is-4">{{ bookOwnership.book.title }}</div>
-        <div>{{ bookOwnership.book.description }}</div>
-      </div>
-    </div>
+    <div id="{{ contentHtmlId }}">{{ include('books/card_content.html.twig') }}</div>
     <footer class="card-footer">
       <form action="{{ path('book_library_edit', {id: bookOwnership.book.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-link" type="submit" title="{{ 'book_library.edit'|trans }}">

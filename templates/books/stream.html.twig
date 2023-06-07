@@ -1,0 +1,5 @@
+{% block book_updated %}
+<turbo-stream action="update" target="{{ id }}">
+  <template>{{ include('books/card_content.html.twig') }}</template>
+</turbo-stream>
+{% endblock %}

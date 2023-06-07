@@ -71,15 +71,7 @@ class BookList
    */
   private function wrapInEmptyOwnerships(array $books): array
   {
-    $bookOwnerships = [];
-    foreach ($books as $book) {
-      $bookOwnerships[] = (new BookOwnership())
-        ->setBook($book)
-        ->setOwner($this->currentUser)
-      ;
-    }
-
-    return $bookOwnerships;
+    return array_map(fn (Book $book) => BookCard::wrapInEmptyOwnership($book, $this->currentUser), $books);
   }
 
   /**
