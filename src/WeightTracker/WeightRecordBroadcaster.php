@@ -46,7 +46,7 @@ class WeightRecordBroadcaster
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
     $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
 
-    return new Event([], self::TOPIC, $initialPayload);
+    return new Event([], self::TOPIC, $initialPayload, sseEvent: self::TOPIC);
   }
 
   public function onWeightRecordCreated(WeightRecord $weightRecord): void
@@ -111,6 +111,6 @@ class WeightRecordBroadcaster
   {
     $users = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = json_encode($payloadArray);
-    $this->eventBus->post(new Event($users, self::TOPIC, $payload));
+    $this->eventBus->post(new Event($users, self::TOPIC, $payload, sseEvent: self::TOPIC));
   }
 }

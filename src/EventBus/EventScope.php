@@ -8,4 +8,5 @@ enum EventScope: string
 {
   case SpecifiedTopic = 'specified_topic';
   case AllTopics = 'all_topics';
+  case AllUsersOfSpecifiedTopic = 'all_users_of_specified_topic';
 }

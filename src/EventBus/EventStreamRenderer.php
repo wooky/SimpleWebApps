@@ -54,6 +54,7 @@ class EventStreamRenderer
       $shouldWrite = match ($event->scope) {
         EventScope::SpecifiedTopic => in_array($userId, $event->users, true) && in_array($event->topic, $topics, true),
         EventScope::AllTopics => in_array($userId, $event->users, true),
+        EventScope::AllUsersOfSpecifiedTopic => in_array($event->topic, $topics, true),
       };
       if ($shouldWrite) {
         self::writePayload($event);
@@ -63,8 +64,9 @@ class EventStreamRenderer
 
   private static function writePayload(Event $event): void
   {
+    $payload = str_replace("\n", '&#10;', $event->payload);
     echo 'event: '.$event->sseEvent."\n";
-    echo 'data: '.$event->payload."\n\n";
+    echo 'data: '.$payload."\n\n";
     self::flush();
   }
 
