@@ -41,26 +41,36 @@ readonly class BookRenderingUtilities
    */
   public static function privateListClasses(BookViewFilter $bookViewFilter, User $user): ?array
   {
+    $privateClass = self::composePrivateClass($user);
+
     if (BookViewFilter::All === $bookViewFilter) {
-      return array_map(
+      $classes = array_map(
         fn (BookOwnershipState $bookOwnershipState) => self::composePrivateListClass($user, $bookOwnershipState),
         BookOwnershipState::cases()
       );
+      $classes[] = $privateClass;
+
+      return $classes;
     }
 
     $bookOwnershipState = $bookViewFilter->toOwnershipState();
     if ($bookOwnershipState) {
-      return [self::composePrivateListClass($user, $bookOwnershipState)];
+      return [$privateClass, self::composePrivateListClass($user, $bookOwnershipState)];
     }
 
     return null;
   }
 
-  public static function composePrivateListClass(User $user, BookOwnershipState $bookOwnershipState): string
+  public static function composePrivateClass(User $user, string $state = 'private'): string
   {
     $userId = $user->getId() ?? throw new RuntimeException('User has no id');
 
-    return self::BOOK_LIST_CLASS_PREFIX.(string) $userId.'-'.$bookOwnershipState->value;
+    return self::BOOK_LIST_CLASS_PREFIX.(string) $userId.'-'.$state;
+  }
+
+  public static function composePrivateListClass(User $user, BookOwnershipState $bookOwnershipState): string
+  {
+    return self::composePrivateClass($user, $bookOwnershipState->value);
   }
 
   public static function composeQuerySelectorOfPrivateList(User $user, BookOwnershipState $bookOwnershipState): string

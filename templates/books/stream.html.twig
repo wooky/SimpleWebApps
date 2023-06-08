@@ -4,6 +4,13 @@
 </turbo-stream>
 {% endblock %}
 
+{% block book_ownership_updated %}
+<turbo-stream action="remove" targets=".{{ privateClass }} > #{{ id }}"></turbo-stream>
+<turbo-stream action="append" targets="{{ newSelector }}">
+  <template>{{ component('book:card', {bookOwnership: bookOwnership}) }}</template>
+</turbo-stream>
+{% endblock %}
+
 {% block book_updated %}
 <turbo-stream action="update" target="{{ id }}">
   <template>{{ include('books/card_content.html.twig') }}</template>

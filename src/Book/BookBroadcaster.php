@@ -54,6 +54,20 @@ class BookBroadcaster
     }
   }
 
+  public function onBookOwnershipUpdated(BookOwnership $bookOwnership): void
+  {
+    $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
+    $content = $this->twig
+      ->load(self::STREAM_TEMPLATE)
+      ->renderBlock('book_ownership_updated', [
+        'privateClass' => BookRenderingUtilities::composePrivateClass($owner),
+        'id' => BookRenderingUtilities::cardHtmlId($bookOwnership->getBook()->getId()),
+        'newSelector' => BookRenderingUtilities::composeQuerySelectorOfPrivateList($owner, $bookOwnership->getState()),
+        'bookOwnership' => $bookOwnership,
+      ]);
+    $this->broadcastToAffectedUsers([$owner], $content);
+  }
+
   public function onBookUpdated(Book $book): void
   {
     $content = $this->twig
