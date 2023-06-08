@@ -18,7 +18,7 @@
         </button>
       </form>
     {% else %}
-      <form action="{{ path('books_new', {bookid: bookOwnership.book.id, ownerid: bookOwnership.owner.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
+      <form action="{{ path('books_new', {bookid: bookOwnership.book.id, ownerid: bookOwnership.owner ? bookOwnership.owner.id : null}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-primary" type="submit" title="{{ 'books.new'|trans }}">
           <span class="icon">
             <iconify-icon icon="mdi:library-add"></iconify-icon>

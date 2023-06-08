@@ -32,11 +32,11 @@ class BooksController extends AbstractController
     return $this->render('books/index.html.twig');
   }
 
-  #[Route(self::ROUTE_NEW_PATH.'/{bookid}/{ownerid}', name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
+  #[Route(self::ROUTE_NEW_PATH.'/{bookid}/{ownerid?}', name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
   public function new(
     Request $request,
     #[MapEntity(id: 'bookid')] Book $book,
-    #[MapEntity(id: 'ownerid')] User $owner,
+    #[MapEntity(id: 'ownerid')] ?User $owner,
     BookOwnershipRepository $bookOwnershipRepository
   ): Response {
     $entity = (new BookOwnership())

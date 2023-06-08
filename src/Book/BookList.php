@@ -71,7 +71,7 @@ class BookList
    */
   private function wrapInEmptyOwnerships(array $books): array
   {
-    return array_map(fn (Book $book) => BookCard::wrapInEmptyOwnership($book, $this->currentUser), $books);
+    return array_map(fn (Book $book) => BookRenderingUtilities::wrapInEmptyOwnership($book, $this->currentUser), $books);
   }
 
   /**
@@ -93,5 +93,13 @@ class BookList
   public function getViewFilters(): array
   {
     return BookViewFilter::cases();
+  }
+
+  public function getListClasses(): array
+  {
+    return
+      BookRenderingUtilities::privateListClasses($this->viewFilter, $this->currentUser)
+      ?? BookRenderingUtilities::publicListClasses($this->viewFilter, $this->currentUser)
+      ?? [];
   }
 }

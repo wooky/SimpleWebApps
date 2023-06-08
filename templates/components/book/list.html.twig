@@ -31,7 +31,7 @@
       </select>
     </span>
   </div>
-  <div class="columns is-multiline">
+  <div class="columns is-multiline {{ this.listClasses|join(' ') }}">
   {% for bookOwnership in bookOwnerships %}
     {{ component('book:card', {bookOwnership: bookOwnership}) }}
   {% endfor %}

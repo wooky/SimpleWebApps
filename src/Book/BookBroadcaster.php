@@ -35,18 +35,37 @@ class BookBroadcaster
     // Do nothing.
   }
 
+  public function onBookOwnershipCreated(BookOwnership $bookOwnership): void
+  {
+    $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
+    $template = $this->twig->load(self::STREAM_TEMPLATE);
+    $content = $template->renderBlock('book_ownership_created', [
+      'selector' => BookRenderingUtilities::composeQuerySelectorOfPrivateList($owner, $bookOwnership->getState()),
+      'bookOwnership' => $bookOwnership,
+    ]);
+    $this->broadcastToAffectedUsers([$owner], $content);
+
+    if ($bookOwnership->getBook()->isPublic()) {
+      $content = $template->renderBlock('book_ownership_created', [
+        'selector' => BookRenderingUtilities::composeQuerySelectorOfPublicListNotBelongingToUser($owner),
+        'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($bookOwnership->getBook()),
+      ]);
+      $this->broadcastToAllUsers($content);
+    }
+  }
+
   public function onBookUpdated(Book $book): void
   {
     $content = $this->twig
       ->load(self::STREAM_TEMPLATE)
       ->renderBlock('book_updated', [
-        'id' => BookCard::contentHtmlId($book->getId()),
-        'bookOwnership' => BookCard::wrapInEmptyOwnership($book),
+        'id' => BookRenderingUtilities::contentHtmlId($book->getId()),
+        'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($book),
       ]);
 
     // Broadcast to all users if the book is public
     if ($book->isPublic()) {
-      $this->eventBus->post(new Event([], self::TOPIC, $content, EventScope::AllUsersOfSpecifiedTopic));
+      $this->broadcastToAllUsers($content);
 
       return;
     }
@@ -56,11 +75,7 @@ class BookBroadcaster
       fn (BookOwnership $bookOwnership) => $bookOwnership->getOwner() ?? throw new RuntimeException('Book ownership has no owner'),
       $this->bookOwnershipRepository->findBy(['book' => $book])
     );
-    $affectedUsers = array_map(
-      fn (User $user) => (string) $user->getId(),
-      $this->userRepository->getControllingUsersIncludingSelf($bookOwners, RelationshipCapability::Read->permissionsRequired())
-    );
-    $this->eventBus->post(new Event($affectedUsers, self::TOPIC, $content));
+    $this->broadcastToAffectedUsers($bookOwners, $content);
   }
 
   public function onBookDeleted(Book $book, Ulid $bookId): void
@@ -70,9 +85,26 @@ class BookBroadcaster
       $content = $this->twig
         ->load(self::STREAM_TEMPLATE)
         ->renderBlock('book_deleted', [
-          'id' => BookCard::cardHtmlId($bookId),
+          'id' => BookRenderingUtilities::cardHtmlId($bookId),
         ]);
-      $this->eventBus->post(new Event([], self::TOPIC, $content, EventScope::AllUsersOfSpecifiedTopic));
+      $this->broadcastToAllUsers($content);
     }
+  }
+
+  /**
+   * @param User[] $users
+   */
+  private function broadcastToAffectedUsers(array $users, string $content): void
+  {
+    $affectedUsers = array_map(
+      fn (User $user) => (string) $user->getId(),
+      $this->userRepository->getControllingUsersIncludingSelf($users, RelationshipCapability::Read->permissionsRequired())
+    );
+    $this->eventBus->post(new Event($affectedUsers, self::TOPIC, $content));
+  }
+
+  private function broadcastToAllUsers(string $content): void
+  {
+    $this->eventBus->post(new Event([], self::TOPIC, $content, EventScope::AllUsersOfSpecifiedTopic));
   }
 }

@@ -7,8 +7,11 @@ namespace SimpleWebApps\Book;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use SimpleWebApps\Entity\Book;
+use SimpleWebApps\Entity\BookOwnership;
 use Symfony\Component\Uid\Ulid;
 
+#[AsEntityListener(event: Events::postPersist, method: 'onBookOwnershipCreated', entity: BookOwnership::class)]
+// skip book create because it's done as part of book ownership creation
 #[AsEntityListener(event: Events::postUpdate, method: 'onBookUpdated', entity: Book::class)]
 #[AsEntityListener(event: Events::preRemove, method: 'onBookPreRemoved', entity: Book::class)]
 #[AsEntityListener(event: Events::postRemove, method: 'onBookDeleted', entity: Book::class)]
@@ -20,6 +23,11 @@ class BookListener
     private BookBroadcaster $broadcaster
   ) {
     // Do nothing.
+  }
+
+  public function onBookOwnershipCreated(BookOwnership $bookOwnership): void
+  {
+    $this->broadcaster->onBookOwnershipCreated($bookOwnership);
   }
 
   public function onBookUpdated(Book $book): void
