@@ -31,7 +31,7 @@
       </select>
     </span>
   </div>
-  <div class="columns is-multiline {{ this.listClasses|join(' ') }}">
+  <div class="columns is-multiline {{ this.listClasses|join(' ') }}" data-live-id="book-list-{{ random() }}">
   {% for bookOwnership in bookOwnerships %}
     {{ component('book:card', {bookOwnership: bookOwnership}) }}
   {% endfor %}
