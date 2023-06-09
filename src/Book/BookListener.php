@@ -12,6 +12,7 @@ use Symfony\Component\Uid\Ulid;
 
 #[AsEntityListener(event: Events::postPersist, method: 'onBookOwnershipCreated', entity: BookOwnership::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'onBookOwnershipUpdated', entity: BookOwnership::class)]
+#[AsEntityListener(event: Events::postRemove, method: 'onBookOwnershipDeleted', entity: BookOwnership::class)]
 // skip book create because it's done as part of book ownership creation
 #[AsEntityListener(event: Events::postUpdate, method: 'onBookUpdated', entity: Book::class)]
 #[AsEntityListener(event: Events::preRemove, method: 'onBookPreRemoved', entity: Book::class)]
@@ -34,6 +35,11 @@ class BookListener
   public function onBookOwnershipUpdated(BookOwnership $bookOwnership): void
   {
     $this->broadcaster->onBookOwnershipUpdated($bookOwnership);
+  }
+
+  public function onBookOwnershipDeleted(BookOwnership $bookOwnership): void
+  {
+    $this->broadcaster->onBookOwnershipDeleted($bookOwnership);
   }
 
   public function onBookUpdated(Book $book): void

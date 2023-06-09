@@ -68,6 +68,18 @@ class BookBroadcaster
     $this->broadcastToAffectedUsers([$owner], $content);
   }
 
+  public function onBookOwnershipDeleted(BookOwnership $bookOwnership): void
+  {
+    $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
+    $content = $this->twig
+      ->load(self::STREAM_TEMPLATE)
+      ->renderBlock('book_ownership_deleted', [
+        'privateClass' => BookRenderingUtilities::composePrivateClass($owner),
+        'id' => BookRenderingUtilities::cardHtmlId($bookOwnership->getBook()->getId()),
+      ]);
+    $this->broadcastToAffectedUsers([$owner], $content);
+  }
+
   public function onBookUpdated(Book $book): void
   {
     $content = $this->twig

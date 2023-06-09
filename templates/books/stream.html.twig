@@ -5,10 +5,14 @@
 {% endblock %}
 
 {% block book_ownership_updated %}
-<turbo-stream action="remove" targets=".{{ privateClass }} > #{{ id }}"></turbo-stream>
+{{ block('book_ownership_deleted') }}
 <turbo-stream action="append" targets="{{ newSelector }}">
   <template>{{ component('book:card', {bookOwnership: bookOwnership}) }}</template>
 </turbo-stream>
+{% endblock %}
+
+{% block book_ownership_deleted %}
+<turbo-stream action="remove" targets=".{{ privateClass }} > #{{ id }}"></turbo-stream>
 {% endblock %}
 
 {% block book_updated %}
