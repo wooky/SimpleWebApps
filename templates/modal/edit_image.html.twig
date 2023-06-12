@@ -1,14 +1,30 @@
 {% extends 'modal/_base.html.twig' %}
 
-{% block title %}TODO{% endblock %}
+{% block title %}{{ 'edit_image.title'|trans }}{% endblock %}
 
 {% block before_modal %}{{ form_start(form, {'action': app.request.requesturi, 'attr': {'data-controller': 'image-upload'}}) }}{% endblock %}
 {% block modal_body %}
-{{ form_widget(form) }}
-<div data-image-upload-target="notAnImage">
-  {{ 'image_upload.not_an_image'|trans }}
+<ul class="steps has-content-centered">
+  <li class="steps-segment" data-image-upload-target="stepMarker">
+    <span class="steps-marker"></span>
+    <div class="steps-content is-size-4">{{ 'edit_image.select_image'|trans }}</div>
+  </li>
+  <li class="steps-segment" data-image-upload-target="stepMarker">
+    <span class="steps-marker"></span>
+    <div class="steps-content is-size-4">{{ 'edit_image.crop'|trans }}</div>
+  </li>
+  <li class="steps-segment" data-image-upload-target="stepMarker">
+    <span class="steps-marker"></span>
+    <div class="steps-content is-size-4">{{ 'edit_image.upload'|trans }}</div>
+  </li>
+</ul>
+<div data-image-upload-target="stepStage">
+  {{ form_widget(form.dropzone) }}
+  <div data-image-upload-target="notAnImage">
+    {{ 'edit_image.not_an_image'|trans }}
+  </div>
 </div>
-<div>
+<div data-image-upload-target="stepStage">
   <img id="cropper" data-image-upload-target="cropper" style="display: block; max-width: 100%; max-height: 400px" {# TODO #}>
 </div>
 {% endblock %}

@@ -25,9 +25,6 @@ class EditImageType extends AbstractType
           'data-image-upload-target' => 'dropzone',
           'placeholder' => 'TODO',
         ],
-        'row_attr' => [
-          'data-image-upload-target' => 'dropzoneRow',
-        ],
       ])
     ;
   }

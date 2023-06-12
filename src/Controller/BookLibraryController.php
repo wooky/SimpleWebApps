@@ -56,7 +56,7 @@ class BookLibraryController extends AbstractController
   public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
   {
     return $this->crudEdit($request, $bookRepository, $book, isDeletable: false, extraButtons: [
-      'form.edit_image' => $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_IMAGE_NAME, ['id' => $book->getId()]),
+      'edit_image.button' => $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_IMAGE_NAME, ['id' => $book->getId()]),
     ]);
   }
 

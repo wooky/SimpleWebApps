@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import Cropper from "cropperjs";
 
 export default class extends Controller {
-  static targets = ['dropzone', 'dropzoneRow', 'cropper', 'notAnImage'];
+  static targets = ['stepMarker', 'stepStage', 'dropzone', 'cropper', 'notAnImage'];
 
   connect() {
     this._reset();
@@ -16,11 +16,23 @@ export default class extends Controller {
   }
 
   _reset() {
-    [this.notAnImageTarget, this.cropperTarget]
+    this._setStep(0);
+
+    [this.notAnImageTarget]
       .forEach(el => el.classList.add('is-hidden'));
+
     if (this.cropper) {
       this.cropper.destroy();
     }
+  }
+
+  _setStep(step) {
+    this.stepMarkerTargets.forEach((el, i) =>
+      (step === i) ? el.classList.add('is-active') : el.classList.remove('is-active')
+    );
+    this.stepStageTargets.forEach((el, i) =>
+      (step === i) ? el.classList.remove('is-hidden') : el.classList.add('is-hidden')
+    );
   }
 
   _onDropzoneChange(event) {
@@ -38,6 +50,7 @@ export default class extends Controller {
         viewMode: 2,
         modal: false,
       });
+      this._setStep(1);
     });
     reader.readAsDataURL(file);
   }

@@ -48,11 +48,18 @@ book_library:
 calculator:
   title: 'Calculator'
 
+edit_image:
+  button: 'Edit Image'
+  title: 'TODO'
+  select_image: 'Select Image'
+  crop: 'Crop'
+  upload: 'Upload'
+  not_an_image: 'The selected file is not an image.'
+
 form:
   save: 'Save'
   ulid: 'ULID'
   unchanged: '(unchanged)'
-  edit_image: 'Edit Image'
 
 modal:
   new:
