@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller\Mixin;
 
-use SimpleWebApps\Form\EditImageType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\UX\Dropzone\Form\DropzoneType;
 
 trait EditImageMixin
 {
@@ -17,7 +18,10 @@ trait EditImageMixin
 
   protected function editImageModal(string $backUrl): Response
   {
-    $form = $this->createForm(EditImageType::class);
+    $form = $this->createFormBuilder()
+      ->add('dropzone', DropzoneType::class, ['required' => false])
+      ->add('image', HiddenType::class)
+      ->getForm();
 
     return $this->render('modal/edit_image.html.twig', [
       'form' => $form,

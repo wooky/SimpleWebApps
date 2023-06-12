@@ -15,6 +15,7 @@ use function assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[Gedmo\Loggable]
+#[Gedmo\Uploadable(path: 'public/upload/book', filenameGenerator: 'SHA1', allowedTypes: 'image/png')]
 class Book implements Identifiable
 {
   #[ORM\Id]
@@ -33,11 +34,12 @@ class Book implements Identifiable
 
   #[ORM\Column]
   #[Gedmo\Versioned]
-  private bool $hasImage = false;
-
-  #[ORM\Column]
-  #[Gedmo\Versioned]
   private ?bool $isPublic = null;
+
+  #[ORM\Column(length: 64, nullable: true)]
+  #[Gedmo\UploadableFileName]
+  #[Gedmo\Versioned]
+  private ?string $imagePath = null;
 
   public function getId(): Ulid
   {
@@ -75,18 +77,6 @@ class Book implements Identifiable
     return $this;
   }
 
-  public function hasImage(): bool
-  {
-    return $this->hasImage;
-  }
-
-  public function setHasImage(bool $hasImage): self
-  {
-    $this->hasImage = $hasImage;
-
-    return $this;
-  }
-
   public function isPublic(): ?bool
   {
     return $this->isPublic;
@@ -95,6 +85,18 @@ class Book implements Identifiable
   public function setIsPublic(bool $isPublic): self
   {
     $this->isPublic = $isPublic;
+
+    return $this;
+  }
+
+  public function getImagePath(): ?string
+  {
+    return $this->imagePath;
+  }
+
+  public function setImagePath(string $imagePath): self
+  {
+    $this->imagePath = $imagePath;
 
     return $this;
   }

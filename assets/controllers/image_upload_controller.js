@@ -3,7 +3,7 @@ import { visit } from "@hotwired/turbo";
 import Cropper from "cropperjs";
 
 export default class extends Controller {
-  static targets = ['stepMarker', 'stepStage', 'back', 'dropzone', 'cropper', 'notAnImage'];
+  static targets = ['stepMarker', 'stepStage', 'back', 'dropzone', 'cropper', 'notAnImage', 'upload', 'image'];
   static values = {
     backUrl: String,
   };
@@ -24,13 +24,20 @@ export default class extends Controller {
     ;
   }
 
+  uploadCrop() {
+    this.cropper.getCroppedCanvas().toBlob((blob) => {
+      this.imageTarget.value = blob;
+      this.element.requestSubmit();
+    });
+  }
+
   _reset() {
     this._setStep(0);
   }
 
   _setStep(step) {
     this.step = step;
-    [this.notAnImageTarget]
+    [this.notAnImageTarget, this.uploadTarget]
       .forEach(el => el.classList.add('is-hidden'));
 
     this.stepMarkerTargets.forEach((el, i) =>
@@ -62,6 +69,7 @@ export default class extends Controller {
 
       this.application.getControllerForElementAndIdentifier(this.dropzoneTarget.parentNode, 'symfony--ux-dropzone--dropzone').clear(); // TODO ugly hack
       this._setStep(1);
+      this.uploadTarget.classList.remove('is-hidden');
     });
     reader.readAsDataURL(file);
   }
