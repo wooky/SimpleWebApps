@@ -2,7 +2,7 @@
 
 {% block title %}TODO{% endblock %}
 
-{% block before_modal %}{% endblock %}
-{% block modal_body %}{% endblock %}
+{% block before_modal %}{{ form_start(form, {'action': app.request.requesturi, 'attr': {'data-controller': 'image-upload'}}) }}{% endblock %}
+{% block modal_body %} {{ form_widget(form) }}{% endblock %}
 {% block modal_footer %}{% endblock %}
-{% block after_modal %}{% endblock %}
+{% block after_modal %}{{ form_end(form) }}{% endblock %}

@@ -61,7 +61,7 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_IMAGE_PATH, name: self::ROUTE_EDIT_IMAGE_NAME, methods: ['GET', 'POST'])]
-  public function editImage(Book $book): Response
+  public function editImage(): Response
   {
     return $this->editImageModal();
   }

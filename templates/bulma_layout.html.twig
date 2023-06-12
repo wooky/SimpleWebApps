@@ -265,7 +265,7 @@
 {# Rows #}
 
 {%- block form_row -%}
-    <div class="field is-horizontal">
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %} class="field is-horizontal">
         <div class="field-label is-normal">{{- form_label(form) -}}</div>
         <div class="field-body">
             <div class="field">
@@ -321,3 +321,16 @@
     {%- endif -%}
     class="{{ class }}"
 {%- endblock form_widget_container_attributes -%}
+
+{% block attributes -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+        {%- elseif attrvalue is same as(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not same as(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock attributes -%}
