@@ -22,4 +22,5 @@ return [
     Scheb\TwoFactorBundle\SchebTwoFactorBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Symfony\UX\Dropzone\DropzoneBundle::class => ['all' => true],
+    Symfony\UX\Cropperjs\CropperjsBundle::class => ['all' => true],
 ];

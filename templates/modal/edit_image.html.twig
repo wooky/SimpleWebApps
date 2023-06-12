@@ -3,6 +3,14 @@
 {% block title %}TODO{% endblock %}
 
 {% block before_modal %}{{ form_start(form, {'action': app.request.requesturi, 'attr': {'data-controller': 'image-upload'}}) }}{% endblock %}
-{% block modal_body %} {{ form_widget(form) }}{% endblock %}
+{% block modal_body %}
+{{ form_widget(form) }}
+<div data-image-upload-target="notAnImage">
+  {{ 'image_upload.not_an_image'|trans }}
+</div>
+<div>
+  <img id="cropper" data-image-upload-target="cropper" style="display: block; max-width: 100%; max-height: 400px" {# TODO #}>
+</div>
+{% endblock %}
 {% block modal_footer %}{% endblock %}
 {% block after_modal %}{{ form_end(form) }}{% endblock %}
