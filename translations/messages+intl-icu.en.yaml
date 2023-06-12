@@ -75,6 +75,7 @@ modal:
   forbidden:
     title: 'Access Denied'
     message: "You do not have permission to edit this user's {subject}."
+  back: 'Back'
 
 profile:
   title: 'My Profile'

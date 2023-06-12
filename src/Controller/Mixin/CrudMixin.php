@@ -20,6 +20,8 @@ use function is_string;
  */
 trait CrudMixin
 {
+  use AbstractControllerTrait;
+
   protected const ROUTE_INDEX_PATH = '/';
   protected const ROUTE_NEW_PATH = '/new';
   protected const ROUTE_EDIT_PATH = '/{id}/edit';
@@ -32,12 +34,6 @@ trait CrudMixin
   public const ROUTE_DELETE_NAME = '_delete';
 
   private const SUBJECT_SUFFIX = '.subject';
-
-  abstract protected function denyAccessUnlessGranted(mixed $attribute, mixed $subject = null, string $message = 'Access Denied.'): void;
-
-  abstract protected function render(string $view, array $parameters = []): Response;
-
-  abstract protected static function getControllerShortName(): string;
 
   /**
    * @param T $entity

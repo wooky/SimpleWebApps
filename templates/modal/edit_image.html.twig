@@ -2,7 +2,12 @@
 
 {% block title %}{{ 'edit_image.title'|trans }}{% endblock %}
 
-{% block before_modal %}{{ form_start(form, {'action': app.request.requesturi, 'attr': {'data-controller': 'image-upload'}}) }}{% endblock %}
+{% block before_modal %}
+{{ form_start(form, {
+  'action': app.request.requesturi,
+  'attr': {'data-controller': 'image-upload', 'data-image-upload-back-url-value': back_url}
+})}}
+{% endblock %}
 {% block modal_body %}
 <ul class="steps has-content-centered">
   <li class="steps-segment" data-image-upload-target="stepMarker">
@@ -19,7 +24,10 @@
   </li>
 </ul>
 <div data-image-upload-target="stepStage">
-  {{ form_widget(form.dropzone) }}
+  {{ form_widget(form.dropzone, {'attr': {
+    'data-image-upload-target': 'dropzone',
+    'placeholder': 'TODO',
+  }}) }}
   <div data-image-upload-target="notAnImage">
     {{ 'edit_image.not_an_image'|trans }}
   </div>
@@ -28,5 +36,12 @@
   <img id="cropper" data-image-upload-target="cropper" style="display: block; max-width: 100%; max-height: 400px" {# TODO #}>
 </div>
 {% endblock %}
-{% block modal_footer %}{% endblock %}
+{% block modal_footer %}
+<button
+  type="button"
+  class="button is-warning"
+  data-image-upload-target="back"
+  data-action="image-upload#goBack"
+>{{ 'modal.back'|trans }}</button>
+{% endblock %}
 {% block after_modal %}{{ form_end(form) }}{% endblock %}
