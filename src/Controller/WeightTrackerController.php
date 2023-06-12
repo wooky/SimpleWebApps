@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Controller\Mixin\CrudMixin;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Form\WeightRecordType;

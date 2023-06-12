@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SimpleWebApps\Controller;
+namespace SimpleWebApps\Controller\Mixin;
 
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Auth\RelationshipCapability;
