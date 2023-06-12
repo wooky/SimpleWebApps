@@ -83,9 +83,15 @@ trait CrudMixin
   /**
    * @param AbstractRepository<T> $repository
    * @param T                     $entity
+   * @param array<string,string>  $extraButtons
    */
-  protected function crudEdit(Request $request, $repository, $entity, bool $isDeletable = true): Response
-  {
+  protected function crudEdit(
+    Request $request,
+    $repository,
+    $entity,
+    bool $isDeletable = true,
+    array $extraButtons = []
+  ): Response {
     if ($entity instanceof Ownable && !$this->isGranted(RelationshipCapability::Write->value, $entity)) {
       return $this->render('modal/forbidden.html.twig', [
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
@@ -107,6 +113,7 @@ trait CrudMixin
         'form' => $form,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
         'pre_delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]) : null,
+        'extra_buttons' => $extraButtons,
     ];
 
     return $this->render('modal/edit.html.twig', $parameters);

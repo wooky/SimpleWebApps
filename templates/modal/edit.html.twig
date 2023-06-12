@@ -9,5 +9,8 @@
 {% if pre_delete_path %}
 <button class="button is-danger" formaction="{{ pre_delete_path }}">{% trans %}modal.delete.delete{% endtrans %}</button>
 {% endif %}
+{% for label, link in extra_buttons %}
+<a href="{{ link }}" class="button is-link">{{ label|trans }}</a>
+{% endfor %}
 {% endblock %}
 {% block after_modal %}{{ form_end(form) }}{% endblock %}

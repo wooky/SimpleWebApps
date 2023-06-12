@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Controller;
 
 use SimpleWebApps\Controller\Mixin\CrudMixin;
+use SimpleWebApps\Controller\Mixin\EditImageMixin;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
@@ -24,6 +25,7 @@ class BookLibraryController extends AbstractController
 {
   /** @use CrudMixin<Book> */
   use CrudMixin;
+  use EditImageMixin;
 
   public const CONTROLLER_SHORT_NAME = 'book_library';
 
@@ -53,7 +55,15 @@ class BookLibraryController extends AbstractController
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
   public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
   {
-    return $this->crudEdit($request, $bookRepository, $book, isDeletable: false);
+    return $this->crudEdit($request, $bookRepository, $book, isDeletable: false, extraButtons: [
+      'form.edit_image' => $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_IMAGE_NAME, ['id' => $book->getId()]),
+    ]);
+  }
+
+  #[Route(self::ROUTE_EDIT_IMAGE_PATH, name: self::ROUTE_EDIT_IMAGE_NAME, methods: ['GET', 'POST'])]
+  public function editImage(Book $book): Response
+  {
+    return $this->editImageModal();
   }
 
   /**

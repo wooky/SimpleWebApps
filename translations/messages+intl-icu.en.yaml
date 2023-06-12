@@ -52,6 +52,7 @@ form:
   save: 'Save'
   ulid: 'ULID'
   unchanged: '(unchanged)'
+  edit_image: 'Edit Image'
 
 modal:
   new:
