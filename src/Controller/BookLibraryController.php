@@ -70,8 +70,15 @@ class BookLibraryController extends AbstractController
       $uploadableManager,
       $bookRepository,
       $book,
+      null !== $book->getImagePath(),
       $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_NAME, ['id' => $book->getId()]),
     );
+  }
+
+  #[Route(self::ROUTE_DELETE_IMAGE_PATH, name: self::ROUTE_DELETE_IMAGE_NAME, methods: ['DELETE'])]
+  public function deleteImage(): Response
+  {
+    return new Response();
   }
 
   /**

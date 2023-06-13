@@ -23,6 +23,8 @@ trait AbstractControllerTrait
 
   abstract protected static function getControllerShortName(): string;
 
+  abstract protected function generateUrl(string $route, array $parameters = []): string;
+
   protected function closeModalOrRedirect(Request $request): Response
   {
     if ('app-modal' === $request->headers->get('Turbo-Frame')) {
