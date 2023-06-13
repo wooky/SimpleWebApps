@@ -12,9 +12,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function assert;
-use function is_string;
-
 /**
  * @template T of Identifiable
  */
@@ -146,9 +143,7 @@ trait CrudMixin
    */
   protected function crudDeleteAndTrue(Request $request, $repository, $entity, bool $flush = true): bool
   {
-    $token = $request->request->get('_token');
-    assert(is_string($token) || null === $token);
-    if ($this->isCsrfTokenValid('delete'.((string) $entity->getId()), $token)) {
+    if ($this->allowedToDelete($request, (string) $entity->getId())) {
       if ($entity instanceof Ownable) {
         $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $entity);
       }

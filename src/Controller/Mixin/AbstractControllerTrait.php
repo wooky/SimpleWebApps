@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use function assert;
+use function is_string;
+
 trait AbstractControllerTrait
 {
   public const ROUTE_INDEX_NAME = '_index';
@@ -35,5 +38,13 @@ trait AbstractControllerTrait
       self::getControllerShortName().self::ROUTE_INDEX_NAME,
       status: Response::HTTP_SEE_OTHER
     );
+  }
+
+  protected function allowedToDelete(Request $request, string $id): bool
+  {
+    $token = $request->request->get('_token');
+    assert(is_string($token) || null === $token);
+
+    return $this->isCsrfTokenValid('delete'.$id, $token);
   }
 }

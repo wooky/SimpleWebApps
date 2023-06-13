@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\Controller\Mixin;
 
 use SimpleWebApps\Entity\Identifiable;
+use SimpleWebApps\Entity\Interface\Imageable;
 use SimpleWebApps\Repository\AbstractRepository;
 use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -14,8 +15,10 @@ use Symfony\UX\Dropzone\Form\DropzoneType;
 
 use function assert;
 
+use const DIRECTORY_SEPARATOR;
+
 /**
- * @template T of Identifiable
+ * @template T of Identifiable&Imageable
  */
 trait EditImageMixin
 {
@@ -63,5 +66,29 @@ trait EditImageMixin
       'back_url' => $backUrl,
       'delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_IMAGE_NAME, ['id' => $id]) : null,
     ]);
+  }
+
+  /**
+   * @param AbstractRepository<T> $repository
+   * @param T                     $entity
+   */
+  protected function handleDeleteImage(
+    Request $request,
+    UploadableManager $uploadableManager,
+    $repository,
+    $entity,
+  ): Response {
+    if ($this->allowedToDelete($request, (string) $entity->getId())) {
+      $imagePathPrefix = $uploadableManager->getUploadableListener()->getDefaultPath();
+      $imagePathSuffix = $entity->getImagePath();
+      assert(null !== $imagePathPrefix && null !== $imagePathSuffix);
+      $imagePath = $imagePathPrefix.DIRECTORY_SEPARATOR.$imagePathSuffix;
+
+      $entity->setImagePath(null);
+      $repository->save($entity, true);
+      $uploadableManager->getUploadableListener()->removeFile($imagePath);
+    }
+
+    return $this->closeModalOrRedirect($request);
   }
 }

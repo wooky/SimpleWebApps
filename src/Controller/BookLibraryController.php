@@ -76,9 +76,9 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_DELETE_IMAGE_PATH, name: self::ROUTE_DELETE_IMAGE_NAME, methods: ['DELETE'])]
-  public function deleteImage(): Response
+  public function deleteImage(Request $request, Book $book, BookRepository $bookRepository, UploadableManager $uploadableManager): Response
   {
-    return new Response();
+    return $this->handleDeleteImage($request, $uploadableManager, $bookRepository, $book);
   }
 
   /**
