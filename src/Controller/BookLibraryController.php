@@ -12,6 +12,7 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\BookType;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\BookRepository;
+use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +26,7 @@ class BookLibraryController extends AbstractController
 {
   /** @use CrudMixin<Book> */
   use CrudMixin;
+  /** @use EditImageMixin<Book> */
   use EditImageMixin;
 
   public const CONTROLLER_SHORT_NAME = 'book_library';
@@ -61,9 +63,15 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_IMAGE_PATH, name: self::ROUTE_EDIT_IMAGE_NAME, methods: ['GET', 'POST'])]
-  public function editImage(Book $book): Response
+  public function editImage(Request $request, Book $book, BookRepository $bookRepository, UploadableManager $uploadableManager): Response
   {
-    return $this->editImageModal($this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_NAME, ['id' => $book->getId()]));
+    return $this->editImageModal(
+      $request,
+      $uploadableManager,
+      $bookRepository,
+      $book,
+      $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_NAME, ['id' => $book->getId()]),
+    );
   }
 
   /**

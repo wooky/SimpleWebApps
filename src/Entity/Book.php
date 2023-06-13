@@ -15,7 +15,7 @@ use function assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[Gedmo\Loggable]
-#[Gedmo\Uploadable(path: 'public/upload/book', filenameGenerator: 'SHA1', allowedTypes: 'image/png')]
+#[Gedmo\Uploadable(filenameGenerator: 'SHA1', allowedTypes: 'image/png')]
 class Book implements Identifiable
 {
   #[ORM\Id]

@@ -3,18 +3,18 @@ import { visit } from "@hotwired/turbo";
 import Cropper from "cropperjs";
 
 export default class extends Controller {
-  static targets = ['stepMarker', 'stepStage', 'back', 'dropzone', 'cropper', 'notAnImage', 'upload', 'image'];
+  static targets = ['stepMarker', 'stepStage', 'back', 'cropper', 'notAnImage', 'upload', 'image'];
   static values = {
     backUrl: String,
   };
 
   connect() {
     this._reset();
-    this.dropzoneTarget.parentNode.addEventListener('dropzone:change', e => this._onDropzoneChange(e));
+    this.imageTarget.parentNode.addEventListener('dropzone:change', e => this._onDropzoneChange(e));
   }
 
   disconnect() {
-    this.dropzoneTarget.parentNode.removeEventListener('dropzone:change', e => this._onDropzoneChange(e));
+    this.imageTarget.parentNode.removeEventListener('dropzone:change', e => this._onDropzoneChange(e));
   }
 
   goBack() {
@@ -26,8 +26,13 @@ export default class extends Controller {
 
   uploadCrop() {
     this.cropper.getCroppedCanvas().toBlob((blob) => {
-      this.imageTarget.value = blob;
+      // https://stackoverflow.com/a/66466544
+      const file = new File([blob], 'image.png', {type: 'image/png'});
+      const container = new DataTransfer();
+      container.items.add(file);
+      this.imageTarget.files = container.files;
       this.element.requestSubmit();
+      this._setStep(2);
     });
   }
 
@@ -67,7 +72,7 @@ export default class extends Controller {
         modal: false,
       });
 
-      this.application.getControllerForElementAndIdentifier(this.dropzoneTarget.parentNode, 'symfony--ux-dropzone--dropzone').clear(); // TODO ugly hack
+      this.application.getControllerForElementAndIdentifier(this.imageTarget.parentNode, 'symfony--ux-dropzone--dropzone').clear(); // TODO ugly hack
       this._setStep(1);
       this.uploadTarget.classList.remove('is-hidden');
     });

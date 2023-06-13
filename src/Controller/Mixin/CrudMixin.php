@@ -27,7 +27,6 @@ trait CrudMixin
   protected const ROUTE_EDIT_PATH = '/{id}/edit';
   protected const ROUTE_DELETE_PATH = '/{id}/delete';
 
-  public const ROUTE_INDEX_NAME = '_index';
   public const ROUTE_NEW_NAME = '_new';
   public const ROUTE_EDIT_NAME = '_edit';
   public const ROUTE_PREDELETE_NAME = '_pre_delete';
@@ -159,17 +158,5 @@ trait CrudMixin
     }
 
     return false;
-  }
-
-  protected function closeModalOrRedirect(Request $request): Response
-  {
-    if ('app-modal' === $request->headers->get('Turbo-Frame')) {
-      return $this->render('modal/close.html.twig');
-    }
-
-    return $this->redirectToRoute(
-      self::getControllerShortName().self::ROUTE_INDEX_NAME,
-      status: Response::HTTP_SEE_OTHER
-    );
   }
 }

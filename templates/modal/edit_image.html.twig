@@ -24,9 +24,8 @@
   </li>
 </ul>
 <div data-image-upload-target="stepStage">
-  {{ form_widget(form.dropzone, {'attr': {
-    'form': '',
-    'data-image-upload-target': 'dropzone',
+  {{ form_widget(form.image, {'attr': {
+    'data-image-upload-target': 'image',
     'placeholder': 'TODO',
   }}) }}
   <div data-image-upload-target="notAnImage">
@@ -36,7 +35,9 @@
 <div data-image-upload-target="stepStage">
   <img id="cropper" data-image-upload-target="cropper" style="display: block; max-width: 100%; max-height: 400px" {# TODO #}>
 </div>
-{{ form_widget(form.image, {'attr': {'data-image-upload-target': 'image'}}) }}
+<div data-image-upload-target="stepStage">
+  <progress class="progress is-large is-primary" max="100"></progress>
+</div>
 {{ form_rest(form) }}
 {% endblock %}
 {% block modal_footer %}
