@@ -1,6 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bulma_layout.html.twig']
+    globals:
+        upload_dir: '%env(UPLOAD_DIR_RELATIVE)%'
 
 when@test:
     twig:

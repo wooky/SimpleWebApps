@@ -3,7 +3,7 @@
 stof_doctrine_extensions:
     default_locale: en_US
     uploadable:
-        default_file_path: "%kernel.project_dir%/public/upload"
+        default_file_path: "%kernel.project_dir%/public%env(UPLOAD_DIR_RELATIVE)%"
     orm:
         default:
             loggable: true
