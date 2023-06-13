@@ -27,13 +27,13 @@ export default class extends Controller {
   uploadCrop() {
     this.cropper.getCroppedCanvas().toBlob((blob) => {
       // https://stackoverflow.com/a/66466544
-      const file = new File([blob], 'image.png', {type: 'image/png'});
+      const file = new File([blob], 'image.jpg', {type: 'image/jpeg'});
       const container = new DataTransfer();
       container.items.add(file);
       this.imageTarget.files = container.files;
       this.element.requestSubmit();
       this._setStep(2);
-    });
+    }, 'image/jpeg');
   }
 
   _reset() {
