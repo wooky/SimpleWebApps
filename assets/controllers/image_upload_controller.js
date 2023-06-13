@@ -3,7 +3,7 @@ import { visit } from "@hotwired/turbo";
 import Cropper from "cropperjs";
 
 export default class extends Controller {
-  static targets = ['stepMarker', 'stepStage', 'back', 'cropper', 'notAnImage', 'upload', 'image'];
+  static targets = ['stepMarker', 'stepStage', 'back', 'cropper', 'notAnImage', 'upload', 'image', 'form'];
   static values = {
     backUrl: String,
   };
@@ -31,7 +31,7 @@ export default class extends Controller {
       const container = new DataTransfer();
       container.items.add(file);
       this.imageTarget.files = container.files;
-      this.element.requestSubmit();
+      this.formTarget.requestSubmit();
       this._setStep(2);
     }, 'image/jpeg');
   }

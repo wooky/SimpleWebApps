@@ -3,12 +3,18 @@
 {% block title %}{{ 'edit_image.title'|trans }}{% endblock %}
 
 {% block before_modal %}
-{{ form_start(form, {
-  'action': app.request.requesturi,
-  'attr': {'data-controller': 'image-upload', 'data-image-upload-back-url-value': back_url}
-})}}
+<span
+  data-controller="image-upload"
+  data-image-upload-back-url-value="back_url"
+>
 {% endblock %}
 {% block modal_body %}
+{{ form_start(form, {
+  'action': app.request.requesturi,
+  'attr': {
+    'data-image-upload-target': 'form',
+  },
+})}}
 <ul class="steps has-content-centered">
   <li class="steps-segment" data-image-upload-target="stepMarker">
     <span class="steps-marker"></span>
@@ -39,6 +45,7 @@
   <progress class="progress is-large is-primary" max="100"></progress>
 </div>
 {{ form_rest(form) }}
+{{ form_end(form) }}
 {% endblock %}
 {% block modal_footer %}
 <div class="level" style="width: 100%" {# TODO #}>
@@ -64,4 +71,4 @@
   </div>
 </div>
 {% endblock %}
-{% block after_modal %}{{ form_end(form) }}{% endblock %}
+{% block after_modal %}</span>{% endblock %}

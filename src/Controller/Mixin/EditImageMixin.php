@@ -47,6 +47,8 @@ trait EditImageMixin
       assert($image instanceof UploadedFile);
       $uploadableManager->markEntityToUpload($entity, $image);
       $repository->save($entity, true);
+
+      return $this->closeModalOrRedirect($request);
     }
 
     return $this->render('modal/edit_image.html.twig', [
