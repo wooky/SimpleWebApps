@@ -48,46 +48,25 @@
 {{ form_end(form) }}
 {% endblock %}
 {% block modal_footer %}
-<div class="level" style="width: 100%" {# TODO #}>
-  <div class="level-left">
-    <div class="level-item">
-      <button
-        type="button"
-        class="button is-warning"
-        data-image-upload-target="back"
-        data-action="image-upload#goBack"
-      >{{ 'modal.back'|trans }}</button>
-    </div>
-  {% if delete_path %}
-    <form class="level-item dropdown is-up" method="DELETE" action="{{ delete_path }}" data-controller="dropdown-button">
-      <div class="dropdown-trigger">
-        <button type="button" class="button is-danger" data-action="dropdown-button#toggleMenu">
-          <span>{{ 'modal.delete.delete'|trans }}</span>
-          <span class="icon is-small">
-            <iconify-icon icon="mdi:chevron-up"></iconify-icon>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu">
-        <div class="dropdown-content">
-          <div class="dropdown-item">
-            <button type="submit" class="button is-danger">{{ 'form.confirm_delete'|trans }}</button>
-          </div>
-        </div>
-      </div>
-      <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
-    </form>
-  {% endif %}
+<div class="level-left">
+  <div class="level-item">
+    <button
+      type="button"
+      class="button is-warning"
+      data-image-upload-target="back"
+      data-action="image-upload#goBack"
+    >{{ 'modal.back'|trans }}</button>
   </div>
-  <div class="level-right">
-    <div class="level-item">
-      <button
-        type="button"
-        class="button is-success"
-        data-image-upload-target="upload"
-        data-action="image-upload#uploadCrop"
-      >{{ 'edit_image.upload'|trans }}</button>
-    </div>
+  {{ include('modal/_delete_button.html.twig') }}
+</div>
+<div class="level-right">
+  <div class="level-item">
+    <button
+      type="button"
+      class="button is-success"
+      data-image-upload-target="upload"
+      data-action="image-upload#uploadCrop"
+    >{{ 'edit_image.upload'|trans }}</button>
   </div>
 </div>
 {% endblock %}

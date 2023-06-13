@@ -1,0 +1,23 @@
+{% if delete_path %}
+  <form class="level-item dropdown is-up" method="DELETE" action="{{ delete_path }}" data-controller="dropdown-button">
+    <div class="dropdown-trigger">
+      <button type="button" class="button is-danger" data-action="dropdown-button#toggleMenu">
+        <span>{{ 'modal.delete.delete'|trans }}</span>
+        <span class="icon is-small">
+          <iconify-icon icon="mdi:chevron-up"></iconify-icon>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu">
+      <div class="dropdown-content">
+        <div class="dropdown-item">
+          <button type="submit" class="button is-danger">{{ 'modal.delete.confirm'|trans }}</button>
+        </div>
+      {% if block('delete_content') is defined and block('delete_content') is not empty %}
+        <div class="dropdown-item">{{ block('delete_content') }}</div>
+      {% endif %}
+      </div>
+    </div>
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+  </form>
+{% endif %}

@@ -17,7 +17,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/books', name: self::CONTROLLER_SHORT_NAME)]
 class BooksController extends AbstractController
@@ -51,19 +50,10 @@ class BooksController extends AbstractController
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
   public function edit(Request $request, BookOwnership $bookOwnership, BookOwnershipRepository $bookOwnershipRepository): Response
   {
-    return $this->crudEdit($request, $bookOwnershipRepository, $bookOwnership);
-  }
-
-  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
-  public function preDelete(
-    BookOwnership $bookOwnership,
-    BookOwnershipRepository $bookOwnershipRepository,
-    TranslatorInterface $translator,
-  ): Response {
     $bookOwners = $bookOwnershipRepository->count(['book' => $bookOwnership->getBook()]);
-    $extraFooter = (1 === $bookOwners) ? $translator->trans('books.no_more_owners') : null;
+    $deleteWarning = (1 === $bookOwners) ? 'books.no_more_owners' : null;
 
-    return $this->crudPreDelete($bookOwnership, $extraFooter);
+    return $this->crudEdit($request, $bookOwnershipRepository, $bookOwnership, deleteWarning: $deleteWarning);
   }
 
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]

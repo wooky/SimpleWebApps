@@ -26,7 +26,6 @@ trait CrudMixin
 
   public const ROUTE_NEW_NAME = '_new';
   public const ROUTE_EDIT_NAME = '_edit';
-  public const ROUTE_PREDELETE_NAME = '_pre_delete';
   public const ROUTE_DELETE_NAME = '_delete';
 
   private const SUBJECT_SUFFIX = '.subject';
@@ -82,7 +81,8 @@ trait CrudMixin
     $repository,
     $entity,
     bool $isDeletable = true,
-    array $extraButtons = []
+    array $extraButtons = [],
+    ?string $deleteWarning = null,
   ): Response {
     if ($entity instanceof Ownable && !$this->isGranted(RelationshipCapability::Write->value, $entity)) {
       return $this->render('modal/forbidden.html.twig', [
@@ -104,8 +104,9 @@ trait CrudMixin
         'id' => $id,
         'form' => $form,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
-        'pre_delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_PREDELETE_NAME, ['id' => $id]) : null,
+        'delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id]) : null,
         'extra_buttons' => $extraButtons,
+        'delete_warning' => $deleteWarning,
     ];
 
     return $this->render('modal/edit.html.twig', $parameters);

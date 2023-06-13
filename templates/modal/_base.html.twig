@@ -11,7 +11,9 @@
         {% block modal_body %}{% endblock %}
       </section>
       <footer class="modal-card-foot">
-        {% block modal_footer %}{% endblock %}
+        <div class="level" style="width: 100%" {# TODO #}>
+          {% block modal_footer %}{% endblock %}
+        </div>
       </footer>
       {% block after_modal %}{% endblock %}
     </div>

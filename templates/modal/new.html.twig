@@ -4,5 +4,12 @@
 
 {% block before_modal %}{{ form_start(form, {'action': app.request.requesturi}) }}{% endblock %}
 {% block modal_body %} {{ form_widget(form) }}{% endblock %}
-{% block modal_footer %}<button type="submit" class="button is-success">{% trans %}modal.new.add{% endtrans %}</button>{% endblock %}
+{% block modal_footer %}
+<div class="level-left"></div>
+<div class="level-right">
+  <div class="level-item">
+    <button type="submit" class="button is-success">{{ 'modal.new.add'|trans }}</button>
+  </div>
+</div>
+{% endblock %}
 {% block after_modal %}{{ form_end(form) }}{% endblock %}

@@ -1,16 +1,29 @@
 {% extends 'modal/_base.html.twig' %}
+{% set form_id = 'form-edit-' ~ random() %}
 
 {% block title %}{{ 'modal.edit.title'|trans({'subject': subject|trans}) }}{% endblock %}
 
-{% block before_modal %}{{ form_start(form, {'action': app.request.requesturi}) }}{% endblock %}
-{% block modal_body %} {{ form_widget(form) }}{% endblock %}
-{% block modal_footer %}
-<button class="button is-success" type="submit">{% trans %}modal.edit.edit{% endtrans %}</button>
-{% if pre_delete_path %}
-<button class="button is-danger" formaction="{{ pre_delete_path }}">{% trans %}modal.delete.delete{% endtrans %}</button>
-{% endif %}
-{% for label, link in extra_buttons %}
-<a href="{{ link }}" class="button is-link">{{ label|trans }}</a>
-{% endfor %}
+{% block modal_body %}
+{{ form_start(form, {'action': app.request.requesturi, 'attr': {'id': form_id}}) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
 {% endblock %}
-{% block after_modal %}{{ form_end(form) }}{% endblock %}
+{% block modal_footer %}
+<div class="level-left">
+  {% embed 'modal/_delete_button.html.twig' %}
+    {%- block delete_content -%}
+    {%- if delete_warning -%}
+      <div class="message is-warning">
+        <div class="message-body">{{- delete_warning|trans -}}</div>
+      </div>
+    {%- endif -%}
+    {%- endblock -%}
+  {% endembed %}
+  {% for label, link in extra_buttons %}
+  <div class="level-item"><a href="{{ link }}" class="button is-link">{{ label|trans }}</a></div>
+  {% endfor %}
+</div>
+<div class="level-right">
+  <button class="button is-success" type="submit" form="{{ form_id }}">{{ 'modal.edit.edit'|trans }}</button>
+</div>
+{% endblock %}

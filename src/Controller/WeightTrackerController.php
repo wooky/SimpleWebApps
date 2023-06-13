@@ -42,12 +42,6 @@ class WeightTrackerController extends AbstractController
     return $this->crudEdit($request, $weightRecordRepository, $weightRecord);
   }
 
-  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_PREDELETE_NAME, methods: ['POST'])]
-  public function preDelete(WeightRecord $weightRecord): Response
-  {
-    return $this->crudPreDelete($weightRecord);
-  }
-
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
   public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
   {
