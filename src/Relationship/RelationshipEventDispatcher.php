@@ -7,7 +7,6 @@ namespace SimpleWebApps\Relationship;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use InvalidArgumentException;
 use SimpleWebApps\Common\EventQueueAndDispatcher;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Relationship\Event\RelationshipActivatedEvent;
@@ -38,7 +37,7 @@ final class RelationshipEventDispatcher
 
   public function preRelationshipRemove(Relationship $relationship): void
   {
-    $this->queueEvent('__DELETED__', new RelationshipRemovedEvent($relationship, $relationship->getId() ?? throw new InvalidArgumentException('Relationship has no ID')));
+    $this->queueEvent('__DELETED__', new RelationshipRemovedEvent($relationship, $relationship->getId()));
   }
 
   public function onRelationshipRemove(): void

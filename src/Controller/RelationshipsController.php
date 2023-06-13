@@ -63,7 +63,7 @@ class RelationshipsController extends AbstractController
       $toUserField = $form->get(InviteFormType::TO_USER);
       $toUserId = $toUserField->getData();
       assert($toUserId instanceof Ulid);
-      if ($fromUser->getId()?->equals($toUserId)) {
+      if ($fromUser->getId()->equals($toUserId)) {
         $toUserField->addError(new FormError($translator->trans('relationships.error.to_self')));
       }
 

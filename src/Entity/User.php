@@ -7,25 +7,21 @@ namespace SimpleWebApps\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use SimpleWebApps\Entity\Interface\Identifiable;
+use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Uid\Ulid;
 
 use function assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
 #[Gedmo\Loggable]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface, Identifiable
 {
-  #[ORM\Id]
-  #[ORM\Column(type: 'ulid', unique: true)]
-  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-  private ?Ulid $id = null;
+  use IdMixin;
 
   #[ORM\Column(length: 180, unique: true)]
   #[Gedmo\Versioned]
@@ -48,11 +44,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
   #[ORM\Column(length: 64, nullable: true)]
   #[Gedmo\Versioned]
   private ?string $googleAuthenticatorSecret = null;
-
-  public function getId(): ?Ulid
-  {
-    return $this->id;
-  }
 
   public function getUsername(): ?string
   {

@@ -37,7 +37,6 @@ class IndexController extends AbstractController
     $user = $this->getUser();
     assert($user instanceof User);
     $userId = $user->getId();
-    assert(null !== $userId);
 
     return $renderer->createResponse((string) $userId, $topics);
   }

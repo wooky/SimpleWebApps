@@ -7,26 +7,19 @@ namespace SimpleWebApps\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use SimpleWebApps\Entity\Interface\Identifiable;
 use SimpleWebApps\Entity\Interface\Imageable;
+use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Entity\Mixin\ImageMixin;
 use SimpleWebApps\Repository\BookRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
-use Symfony\Component\Uid\Ulid;
-
-use function assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[Gedmo\Loggable]
 #[Gedmo\Uploadable(filenameGenerator: 'SHA1', allowedTypes: 'image/jpeg')]
 class Book implements Identifiable, Imageable
 {
+  use IdMixin;
   use ImageMixin;
-
-  #[ORM\Id]
-  #[ORM\Column(type: 'ulid', unique: true)]
-  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-  private ?Ulid $id = null;
 
   #[ORM\Column(length: 255)]
   #[Gedmo\Versioned]
@@ -39,18 +32,6 @@ class Book implements Identifiable, Imageable
   #[ORM\Column]
   #[Gedmo\Versioned]
   private ?bool $isPublic = null;
-
-  public function getId(): Ulid
-  {
-    assert(null !== $this->id);
-
-    return $this->id;
-  }
-
-  public function getIdOrNull(): ?Ulid
-  {
-    return $this->id;
-  }
 
   public function getTitle(): ?string
   {

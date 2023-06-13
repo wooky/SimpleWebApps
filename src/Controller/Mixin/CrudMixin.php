@@ -6,7 +6,7 @@ namespace SimpleWebApps\Controller\Mixin;
 
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Auth\RelationshipCapability;
-use SimpleWebApps\Entity\Identifiable;
+use SimpleWebApps\Entity\Interface\Identifiable;
 use SimpleWebApps\Repository\AbstractRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

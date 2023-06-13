@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SimpleWebApps\Entity;
+namespace SimpleWebApps\Entity\Interface;
 
 use Symfony\Component\Uid\Ulid;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller\Mixin;
 
-use SimpleWebApps\Entity\Identifiable;
+use SimpleWebApps\Entity\Interface\Identifiable;
 use SimpleWebApps\Entity\Interface\Imageable;
 use SimpleWebApps\Repository\AbstractRepository;
 use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;

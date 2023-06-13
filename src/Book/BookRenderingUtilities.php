@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Book;
 
-use RuntimeException;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
@@ -63,7 +62,7 @@ readonly class BookRenderingUtilities
 
   public static function composePrivateClass(User $user, string $state = 'private'): string
   {
-    $userId = $user->getId() ?? throw new RuntimeException('User has no id');
+    $userId = $user->getId();
 
     return self::BOOK_LIST_CLASS_PREFIX.(string) $userId.'-'.$state;
   }
@@ -89,7 +88,7 @@ readonly class BookRenderingUtilities
 
   public static function composePublicListClass(User $user): string
   {
-    $userId = $user->getId() ?? throw new RuntimeException('User has no id');
+    $userId = $user->getId();
 
     return self::BOOK_LIST_CLASS_PUBLIC.'-'.(string) $userId;
   }

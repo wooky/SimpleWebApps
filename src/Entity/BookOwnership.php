@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\Ownable;
 use SimpleWebApps\Book\BookOwnershipState;
+use SimpleWebApps\Entity\Interface\Identifiable;
+use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Repository\BookOwnershipRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Uid\Ulid;
 
 use function assert;
 
@@ -21,11 +21,7 @@ use function assert;
 #[Gedmo\Loggable]
 class BookOwnership implements Identifiable, Ownable
 {
-  #[ORM\Id]
-  #[ORM\Column(type: 'ulid', unique: true)]
-  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-  private ?Ulid $id = null;
+  use IdMixin;
 
   #[ORM\ManyToOne]
   #[ORM\JoinColumn(nullable: false)]
@@ -38,18 +34,6 @@ class BookOwnership implements Identifiable, Ownable
   #[ORM\Column(type: 'string', enumType: BookOwnershipState::class)]
   #[Gedmo\Versioned]
   private BookOwnershipState $state = BookOwnershipState::Own;
-
-  public function getId(): Ulid
-  {
-    assert(null !== $this->id);
-
-    return $this->id;
-  }
-
-  public function getIdOrNull(): ?Ulid
-  {
-    return $this->id;
-  }
 
   public function getOwner(): ?User
   {

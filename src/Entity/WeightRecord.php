@@ -9,13 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\Ownable;
+use SimpleWebApps\Entity\Interface\Identifiable;
+use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Repository\WeightRecordRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
-
-use function assert;
 
 #[ORM\Entity(repositoryClass: WeightRecordRepository::class)]
 #[ORM\UniqueConstraint(
@@ -26,11 +24,7 @@ use function assert;
 #[Gedmo\Loggable]
 class WeightRecord implements Identifiable, Ownable
 {
-  #[ORM\Id]
-  #[ORM\Column(type: 'ulid', unique: true)]
-  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-  private ?Ulid $id = null;
+  use IdMixin;
 
   #[ORM\ManyToOne]
   #[ORM\JoinColumn(nullable: false)]
@@ -44,18 +38,6 @@ class WeightRecord implements Identifiable, Ownable
   #[Gedmo\Versioned]
   #[Assert\Positive]
   private ?int $weight = null;
-
-  public function getId(): Ulid
-  {
-    assert(null !== $this->id);
-
-    return $this->id;
-  }
-
-  public function getIdOrNull(): ?Ulid
-  {
-    return $this->id;
-  }
 
   public function getOwner(): ?User
   {

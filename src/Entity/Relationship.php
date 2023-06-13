@@ -7,9 +7,9 @@ namespace SimpleWebApps\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use SimpleWebApps\Auth\RelationshipCapability;
+use SimpleWebApps\Entity\Interface\Identifiable;
+use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Repository\RelationshipRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RelationshipRepository::class)]
@@ -19,13 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Assert\Expression('this.fromUser != this.toUser', message: 'relationships.to_self')]
 #[Gedmo\Loggable]
-class Relationship
+class Relationship implements Identifiable
 {
-  #[ORM\Id]
-  #[ORM\Column(type: 'ulid', unique: true)]
-  #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-  #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-  private ?Ulid $id = null;
+  use IdMixin;
 
   #[ORM\ManyToOne]
   #[ORM\JoinColumn(name: 'from_user', nullable: false)]
@@ -42,11 +38,6 @@ class Relationship
   #[ORM\Column]
   #[Gedmo\Versioned]
   private bool $active = false;
-
-  public function getId(): ?Ulid
-  {
-    return $this->id;
-  }
 
   public function getFromUser(): ?User
   {

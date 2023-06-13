@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\WeightTracker;
 
-use InvalidArgumentException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -42,7 +41,7 @@ class WeightRecordBroadcaster
     $user = $this->userRepository->find($userId);
     assert(null !== $user);
     $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
-    $controlledUserIds = array_map(fn (User $user) => $user->getId()?->toBinary() ?? throw new InvalidArgumentException('User has no ID'), $controlledUsers);
+    $controlledUserIds = array_map(fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
     $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
 
@@ -76,8 +75,7 @@ class WeightRecordBroadcaster
   {
     $user = $relationship->getToUser();
     assert(null !== $user);
-    $userId = $user->getId()?->toBinary();
-    assert(null !== $userId);
+    $userId = $user->getId()->toBinary();
     $weightRecords = $this->weightRecordRepository->getDataPoints([$userId]);
     $this->onRelationshipChange($relationship, $this->commandRenderer->relationshipActivated($user, $weightRecords));
   }
