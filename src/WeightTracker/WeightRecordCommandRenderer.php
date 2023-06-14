@@ -71,7 +71,10 @@ class WeightRecordCommandRenderer
    */
   public function relationshipActivated(User $user, array $weightRecords): array
   {
-    $dataPoints = array_map(fn (WeightRecord $weightRecord) => $this->dataRenderer->dataPoint($weightRecord), $weightRecords);
+    $dataPoints = array_map(
+      fn (WeightRecord $weightRecord) => $this->dataRenderer->dataPoint($weightRecord),
+      $weightRecords,
+    );
 
     return [
       'command' => 'relationship-activated',

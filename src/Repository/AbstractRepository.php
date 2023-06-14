@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace SimpleWebApps\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @template T
+ * @template T of object
  *
  * @extends ServiceEntityRepository<T>
  *
@@ -17,6 +18,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 abstract class AbstractRepository extends ServiceEntityRepository
 {
+  /**
+   * @param class-string<T> $entityClass
+   */
+  public function __construct(ManagerRegistry $registry, string $entityClass)
+  {
+    parent::__construct($registry, $entityClass);
+  }
+
   /**
    * @param T $entity
    */
@@ -30,7 +39,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
   }
 
   /**
-   * @param T entity
+   * @param T $entity
    */
   public function remove($entity, bool $flush = false): void
   {

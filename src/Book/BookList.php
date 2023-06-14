@@ -47,7 +47,10 @@ class BookList
     $this->currentUser = $user;
     $this->refresh();
 
-    $this->users = $userRepository->getControlledUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
+    $this->users = $userRepository->getControlledUsersIncludingSelf(
+      [$user],
+      RelationshipCapability::Read->permissionsRequired(),
+    );
   }
 
   #[LiveAction]
@@ -57,8 +60,10 @@ class BookList
 
     $this->bookOwnerships = match ($this->viewFilter) {
       BookViewFilter::Public => $this->wrapInEmptyOwnerships($this->bookRepository->findBy(['isPublic' => true])),
-      BookViewFilter::PublicAbsent => $this->wrapInEmptyOwnerships($this->bookRepository->findBooksNotBelongingToUser($this->currentUser)),
-      default => $this->queryUserBooks()
+      BookViewFilter::PublicAbsent => $this->wrapInEmptyOwnerships(
+        $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
+      ),
+      default => $this->queryUserBooks(),
     };
   }
 
@@ -71,7 +76,10 @@ class BookList
    */
   private function wrapInEmptyOwnerships(array $books): array
   {
-    return array_map(fn (Book $book) => BookRenderingUtilities::wrapInEmptyOwnership($book, $this->currentUser), $books);
+    return array_map(
+      fn (Book $book) => BookRenderingUtilities::wrapInEmptyOwnership($book, $this->currentUser),
+      $books,
+    );
   }
 
   /**

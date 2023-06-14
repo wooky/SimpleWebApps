@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RelationshipRepository::class)]
 #[ORM\UniqueConstraint(
   name: 'link_unique_idx',
-  columns: ['from_user', 'to_user']
+  columns: ['from_user', 'to_user'],
 )]
 #[Assert\Expression('this.fromUser != this.toUser', message: 'relationships.to_self')]
 #[Gedmo\Loggable]

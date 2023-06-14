@@ -35,7 +35,7 @@ final class UserBroadcaster
       TurboStreamAction::Replace,
       UsernameComponent::htmlClass($event->user),
       UsernameComponent::NAME,
-      ['user' => $event->user]
+      ['user' => $event->user],
     );
     $this->eventBus->post(new Event($userIds, TurboStreamRenderer::MESSAGE, $payload, EventScope::AllTopics));
   }

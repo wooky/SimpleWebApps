@@ -37,7 +37,7 @@ class BooksController extends AbstractController
     Request $request,
     #[MapEntity(id: 'bookid')] Book $book,
     #[MapEntity(id: 'ownerid')] ?User $owner,
-    BookOwnershipRepository $bookOwnershipRepository
+    BookOwnershipRepository $bookOwnershipRepository,
   ): Response {
     $entity = (new BookOwnership())
       ->setOwner($owner)
@@ -48,8 +48,11 @@ class BooksController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
-  public function edit(Request $request, BookOwnership $bookOwnership, BookOwnershipRepository $bookOwnershipRepository): Response
-  {
+  public function edit(
+    Request $request,
+    BookOwnership $bookOwnership,
+    BookOwnershipRepository $bookOwnershipRepository,
+  ): Response {
     $bookOwners = $bookOwnershipRepository->count(['book' => $bookOwnership->getBook()]);
     $deleteWarning = (1 === $bookOwners) ? 'books.no_more_owners' : null;
 

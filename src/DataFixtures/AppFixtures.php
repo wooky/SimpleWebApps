@@ -25,6 +25,7 @@ use function assert;
  * @psalm-suppress PropertyNotSetInConstructor
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * phpcs:ignoreFile
  */
 final class AppFixtures extends Fixture
 {

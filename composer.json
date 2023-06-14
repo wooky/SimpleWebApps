@@ -55,7 +55,8 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "sort-packages": true
     },
@@ -91,8 +92,9 @@
         ],
         "check": [
             "php-cs-fixer fix --dry-run --allow-risky=yes",
-            "phpmd src/ ansi rulesets.xml",
-            "psalm"
+            "phpcs -s",
+            "psalm",
+            "phan"
         ],
         "fix": [
             "php-cs-fixer fix --allow-risky=yes"
@@ -108,11 +110,15 @@
         }
     },
     "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofphp/php-cs-fixer": "^3.17",
+        "phan/phan": "^5.4",
         "phpmd/phpmd": "^2.13",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-symfony": "^5.0",
+        "rarst/phpcs-cognitive-complexity": "^0.2.0",
+        "squizlabs/php_codesniffer": "*",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
         "symfony/debug-bundle": "6.2.*",

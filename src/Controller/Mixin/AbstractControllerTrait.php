@@ -6,6 +6,7 @@ namespace SimpleWebApps\Controller\Mixin;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,7 +17,11 @@ trait AbstractControllerTrait
 {
   public const ROUTE_INDEX_NAME = '_index';
 
-  abstract protected function denyAccessUnlessGranted(mixed $attribute, mixed $subject = null, string $message = 'Access Denied.'): void;
+  abstract protected function denyAccessUnlessGranted(
+    mixed $attribute,
+    mixed $subject = null,
+    string $message = 'Access Denied.',
+  ): void;
 
   abstract protected function render(string $view, array $parameters = []): Response;
 
@@ -28,6 +33,16 @@ trait AbstractControllerTrait
 
   abstract protected function generateUrl(string $route, array $parameters = []): string;
 
+  abstract protected function redirectToRoute(
+    string $route,
+    array $parameters = [],
+    int $status = 302,
+  ): RedirectResponse;
+
+  abstract protected function isCsrfTokenValid(string $id, ?string $token): bool;
+
+  abstract protected function isGranted(mixed $attribute, mixed $subject = null): bool;
+
   protected function closeModalOrRedirect(Request $request): Response
   {
     if ('app-modal' === $request->headers->get('Turbo-Frame')) {
@@ -36,7 +51,7 @@ trait AbstractControllerTrait
 
     return $this->redirectToRoute(
       self::getControllerShortName().self::ROUTE_INDEX_NAME,
-      status: Response::HTTP_SEE_OTHER
+      status: Response::HTTP_SEE_OTHER,
     );
   }
 

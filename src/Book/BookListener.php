@@ -22,7 +22,7 @@ class BookListener
   private ?Ulid $lastBookIdRemoved = null;
 
   public function __construct(
-    private BookBroadcaster $broadcaster
+    private BookBroadcaster $broadcaster,
   ) {
     // Do nothing.
   }

@@ -25,8 +25,11 @@ use function is_string;
 class AuthController extends AbstractController
 {
   #[Route('/register', name: 'register', methods: ['GET', 'POST'])]
-  public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
-  {
+  public function register(
+    Request $request,
+    UserPasswordHasherInterface $userPasswordHasher,
+    UserRepository $userRepository,
+  ): Response {
     $user = new User();
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
@@ -36,8 +39,8 @@ class AuthController extends AbstractController
       $user->setPassword(
         $userPasswordHasher->hashPassword(
           $user,
-          (string) $form->get('plainPassword')->getData()
-        )
+          (string) $form->get('plainPassword')->getData(),
+        ),
       );
 
       $userRepository->save($user, true);
@@ -86,8 +89,8 @@ class AuthController extends AbstractController
         $user->setPassword(
           $userPasswordHasher->hashPassword(
             $user,
-            $plainPassword
-          )
+            $plainPassword,
+          ),
         );
       }
 

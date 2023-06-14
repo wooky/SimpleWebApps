@@ -31,20 +31,29 @@ class WeightTrackerController extends AbstractController
   }
 
   #[Route(self::ROUTE_NEW_PATH, name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
-  public function new(Request $request, WeightRecordRepository $weightRecordRepository, #[CurrentUser] User $user): Response
-  {
+  public function new(
+    Request $request,
+    WeightRecordRepository $weightRecordRepository,
+    #[CurrentUser] User $user,
+  ): Response {
     return $this->crudNewAndClose($request, $weightRecordRepository, (new WeightRecord())->setOwner($user));
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
-  public function edit(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
-  {
+  public function edit(
+    Request $request,
+    WeightRecord $weightRecord,
+    WeightRecordRepository $weightRecordRepository,
+  ): Response {
     return $this->crudEdit($request, $weightRecordRepository, $weightRecord);
   }
 
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
-  public function delete(Request $request, WeightRecord $weightRecord, WeightRecordRepository $weightRecordRepository): Response
-  {
+  public function delete(
+    Request $request,
+    WeightRecord $weightRecord,
+    WeightRecordRepository $weightRecordRepository,
+  ): Response {
     return $this->crudDelete($request, $weightRecordRepository, $weightRecord);
   }
 

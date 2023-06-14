@@ -29,7 +29,10 @@ trait OwnerFieldMixin
       'label' => 'auth.username',
       'class' => User::class,
       'choice_label' => 'username',
-      'query_builder' => fn (UserRepository $userRepository) => $userRepository->getControlledUsersIncludingSelfQuery([$user], RelationshipCapability::Write->permissionsRequired()),
+      'query_builder' => fn (UserRepository $userRepository) => $userRepository->getControlledUsersIncludingSelfQuery(
+        [$user],
+        RelationshipCapability::Write->permissionsRequired(),
+      ),
     ]);
     $builder->add(self::OWNER_FIELD, EntityType::class, $options);
   }

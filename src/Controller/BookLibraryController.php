@@ -50,7 +50,10 @@ class BookLibraryController extends AbstractController
       ;
       $bookOwnershipRepository->save($bookOwnership, true);
 
-      return $this->redirectToRoute(BooksController::CONTROLLER_SHORT_NAME.BooksController::ROUTE_EDIT_NAME, ['id' => $bookOwnership->getId()]);
+      return $this->redirectToRoute(
+        BooksController::CONTROLLER_SHORT_NAME.BooksController::ROUTE_EDIT_NAME,
+        ['id' => $bookOwnership->getId()],
+      );
     }
 
     return $response;
@@ -60,7 +63,10 @@ class BookLibraryController extends AbstractController
   public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
   {
     return $this->crudEdit($request, $bookRepository, $book, isDeletable: false, extraButtons: [
-      'edit_image.button' => $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_IMAGE_NAME, ['id' => $book->getId()]),
+      'edit_image.button' => $this->generateUrl(
+        self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_IMAGE_NAME,
+        ['id' => $book->getId()],
+      ),
     ]);
   }
 
@@ -84,8 +90,12 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_DELETE_IMAGE_PATH, name: self::ROUTE_DELETE_IMAGE_NAME, methods: ['DELETE'])]
-  public function deleteImage(Request $request, Book $book, BookRepository $bookRepository, ArtefactRepository $artefactRepository): Response
-  {
+  public function deleteImage(
+    Request $request,
+    Book $book,
+    BookRepository $bookRepository,
+    ArtefactRepository $artefactRepository,
+  ): Response {
     return $this->handleDeleteImage($request, $artefactRepository, $bookRepository, $book);
   }
 

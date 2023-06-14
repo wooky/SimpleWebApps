@@ -40,6 +40,10 @@ trait EditImageMixin
    * FIXME this entire method is a superfund site.
    *
    * @param T $entity
+   *
+   * TODO vimeo/psalm#7496
+   *
+   * @psalm-suppress all
    */
   protected function editImageModal(
     Request $request,
@@ -63,7 +67,8 @@ trait EditImageMixin
         return new Response('Image type must be a JPEG', Response::HTTP_UNPROCESSABLE_ENTITY);
       }
 
-      // TODO Doctrine throws a fit if we modify an artefact belonging to the entity, so the artefact needs to be queried separately.
+      // TODO Doctrine throws a fit if we modify an artefact belonging to the entity,
+      // so the artefact needs to be queried separately.
       $artefact = $entity->getImage();
       if ($artefact) {
         $artefact = $artefactRepository->find($artefact->getId());
@@ -77,11 +82,18 @@ trait EditImageMixin
       $uploadableManager->markEntityToUpload($artefact, $image);
       $artefactRepository->save($artefact, true);
 
-      // TODO the entity update event does not get called if the image gets modified, so we call the events here manually.
+      // TODO the entity update event does not get called if the image gets modified,
+      // so we call the events here manually.
       $classMetadata = $entityManager->getClassMetadata($entity::class);
       $listenersInvoker = new ListenersInvoker($entityManager);
       $postUpdateInvoke = $listenersInvoker->getSubscribedSystems($classMetadata, Events::postUpdate);
-      $listenersInvoker->invoke($classMetadata, Events::postUpdate, $entity, new PostUpdateEventArgs($entity, $entityManager), $postUpdateInvoke);
+      $listenersInvoker->invoke(
+        $classMetadata,
+        Events::postUpdate,
+        $entity,
+        new PostUpdateEventArgs($entity, $entityManager),
+        $postUpdateInvoke,
+      );
 
       return $this->closeModalOrRedirect($request);
     }
@@ -92,13 +104,19 @@ trait EditImageMixin
       'id' => $id,
       'form' => $form,
       'back_url' => $backUrl,
-      'delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_IMAGE_NAME, ['id' => $id]) : null,
+      'delete_path' => $isDeletable
+        ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_IMAGE_NAME, ['id' => $id])
+        : null,
     ]);
   }
 
   /**
    * @param AbstractRepository<T> $repository
    * @param T                     $entity
+   *
+   * TODO vimeo/psalm#7496
+   *
+   * @psalm-suppress all
    */
   protected function handleDeleteImage(
     Request $request,

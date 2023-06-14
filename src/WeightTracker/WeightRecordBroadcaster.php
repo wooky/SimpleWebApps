@@ -40,10 +40,14 @@ class WeightRecordBroadcaster
     }
     $user = $this->userRepository->find($userId);
     assert(null !== $user);
-    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
+    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf(
+      [$user],
+      RelationshipCapability::Read->permissionsRequired(),
+    );
     $controlledUserIds = array_map(fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
     $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
+    assert(false !== $initialPayload);
 
     return new Event([], self::TOPIC, $initialPayload, sseEvent: self::TOPIC);
   }
@@ -67,7 +71,10 @@ class WeightRecordBroadcaster
   {
     $owner = $weightRecord->getOwner();
     assert(null !== $owner);
-    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf([$owner], RelationshipCapability::Read->permissionsRequired());
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf(
+      [$owner],
+      RelationshipCapability::Read->permissionsRequired(),
+    );
     $this->broadcast($affectedUsers, $payload);
   }
 
@@ -97,7 +104,10 @@ class WeightRecordBroadcaster
 
   public function onUsernameChanged(User $user): void
   {
-    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf([$user], RelationshipCapability::Read->permissionsRequired());
+    $affectedUsers = $this->userRepository->getControllingUsersIncludingSelf(
+      [$user],
+      RelationshipCapability::Read->permissionsRequired(),
+    );
     $payload = $this->commandRenderer->usernameChanged($user);
     $this->broadcast($affectedUsers, $payload);
   }
@@ -109,6 +119,7 @@ class WeightRecordBroadcaster
   {
     $users = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = json_encode($payloadArray);
+    assert(false !== $payload);
     $this->eventBus->post(new Event($users, self::TOPIC, $payload, sseEvent: self::TOPIC));
   }
 }

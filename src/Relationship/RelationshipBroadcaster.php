@@ -38,7 +38,7 @@ final class RelationshipBroadcaster
         TurboStreamAction::Before,
         'from-users-bottom',
         RelationshipBoxComponent::NAME,
-        ['relationship' => $relationship, 'isFromUser' => true]
+        ['relationship' => $relationship, 'isFromUser' => true],
       ),
     ));
     $this->eventBus->post(new Event(
@@ -48,7 +48,7 @@ final class RelationshipBroadcaster
         TurboStreamAction::Before,
         'to-users-bottom',
         RelationshipBoxComponent::NAME,
-        ['relationship' => $relationship, 'isFromUser' => false]
+        ['relationship' => $relationship, 'isFromUser' => false],
       ),
     ));
   }
@@ -62,7 +62,7 @@ final class RelationshipBroadcaster
         TurboStreamAction::Replace,
         RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
         RelationshipBoxComponent::NAME,
-        ['relationship' => $event->relationship, 'isFromUser' => true]
+        ['relationship' => $event->relationship, 'isFromUser' => true],
       ),
     ));
     $this->eventBus->post(new Event(
@@ -72,7 +72,7 @@ final class RelationshipBroadcaster
         TurboStreamAction::Replace,
         RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
         RelationshipBoxComponent::NAME,
-        ['relationship' => $event->relationship, 'isFromUser' => false]
+        ['relationship' => $event->relationship, 'isFromUser' => false],
       ),
     ));
   }
@@ -89,7 +89,7 @@ final class RelationshipBroadcaster
         TurboStreamAction::Remove,
         RelationshipBoxComponent::htmlId((string) $event->id),
         '',
-        []
+        [],
       ),
     ));
   }

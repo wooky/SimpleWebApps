@@ -96,17 +96,20 @@ class BookBroadcaster
       return;
     }
 
-    // Broadcast to all users that have the book in their library, as well as other users that have a relationship with said users
+    // Broadcast to all users that have the book in their library,
+    // as well as other users that have a relationship with said users
     $bookOwners = array_map(
-      fn (BookOwnership $bookOwnership) => $bookOwnership->getOwner() ?? throw new RuntimeException('Book ownership has no owner'),
-      $this->bookOwnershipRepository->findBy(['book' => $book])
+      fn (BookOwnership $bookOwnership) => $bookOwnership->getOwner()
+        ?? throw new RuntimeException('Book ownership has no owner'),
+      $this->bookOwnershipRepository->findBy(['book' => $book]),
     );
     $this->broadcastToAffectedUsers($bookOwners, $content);
   }
 
   public function onBookDeleted(Book $book, Ulid $bookId): void
   {
-    // Broadcast only if the book was public, since a private book card got automatically removed once the book ownership got removed.
+    // Broadcast only if the book was public,
+    // since a private book card got automatically removed once the book ownership got removed.
     if ($book->isPublic()) {
       $content = $this->twig
         ->load(self::STREAM_TEMPLATE)
@@ -124,7 +127,10 @@ class BookBroadcaster
   {
     $affectedUsers = array_map(
       fn (User $user) => (string) $user->getId(),
-      $this->userRepository->getControllingUsersIncludingSelf($users, RelationshipCapability::Read->permissionsRequired())
+      $this->userRepository->getControllingUsersIncludingSelf(
+        $users,
+        RelationshipCapability::Read->permissionsRequired(),
+      ),
     );
     $this->eventBus->post(new Event($affectedUsers, self::TOPIC, $content));
   }

@@ -54,7 +54,8 @@ class UserVoter extends Voter
 
     $this->logger->debug('Check if relationship exists');
     $capability = RelationshipCapability::from($attribute);
-    $relationship = $this->relationshipRepository->findActiveRelationship($user, $owner, $capability->permissionsRequired());
+    $relationship =
+      $this->relationshipRepository->findActiveRelationship($user, $owner, $capability->permissionsRequired());
     if ($relationship) {
       return true;
     }

@@ -99,12 +99,15 @@ trait CrudMixin
       return $this->closeModalOrRedirect($request);
     }
 
+    // TODO phan can't cope with templates and instanceof @phan-suppress-next-line PhanUndeclaredMethod
     $id = $entity->getId();
     $parameters = [
         'id' => $id,
         'form' => $form,
         'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
-        'delete_path' => $isDeletable ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id]) : null,
+        'delete_path' => $isDeletable
+          ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id])
+          : null,
         'extra_buttons' => $extraButtons,
         'delete_warning' => $deleteWarning,
     ];

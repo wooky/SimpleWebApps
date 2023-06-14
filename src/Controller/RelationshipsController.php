@@ -95,8 +95,11 @@ class RelationshipsController extends AbstractController
   }
 
   #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
-  public function approve(/* Request $request, */ Relationship $relationship, RelationshipRepository $relationshipRepository): Response
-  {
+  public function approve(
+    /* Request $request, */
+    Relationship $relationship,
+    RelationshipRepository $relationshipRepository,
+  ): Response {
     if ($relationship->getToUser() !== $this->getUser()) {
       throw $this->createAccessDeniedException();
     }
@@ -125,8 +128,11 @@ class RelationshipsController extends AbstractController
   }
 
   #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
-  public function delete(Request $request, Relationship $relationship, RelationshipRepository $relationshipRepository): Response
-  {
+  public function delete(
+    Request $request,
+    Relationship $relationship,
+    RelationshipRepository $relationshipRepository,
+  ): Response {
     $token = $request->request->get('_token');
     assert(is_string($token) || null === $token);
     if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {

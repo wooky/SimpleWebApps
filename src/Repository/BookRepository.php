@@ -29,7 +29,10 @@ class BookRepository extends AbstractRepository
 
     return $qb
       ->distinct()
-      ->leftJoin(BookOwnership::class, 'bo', Join::WITH, $qb->expr()->andX($qb->expr()->eq('bo.book', 'b'), $qb->expr()->eq('bo.owner', '?1')))
+      ->leftJoin(BookOwnership::class, 'bo', Join::WITH, $qb->expr()->andX(
+        $qb->expr()->eq('bo.book', 'b'),
+        $qb->expr()->eq('bo.owner', '?1'),
+      ))
       ->where($qb->expr()->isNull('bo.owner'))
       ->andWhere($qb->expr()->eq('b.isPublic', true))
       ->setParameter(1, $user->getId(), 'ulid')
