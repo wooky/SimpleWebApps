@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Entity\Interface;
 
+use SimpleWebApps\Entity\Artefact;
+
 interface Imageable
 {
-  public function getImagePath(): ?string;
+  public function getImage(): ?Artefact;
 
-  public function setImagePath(?string $imagePath): self;
+  public function setImage(?Artefact $image): self;
 }

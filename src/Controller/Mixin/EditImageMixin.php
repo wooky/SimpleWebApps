@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller\Mixin;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\ListenersInvoker;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Events;
+use SimpleWebApps\Entity\Artefact;
 use SimpleWebApps\Entity\Interface\Identifiable;
 use SimpleWebApps\Entity\Interface\Imageable;
 use SimpleWebApps\Repository\AbstractRepository;
+use SimpleWebApps\Repository\ArtefactRepository;
 use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,8 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Dropzone\Form\DropzoneType;
 
 use function assert;
-
-use const DIRECTORY_SEPARATOR;
 
 /**
  * @template T of Identifiable&Imageable
@@ -33,13 +37,15 @@ trait EditImageMixin
   private const FORM_FIELD_IMAGE = 'image';
 
   /**
-   * @param AbstractRepository<T> $repository
-   * @param T                     $entity
+   * FIXME this entire method is a superfund site.
+   *
+   * @param T $entity
    */
   protected function editImageModal(
     Request $request,
     UploadableManager $uploadableManager,
-    $repository,
+    EntityManagerInterface $entityManager,
+    ArtefactRepository $artefactRepository,
     $entity,
     bool $isDeletable,
     string $backUrl,
@@ -52,8 +58,30 @@ trait EditImageMixin
     if ($form->isSubmitted() && $form->isValid()) {
       $image = $form->get(self::FORM_FIELD_IMAGE)->getData();
       assert($image instanceof UploadedFile);
-      $uploadableManager->markEntityToUpload($entity, $image);
-      $repository->save($entity, true);
+      if ('image/jpeg' !== $image->getClientMimeType()) {
+        // TODO
+        return new Response('Image type must be a JPEG', Response::HTTP_UNPROCESSABLE_ENTITY);
+      }
+
+      // TODO Doctrine throws a fit if we modify an artefact belonging to the entity, so the artefact needs to be queried separately.
+      $artefact = $entity->getImage();
+      if ($artefact) {
+        $artefact = $artefactRepository->find($artefact->getId());
+        assert($artefact instanceof Artefact);
+      } else {
+        $artefact = new Artefact();
+        $entity->setImage($artefact);
+        $entityManager->persist($entity);
+      }
+
+      $uploadableManager->markEntityToUpload($artefact, $image);
+      $artefactRepository->save($artefact, true);
+
+      // TODO the entity update event does not get called if the image gets modified, so we call the events here manually.
+      $classMetadata = $entityManager->getClassMetadata($entity::class);
+      $listenersInvoker = new ListenersInvoker($entityManager);
+      $postUpdateInvoke = $listenersInvoker->getSubscribedSystems($classMetadata, Events::postUpdate);
+      $listenersInvoker->invoke($classMetadata, Events::postUpdate, $entity, new PostUpdateEventArgs($entity, $entityManager), $postUpdateInvoke);
 
       return $this->closeModalOrRedirect($request);
     }
@@ -74,19 +102,16 @@ trait EditImageMixin
    */
   protected function handleDeleteImage(
     Request $request,
-    UploadableManager $uploadableManager,
+    ArtefactRepository $artefactRepository,
     $repository,
     $entity,
   ): Response {
     if ($this->allowedToDelete($request, (string) $entity->getId())) {
-      $imagePathPrefix = $uploadableManager->getUploadableListener()->getDefaultPath();
-      $imagePathSuffix = $entity->getImagePath();
-      assert(null !== $imagePathPrefix && null !== $imagePathSuffix);
-      $imagePath = $imagePathPrefix.DIRECTORY_SEPARATOR.$imagePathSuffix;
-
-      $entity->setImagePath(null);
+      $artefact = $entity->getImage();
+      assert(null !== $artefact);
+      $artefactRepository->remove($artefact);
+      $entity->setImage(null);
       $repository->save($entity, true);
-      $uploadableManager->getUploadableListener()->removeFile($imagePath);
     }
 
     return $this->closeModalOrRedirect($request);

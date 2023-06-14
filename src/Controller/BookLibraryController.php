@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use SimpleWebApps\Controller\Mixin\CrudMixin;
 use SimpleWebApps\Controller\Mixin\EditImageMixin;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\BookType;
+use SimpleWebApps\Repository\ArtefactRepository;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\BookRepository;
 use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;
@@ -63,22 +65,28 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_IMAGE_PATH, name: self::ROUTE_EDIT_IMAGE_NAME, methods: ['GET', 'POST'])]
-  public function editImage(Request $request, Book $book, BookRepository $bookRepository, UploadableManager $uploadableManager): Response
-  {
+  public function editImage(
+    Request $request,
+    Book $book,
+    ArtefactRepository $artefactRepository,
+    EntityManagerInterface $entityManager,
+    UploadableManager $uploadableManager,
+  ): Response {
     return $this->editImageModal(
       $request,
       $uploadableManager,
-      $bookRepository,
+      $entityManager,
+      $artefactRepository,
       $book,
-      null !== $book->getImagePath(),
+      null !== $book->getImage(),
       $this->generateUrl(self::CONTROLLER_SHORT_NAME.self::ROUTE_EDIT_NAME, ['id' => $book->getId()]),
     );
   }
 
   #[Route(self::ROUTE_DELETE_IMAGE_PATH, name: self::ROUTE_DELETE_IMAGE_NAME, methods: ['DELETE'])]
-  public function deleteImage(Request $request, Book $book, BookRepository $bookRepository, UploadableManager $uploadableManager): Response
+  public function deleteImage(Request $request, Book $book, BookRepository $bookRepository, ArtefactRepository $artefactRepository): Response
   {
-    return $this->handleDeleteImage($request, $uploadableManager, $bookRepository, $book);
+    return $this->handleDeleteImage($request, $artefactRepository, $bookRepository, $book);
   }
 
   /**

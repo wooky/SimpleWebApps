@@ -15,7 +15,6 @@ use SimpleWebApps\Repository\BookRepository;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[Gedmo\Loggable]
-#[Gedmo\Uploadable(filenameGenerator: 'SHA1', allowedTypes: 'image/jpeg')]
 class Book implements Identifiable, Imageable
 {
   use IdMixin;

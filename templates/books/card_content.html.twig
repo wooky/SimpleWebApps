@@ -1,7 +1,7 @@
 <div class="card-image">
   <img src=
-  {%- if bookOwnership.book.imagePath -%}
-    "{{- upload_dir -}}/{{- bookOwnership.book.imagePath -}}"
+  {%- if bookOwnership.book.image -%}
+    "{{- upload_dir -}}/{{- bookOwnership.book.image.filePath -}}"
   {%- else -%}
     "https://bulma.io/images/placeholders/1280x960.png"
   {%- endif -%}

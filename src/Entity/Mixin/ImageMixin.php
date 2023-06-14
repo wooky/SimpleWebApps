@@ -6,22 +6,23 @@ namespace SimpleWebApps\Entity\Mixin;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use SimpleWebApps\Entity\Artefact;
 
 trait ImageMixin
 {
-  #[ORM\Column(length: 64, nullable: true)]
-  #[Gedmo\UploadableFileName]
+  // TODO does the cascade do anything, considering that Uploadable is a fragile little snowflake?
+  #[ORM\OneToOne(cascade: ['persist', 'remove'])]
   #[Gedmo\Versioned]
-  private ?string $imagePath = null;
+  private ?Artefact $image = null;
 
-  public function getImagePath(): ?string
+  public function getImage(): ?Artefact
   {
-    return $this->imagePath;
+    return $this->image;
   }
 
-  public function setImagePath(?string $imagePath): self
+  public function setImage(?Artefact $image): self
   {
-    $this->imagePath = $imagePath;
+    $this->image = $image;
 
     return $this;
   }
