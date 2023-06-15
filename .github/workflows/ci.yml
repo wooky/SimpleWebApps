@@ -1,0 +1,23 @@
+name: "CI"
+on:
+  push:
+  pull_request:
+permissions:
+  packages: read
+  contents: read
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wooky/simplewebapps:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          composer install -n
+          npm install
+      - name: Check code quality
+        run: composer check
