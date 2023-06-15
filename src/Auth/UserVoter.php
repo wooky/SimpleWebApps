@@ -12,6 +12,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 use function assert;
 
+/**
+ * @extends Voter<string,Ownable>
+ */
 class UserVoter extends Voter
 {
   public function __construct(
