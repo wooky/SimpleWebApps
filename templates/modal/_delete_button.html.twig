@@ -1,12 +1,14 @@
 {% if delete_path %}
   <form class="level-item dropdown is-up" method="DELETE" action="{{ delete_path }}" data-controller="dropdown-button">
     <div class="dropdown-trigger">
-      <button type="button" class="button is-danger" data-action="dropdown-button#toggleMenu">
+      <button type="button" data-action="dropdown-button#toggleMenu" {% block delete_button_attr %}class="button is-danger"{% endblock %}>
+      {% block delete_button_contents %}
         <span>{{ 'modal.delete.delete'|trans }}</span>
         <span class="icon is-small">
           <iconify-icon icon="mdi:chevron-up"></iconify-icon>
         </span>
       </button>
+      {% endblock %}
     </div>
     <div class="dropdown-menu">
       <div class="dropdown-content">

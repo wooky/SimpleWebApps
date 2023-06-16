@@ -17,18 +17,29 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function assert;
 use function is_string;
 
-#[Route('/relationships', name: 'relationships_')]
+#[Route('/relationships', name: self::CONTROLLER_SHORT_NAME)]
 class RelationshipsController extends AbstractController
 {
+  public const CONTROLLER_SHORT_NAME = 'relationships';
+
+  public const ROUTE_INDEX_NAME = '_index';
+  public const ROUTE_INVITE_NAME = '_invite';
+  public const ROUTE_APPROVE_NAME = '_approve';
+  public const ROUTE_DELETE_NAME = '_delete';
+
+  private const ROUTE_INDEX_PATH = '/';
+  private const ROUTE_INVITE_PATH = '/invite';
+  private const ROUTE_APPROVE_PATH = '/{id}/approve';
+  private const ROUTE_DELETE_PATH = '/{id}/delete';
+
   /**
    * @SuppressWarnings(PHPMD.ElseExpression)
    */
-  #[Route('/', name: 'index', methods: ['GET'])]
+  #[Route(self::ROUTE_INDEX_PATH, name: self::ROUTE_INDEX_NAME, methods: ['GET'])]
   public function index(RelationshipRepository $relationshipRepository, #[CurrentUser] User $user): Response
   {
     $relationships = $relationshipRepository->findBidirectionalRelationships($user);
@@ -48,13 +59,12 @@ class RelationshipsController extends AbstractController
     ]);
   }
 
-  #[Route('/invite', name: 'invite', methods: ['GET', 'POST'])]
+  #[Route(self::ROUTE_INVITE_PATH, name: self::ROUTE_INVITE_NAME, methods: ['GET', 'POST'])]
   public function invite(
     Request $request,
     UserRepository $userRepository,
     RelationshipRepository $relationshipRepository,
     #[CurrentUser] User $fromUser,
-    TranslatorInterface $translator,
   ): Response {
     $form = $this->createForm(InviteFormType::class);
     $form->handleRequest($request);
@@ -64,14 +74,14 @@ class RelationshipsController extends AbstractController
       $toUserId = $toUserField->getData();
       assert($toUserId instanceof Ulid);
       if ($fromUser->getId()->equals($toUserId)) {
-        $toUserField->addError(new FormError($translator->trans('relationships.error.to_self')));
+        $toUserField->addError(new FormError('relationships.error.to_self'));
       }
 
       $toUser = $userRepository->find($toUserId);
       if (!$toUser) {
-        $toUserField->addError(new FormError($translator->trans('relationships.error.user_not_found')));
+        $toUserField->addError(new FormError('relationships.error.user_not_found'));
       } elseif ($relationshipRepository->findOneBy(['fromUser' => $fromUser, 'toUser' => $toUser])) {
-        $toUserField->addError(new FormError($translator->trans('relationships.error.duplicate')));
+        $toUserField->addError(new FormError('relationships.error.duplicate'));
       }
 
       if ($form->isValid()) {
@@ -85,7 +95,7 @@ class RelationshipsController extends AbstractController
 
         $relationshipRepository->save($relationship, true);
 
-        return $this->redirectToRoute('relationships_invite');
+        return $this->redirectToRoute(self::CONTROLLER_SHORT_NAME.self::ROUTE_INVITE_NAME);
       }
     }
 
@@ -94,7 +104,7 @@ class RelationshipsController extends AbstractController
     ]);
   }
 
-  #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
+  #[Route(self::ROUTE_APPROVE_PATH, name: self::ROUTE_APPROVE_NAME, methods: ['POST'])]
   public function approve(
     /* Request $request, */
     Relationship $relationship,
@@ -112,22 +122,10 @@ class RelationshipsController extends AbstractController
     $relationshipRepository->save($relationship, true);
     // }
 
-    return $this->redirectToRoute('relationships_index', [], Response::HTTP_SEE_OTHER);
+    return $this->redirectToRoute(self::CONTROLLER_SHORT_NAME.self::ROUTE_INDEX_NAME, [], Response::HTTP_SEE_OTHER);
   }
 
-  #[Route('/{id}/delete', name: 'pre_delete', methods: ['GET'])]
-  public function preDelete(Relationship $relationship): Response
-  {
-    $id = $relationship->getId();
-
-    return $this->render('modal/pre_delete.html.twig', [
-        'id' => $id,
-        'subject' => 'relationships.subject',
-        'delete_path' => $this->generateUrl('relationships_delete', ['id' => $id]),
-    ]);
-  }
-
-  #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
+  #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
   public function delete(
     Request $request,
     Relationship $relationship,
@@ -140,7 +138,7 @@ class RelationshipsController extends AbstractController
       $relationshipRepository->remove($relationship, true);
     }
 
-    return $this->redirectToRoute('relationships_index', [], Response::HTTP_SEE_OTHER);
+    return $this->redirectToRoute(self::CONTROLLER_SHORT_NAME.self::ROUTE_INDEX_NAME, [], Response::HTTP_SEE_OTHER);
   }
 
   private function verifyRelationshipBelongsToUser(Relationship $relationship): void

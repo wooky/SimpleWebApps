@@ -116,21 +116,6 @@ trait CrudMixin
   }
 
   /**
-   * @param T $entity
-   */
-  protected function crudPreDelete($entity, ?string $extraFooter = null): Response
-  {
-    $id = $entity->getId();
-
-    return $this->render('modal/pre_delete.html.twig', [
-        'id' => $id,
-        'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
-        'delete_path' => $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id]),
-        'extra_footer' => $extraFooter,
-    ]);
-  }
-
-  /**
    * @param AbstractRepository<T> $repository
    * @param T                     $entity
    */

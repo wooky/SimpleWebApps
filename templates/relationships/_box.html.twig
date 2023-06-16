@@ -11,11 +11,15 @@
     <div style="width: 2.5em"></div>
   {% endblock %}
   </div>
-  <form class="column is-narrow py-0" action="{{ path('relationships_pre_delete', {'id': relationship.id}) }}" data-turbo-frame="app-modal">
-    <button class="button is-danger" type="submit" title="{{ 'relationships.delete'|trans|e('html_attr') }}">
+  {%- embed "modal/_delete_button.html.twig" with {
+    id: relationship.id,
+    delete_path: path('relationships_delete', {'id': relationship.id}),
+  } -%}
+    {%- block delete_button_attr -%}{{ parent() }} title="{{ 'relationships.delete'|trans|e('html_attr') }}"{%- endblock -%}
+    {%- block delete_button_contents -%}
       <span class="icon">
         <iconify-icon icon="mdi:delete"></iconify-icon>
       </span>
-    </button>
-  </form>
+    {%- endblock -%}
+  {%- endembed -%}
 </div>
