@@ -1,4 +1,5 @@
 .devcontainer/
+simplewebapps.zip
 
 ###> symfony/framework-bundle ###
 /.env.local
