@@ -22,7 +22,7 @@
         data-action="live#action"
         data-action-name="refresh"
       >
-      {% for vf in this.viewFilters %}
+      {% for vf in allViewFilters %}
         <option
           value="{{ vf.value }}"
           {% if vf == viewFilter %}selected{% endif %}
@@ -33,11 +33,10 @@
   </div>
   <div class="columns is-multiline {{ this.listClasses|join(' ') }}" data-live-id="book-list-{{ random() }}">
   {% for bookOwnership in bookOwnerships %}
-  {% if bookOwnership.idOrNull %}
     {% include "books/_card/private_card.html.twig" %}
-  {% else %}
-    {% include "books/_card/public_card.html.twig" with {book: bookOwnership.book, ownerId: currentUser.id} %}
-  {% endif %}
+  {% endfor %}
+  {% for book in publicBooks %}
+    {% include "books/_card/public_card.html.twig" with {ownerId: currentUser.id} %}
   {% endfor %}
   </div>
 </div>

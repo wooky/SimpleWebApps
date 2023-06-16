@@ -38,11 +38,11 @@ readonly class BookRenderingUtilities
   /**
    * @return ?string[]
    */
-  public static function privateListClasses(BookViewFilter $bookViewFilter, User $user): ?array
+  public static function privateListClasses(string $bookViewFilter, User $user): ?array
   {
     $privateClass = self::composePrivateClass($user);
 
-    if (BookViewFilter::All === $bookViewFilter) {
+    if (BookViewFilter::All->value === $bookViewFilter) {
       $classes = array_map(
         fn (BookOwnershipState $bookOwnershipState) => self::composePrivateListClass($user, $bookOwnershipState),
         BookOwnershipState::cases(),
@@ -52,7 +52,7 @@ readonly class BookRenderingUtilities
       return $classes;
     }
 
-    $bookOwnershipState = $bookViewFilter->toOwnershipState();
+    $bookOwnershipState = BookOwnershipState::tryFrom($bookViewFilter);
     if ($bookOwnershipState) {
       return [$privateClass, self::composePrivateListClass($user, $bookOwnershipState)];
     }
@@ -77,9 +77,9 @@ readonly class BookRenderingUtilities
     return '.'.self::composePrivateListClass($user, $bookOwnershipState);
   }
 
-  public static function publicListClasses(BookViewFilter $bookViewFilter, User $user): ?array
+  public static function publicListClasses(string $bookViewFilter, User $user): ?array
   {
-    return match ($bookViewFilter) {
+    return match (BookViewFilter::tryFrom($bookViewFilter)) {
       BookViewFilter::Public => [self::BOOK_LIST_CLASS_PUBLIC],
       BookViewFilter::PublicAbsent => [self::BOOK_LIST_CLASS_PUBLIC, self::composePublicListClass($user)],
       default => null,

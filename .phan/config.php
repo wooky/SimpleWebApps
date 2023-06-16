@@ -265,6 +265,7 @@ return [
         'PhanAttributeWrongTarget',
         'PhanCompatibleTraitConstant', // TODO phan is unable to detect PHP 8.2?
         'PhanContextNotObject',
+        'PhanInvalidConstantExpression', // TODO phan thinks that a statement like Enum::EnumValue->value is invalid
         'PhanPartialTypeMismatchArgument', // TODO phan can't cope with templates and instanceof
         'PhanRedefinedClassReference',
         'PhanRedefinedExtendedClass',
