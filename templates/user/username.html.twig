@@ -1,4 +1,0 @@
-{%- macro html_class(user) -%}simplewebapps-user-{{ user.id }}"{%- endmacro -%}
-{%- macro span(user) -%}
-<span class="{{ _self.html_class(user) }}">{{ user.username }}</span>
-{%- endmacro -%}

@@ -1,4 +1,3 @@
-{%- import "user/username.html.twig" as username -%}
 <turbo-frame id="simplewebapps-navbar-{{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'user' : 'anon' }}">
   <nav class="navbar is-fixed-top">
     <div class="navbar-brand is-hoverable">
@@ -13,7 +12,7 @@
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">
-            {{ username.span(app.user) }}
+            {%- include "user/_username.html.twig" with {user: app.user} -%}
           </a>
           <div class="navbar-dropdown is-right">
             <a class="navbar-item" href="{{ path('auth_profile') }}">{% trans %}profile.title{% endtrans %}</a>

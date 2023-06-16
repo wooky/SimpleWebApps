@@ -1,8 +1,7 @@
 {%- import "relationships/_box_macros.html.twig" as box -%}
-{%- import "user/username.html.twig" as username -%}
 <div id="{{ box.html_id(relationship) }}" class="panel-block">
   <div class="column py-0">
-    {{ username.span(user) }}
+    {%- include "user/_username.html.twig" -%}
   </div>
   <div class="column is-narrow py-0">
     {% if not relationship.active %}{% trans %}relationships.pending{% endtrans %} - {% endif %}
