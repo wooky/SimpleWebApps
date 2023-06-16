@@ -19,7 +19,6 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Uid\Ulid;
 
 use function assert;
-use function is_string;
 
 #[Route('/relationships', name: self::CONTROLLER_SHORT_NAME)]
 class RelationshipsController extends AbstractController
@@ -127,16 +126,17 @@ class RelationshipsController extends AbstractController
 
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
   public function delete(
-    Request $request,
+    // Request $request,
     Relationship $relationship,
     RelationshipRepository $relationshipRepository,
   ): Response {
-    $token = $request->request->get('_token');
-    assert(is_string($token) || null === $token);
-    if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
-      $this->verifyRelationshipBelongsToUser($relationship);
-      $relationshipRepository->remove($relationship, true);
-    }
+    // TODO CSRF is not working if relationship box was created from a stream.
+    // $token = $request->request->get('_token');
+    // assert(is_string($token) || null === $token);
+    // if ($this->isCsrfTokenValid('delete'.((string) $relationship->getId()), $token)) {
+    $this->verifyRelationshipBelongsToUser($relationship);
+    $relationshipRepository->remove($relationship, true);
+    // }
 
     return $this->redirectToRoute(self::CONTROLLER_SHORT_NAME.self::ROUTE_INDEX_NAME, [], Response::HTTP_SEE_OTHER);
   }

@@ -1,5 +1,4 @@
-{% extends "relationships/_box.html.twig" %}
-
+{% embed "relationships/_box.html.twig" with {"user": relationship.fromUser} %}
 {% block left_button %}
 {% if not relationship.active %}
   <form method="POST" action="{{ path('relationships_approve', {'id': relationship.id}) }}">
@@ -14,3 +13,4 @@
   {{ parent() }}
 {% endif %}
 {% endblock %}
+{% endembed %}

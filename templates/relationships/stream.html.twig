@@ -1,0 +1,30 @@
+{% block relationship_created_from %}
+<turbo-stream action="before" target="from-users-bottom">
+  <template>{%- include "relationships/from_box.html.twig" -%}</template>
+</turbo-stream>
+{% endblock %}
+
+{% block relationship_created_to %}
+<turbo-stream action="before" target="to-users-bottom">
+  <template>{%- include "relationships/to_box.html.twig" -%}</template>
+</turbo-stream>
+{% endblock %}
+
+{% block relationship_activated_from %}
+{%- import "relationships/_box_macros.html.twig" as box -%}
+<turbo-stream action="replace" target="{{ box.html_id(relationship) }}">
+  <template>{%- include "relationships/from_box.html.twig" -%}</template>
+</turbo-stream>
+{% endblock %}
+
+{% block relationship_activated_to %}
+{%- import "relationships/_box_macros.html.twig" as box -%}
+<turbo-stream action="replace" target="{{ box.html_id(relationship) }}">
+  <template>{%- include "relationships/to_box.html.twig" -%}</template>
+</turbo-stream>
+{% endblock %}
+
+{% block relationship_removed %}
+{%- import "relationships/_box_macros.html.twig" as box -%}
+<turbo-stream action="remove" target="{{ box.html_id_id(id) }}"></turbo-stream>
+{% endblock %}

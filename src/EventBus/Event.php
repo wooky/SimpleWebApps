@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\EventBus;
 
-use SimpleWebApps\Common\TurboStreamRenderer;
-
 readonly class Event
 {
+  public const MESSAGE = 'message';
+
   /**
    * @param string[] $users
    */
@@ -16,7 +16,7 @@ readonly class Event
     public string $topic,
     public string $payload,
     public EventScope $scope = EventScope::SpecifiedTopic,
-    public string $sseEvent = TurboStreamRenderer::MESSAGE,
+    public string $sseEvent = self::MESSAGE,
   ) {
     // Do nothing.
   }

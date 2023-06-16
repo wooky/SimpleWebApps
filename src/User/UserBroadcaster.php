@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\User;
 
-use SimpleWebApps\Common\TurboStreamRenderer;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventBusInterface;
@@ -35,6 +34,6 @@ final readonly class UserBroadcaster
     $affectedUsers = $this->userRepository->getAllInterestedParties($event->user);
     $userIds = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = $this->template->renderBlock('username_changed', ['user' => $event->user]);
-    $this->eventBus->post(new Event($userIds, TurboStreamRenderer::MESSAGE, $payload, EventScope::AllTopics));
+    $this->eventBus->post(new Event($userIds, Event::MESSAGE, $payload, EventScope::AllTopics));
   }
 }
