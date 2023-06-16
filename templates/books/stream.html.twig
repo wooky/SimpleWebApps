@@ -1,13 +1,13 @@
 {% block book_ownership_created %}
 <turbo-stream action="append" targets="{{ selector }}">
-  <template>{{ component('book:card', {bookOwnership: bookOwnership}) }}</template>
+  <template>{%- include "books/_card.html.twig" -%}</template>
 </turbo-stream>
 {% endblock %}
 
 {% block book_ownership_updated %}
 {{ block('book_ownership_deleted') }}
 <turbo-stream action="append" targets="{{ newSelector }}">
-  <template>{{ component('book:card', {bookOwnership: bookOwnership}) }}</template>
+  <template>{%- include "books/_card.html.twig" -%}</template>
 </turbo-stream>
 {% endblock %}
 

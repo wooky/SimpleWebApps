@@ -1,6 +1,7 @@
-<div id="{{ cardHtmlId }}" class="column is-3" style="height: 100%" {#TODO#}>
+{%- import "books/_macros.html.twig" as macros -%}
+<div id="{{ macros.card_html_id(bookOwnership.book.id) }}" class="column is-3" style="height: 100%" {#TODO#}>
   <div class="card">
-    <div id="{{ contentHtmlId }}">{{ include('books/card_content.html.twig') }}</div>
+    <div id="{{ macros.content_html_id(bookOwnership.book.id) }}">{{ include('books/card_content.html.twig') }}</div>
     <footer class="card-footer">
       <form action="{{ path('book_library_edit', {id: bookOwnership.book.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
         <button class="button is-link" type="submit" title="{{ 'book_library.edit'|trans }}">

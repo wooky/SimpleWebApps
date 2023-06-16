@@ -33,7 +33,7 @@
   </div>
   <div class="columns is-multiline {{ this.listClasses|join(' ') }}" data-live-id="book-list-{{ random() }}">
   {% for bookOwnership in bookOwnerships %}
-    {{ component('book:card', {bookOwnership: bookOwnership}) }}
+    {% include "books/_card.html.twig" %}
   {% endfor %}
   </div>
 </div>
