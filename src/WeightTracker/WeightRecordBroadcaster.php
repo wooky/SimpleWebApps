@@ -46,7 +46,7 @@ class WeightRecordBroadcaster
     );
     $controlledUserIds = array_map(fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
-    $initialPayload = json_encode($this->commandRenderer->initialData($user, $weightRecords));
+    $initialPayload = json_encode($this->commandRenderer->initialData($user, $controlledUsers, $weightRecords));
     assert(false !== $initialPayload);
 
     return new Event([], self::TOPIC, $initialPayload, sseEvent: self::TOPIC);

@@ -8,7 +8,6 @@ use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use Symfony\Component\Uid\Ulid;
 
-use function array_key_exists;
 use function assert;
 
 class WeightRecordCommandRenderer
@@ -20,19 +19,22 @@ class WeightRecordCommandRenderer
   }
 
   /**
+   * @param User[]         $users
    * @param WeightRecord[] $weightRecords
    */
-  public function initialData(User $self, array $weightRecords): array
+  public function initialData(User $self, array $users, array $weightRecords): array
   {
     $dataSets = [];
+    foreach ($users as $user) {
+      $username = $user->getUsername();
+      assert(null !== $username);
+      $dataSets[$username] = $this->dataRenderer->dataSet($user, hidden: $user !== $self);
+    }
     foreach ($weightRecords as $weightRecord) {
       $user = $weightRecord->getOwner();
       assert(null !== $user);
       $username = $user->getUsername();
       assert(null !== $username);
-      if (!array_key_exists($username, $dataSets)) {
-        $dataSets[$username] = $this->dataRenderer->dataSet($user, hidden: $user !== $self);
-      }
       $dataSets[$username]['data'][] = $this->dataRenderer->dataPoint($weightRecord);
     }
 
