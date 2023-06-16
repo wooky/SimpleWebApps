@@ -1,13 +1,19 @@
-{% block book_ownership_created %}
+{% block book_ownership_created_private %}
 <turbo-stream action="append" targets="{{ selector }}">
-  <template>{%- include "books/_card.html.twig" -%}</template>
+  <template>{%- include "books/_card/private_card.html.twig" -%}</template>
+</turbo-stream>
+{% endblock %}
+
+{% block book_ownership_created_public %}
+<turbo-stream action="append" targets="{{ selector }}">
+  <template>{%- include "books/_card/public_card.html.twig" -%}</template>
 </turbo-stream>
 {% endblock %}
 
 {% block book_ownership_updated %}
 {{ block('book_ownership_deleted') }}
 <turbo-stream action="append" targets="{{ newSelector }}">
-  <template>{%- include "books/_card.html.twig" -%}</template>
+  <template>{%- include "books/_card/private_card.html.twig" -%}</template>
 </turbo-stream>
 {% endblock %}
 
@@ -17,7 +23,7 @@
 
 {% block book_updated %}
 <turbo-stream action="update" target="{{ id }}">
-  <template>{{ include('books/card_content.html.twig') }}</template>
+  <template>{{ include('books/_card/card_content.html.twig') }}</template>
 </turbo-stream>
 {% endblock %}
 

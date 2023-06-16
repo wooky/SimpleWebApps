@@ -1,0 +1,11 @@
+{%- extends "books/_card/abstract_card.html.twig" -%}
+
+{%- block book_action -%}
+<form action="{{ path('books_new', {bookid: book.id, ownerid: ownerId|default(null)}) }}" data-turbo-frame="app-modal" class="card-footer-item">
+  <button class="button is-primary" type="submit" title="{{ 'books.new'|trans }}">
+    <span class="icon">
+      <iconify-icon icon="mdi:library-add"></iconify-icon>
+    </span>
+  </button>
+</form>
+{%- endblock -%}

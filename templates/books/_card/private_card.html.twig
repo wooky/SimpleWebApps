@@ -1,0 +1,12 @@
+{%- set book = bookOwnership.book -%}
+{%- extends "books/_card/abstract_card.html.twig" -%}
+
+{%- block book_action -%}
+<form action="{{ path('books_edit', {id: bookOwnership.id}) }}" data-turbo-frame="app-modal" class="card-footer-item">
+  <button class="button is-link" type="submit" title="{{ 'books.edit'|trans }}">
+    <span class="icon">
+      <iconify-icon icon="mdi:library-edit"></iconify-icon>
+    </span>
+  </button>
+</form>
+{%- endblock -%}

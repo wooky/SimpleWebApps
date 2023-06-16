@@ -41,16 +41,16 @@ readonly class BookBroadcaster
   public function onBookOwnershipCreated(BookOwnership $bookOwnership): void
   {
     $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
-    $content = $this->template->renderBlock('book_ownership_created', [
+    $content = $this->template->renderBlock('book_ownership_created_private', [
       'selector' => BookRenderingUtilities::composeQuerySelectorOfPrivateList($owner, $bookOwnership->getState()),
       'bookOwnership' => $bookOwnership,
     ]);
     $this->broadcastToAffectedUsers([$owner], $content);
 
     if ($bookOwnership->getBook()->isPublic()) {
-      $content = $this->template->renderBlock('book_ownership_created', [
+      $content = $this->template->renderBlock('book_ownership_created_public', [
         'selector' => BookRenderingUtilities::composeQuerySelectorOfPublicListNotBelongingToUser($owner),
-        'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($bookOwnership->getBook()),
+        'book' => $bookOwnership->getBook(),
       ]);
       $this->broadcastToAllUsers($content);
     }
@@ -82,7 +82,7 @@ readonly class BookBroadcaster
   {
     $content = $this->template->renderBlock('book_updated', [
         'id' => BookRenderingUtilities::contentHtmlId($book->getId()),
-        'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($book),
+        'book' => $book,
       ]);
 
     // Broadcast to all users if the book is public
