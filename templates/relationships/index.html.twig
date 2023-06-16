@@ -9,9 +9,8 @@
   <h2 class="title is-2">{% trans %}relationships.from_user{% endtrans %}</h2>
   <div class="panel">
     {% for relationship in from_user %}
-      {{ component('relationship:relationship-box', {
+      {{ component('relationship:from-box', {
         'relationship': relationship,
-        'isFromUser': true,
       }) }}
     {% endfor %}
     {% include 'relationships/_no-users.html.twig' with {'id': 'from-users-bottom'} only %}
@@ -25,9 +24,8 @@
   <h2 class="title is-2">{% trans %}relationships.to_user{% endtrans %}</h2>
   <div class="panel">
     {% for relationship in to_user %}
-      {{ component('relationship:relationship-box', {
+      {{ component('relationship:to-box', {
         'relationship': relationship,
-        'isFromUser': false,
       }) }}
     {% endfor %}
     {% include 'relationships/_no-users.html.twig' with {'id': 'to-users-bottom'} only %}

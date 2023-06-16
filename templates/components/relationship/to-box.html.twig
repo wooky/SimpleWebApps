@@ -1,0 +1,16 @@
+{% extends "relationships/_box.html.twig" %}
+
+{% block left_button %}
+{% if not relationship.active %}
+  <form method="POST" action="{{ path('relationships_approve', {'id': relationship.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ relationship.id) }}">
+    <button class="button is-success" type="submit" title="{{ 'relationships.approve'|trans|e('html_attr') }}">
+      <span class="icon">
+        <iconify-icon icon="mdi:check-circle"></iconify-icon>
+      </span>
+    </button>
+  </form>
+{% else %}
+  {{ parent() }}
+{% endif %}
+{% endblock %}

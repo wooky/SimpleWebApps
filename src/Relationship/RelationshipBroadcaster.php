@@ -11,6 +11,9 @@ use SimpleWebApps\Common\TurboStreamRenderer;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventBusInterface;
+use SimpleWebApps\Relationship\Box\AbstractRelationshipBox;
+use SimpleWebApps\Relationship\Box\RelationshipFromBox;
+use SimpleWebApps\Relationship\Box\RelationshipToBox;
 use SimpleWebApps\Relationship\Event\RelationshipActivatedEvent;
 use SimpleWebApps\Relationship\Event\RelationshipRemovedEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -37,8 +40,8 @@ final class RelationshipBroadcaster
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Before,
         'from-users-bottom',
-        RelationshipBoxComponent::NAME,
-        ['relationship' => $relationship, 'isFromUser' => true],
+        RelationshipFromBox::NAME,
+        ['relationship' => $relationship],
       ),
     ));
     $this->eventBus->post(new Event(
@@ -47,8 +50,8 @@ final class RelationshipBroadcaster
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Before,
         'to-users-bottom',
-        RelationshipBoxComponent::NAME,
-        ['relationship' => $relationship, 'isFromUser' => false],
+        RelationshipToBox::NAME,
+        ['relationship' => $relationship],
       ),
     ));
   }
@@ -60,9 +63,9 @@ final class RelationshipBroadcaster
       self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Replace,
-        RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
-        RelationshipBoxComponent::NAME,
-        ['relationship' => $event->relationship, 'isFromUser' => true],
+        RelationshipFromBox::htmlId((string) $event->relationship->getId()),
+        RelationshipFromBox::NAME,
+        ['relationship' => $event->relationship],
       ),
     ));
     $this->eventBus->post(new Event(
@@ -70,9 +73,9 @@ final class RelationshipBroadcaster
       self::TOPIC,
       $this->renderer->renderTwigComponentId(
         TurboStreamAction::Replace,
-        RelationshipBoxComponent::htmlId((string) $event->relationship->getId()),
-        RelationshipBoxComponent::NAME,
-        ['relationship' => $event->relationship, 'isFromUser' => false],
+        RelationshipToBox::htmlId((string) $event->relationship->getId()),
+        RelationshipToBox::NAME,
+        ['relationship' => $event->relationship],
       ),
     ));
   }
@@ -87,7 +90,7 @@ final class RelationshipBroadcaster
       self::TOPIC,
       $this->renderer->renderId(
         TurboStreamAction::Remove,
-        RelationshipBoxComponent::htmlId((string) $event->id),
+        AbstractRelationshipBox::htmlId((string) $event->id),
         '',
         [],
       ),
