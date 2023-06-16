@@ -16,37 +16,39 @@ use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Component\Uid\Ulid;
 use Twig\Environment;
+use Twig\TemplateWrapper;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class BookBroadcaster
+readonly class BookBroadcaster
 {
   public const TOPIC = 'books';
 
   private const STREAM_TEMPLATE = 'books/stream.html.twig';
 
+  private TemplateWrapper $template;
+
   public function __construct(
-    private readonly UserRepository $userRepository,
-    private readonly BookOwnershipRepository $bookOwnershipRepository,
-    private readonly Environment $twig,
-    private readonly EventBusInterface $eventBus,
+    private UserRepository $userRepository,
+    private BookOwnershipRepository $bookOwnershipRepository,
+    private EventBusInterface $eventBus,
+    Environment $twig,
   ) {
-    // Do nothing.
+    $this->template = $twig->load(self::STREAM_TEMPLATE);
   }
 
   public function onBookOwnershipCreated(BookOwnership $bookOwnership): void
   {
     $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
-    $template = $this->twig->load(self::STREAM_TEMPLATE);
-    $content = $template->renderBlock('book_ownership_created', [
+    $content = $this->template->renderBlock('book_ownership_created', [
       'selector' => BookRenderingUtilities::composeQuerySelectorOfPrivateList($owner, $bookOwnership->getState()),
       'bookOwnership' => $bookOwnership,
     ]);
     $this->broadcastToAffectedUsers([$owner], $content);
 
     if ($bookOwnership->getBook()->isPublic()) {
-      $content = $template->renderBlock('book_ownership_created', [
+      $content = $this->template->renderBlock('book_ownership_created', [
         'selector' => BookRenderingUtilities::composeQuerySelectorOfPublicListNotBelongingToUser($owner),
         'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($bookOwnership->getBook()),
       ]);
@@ -57,9 +59,7 @@ class BookBroadcaster
   public function onBookOwnershipUpdated(BookOwnership $bookOwnership): void
   {
     $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
-    $content = $this->twig
-      ->load(self::STREAM_TEMPLATE)
-      ->renderBlock('book_ownership_updated', [
+    $content = $this->template->renderBlock('book_ownership_updated', [
         'privateClass' => BookRenderingUtilities::composePrivateClass($owner),
         'id' => BookRenderingUtilities::cardHtmlId($bookOwnership->getBook()->getId()),
         'newSelector' => BookRenderingUtilities::composeQuerySelectorOfPrivateList($owner, $bookOwnership->getState()),
@@ -71,9 +71,7 @@ class BookBroadcaster
   public function onBookOwnershipDeleted(BookOwnership $bookOwnership): void
   {
     $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
-    $content = $this->twig
-      ->load(self::STREAM_TEMPLATE)
-      ->renderBlock('book_ownership_deleted', [
+    $content = $this->template->renderBlock('book_ownership_deleted', [
         'privateClass' => BookRenderingUtilities::composePrivateClass($owner),
         'id' => BookRenderingUtilities::cardHtmlId($bookOwnership->getBook()->getId()),
       ]);
@@ -82,9 +80,7 @@ class BookBroadcaster
 
   public function onBookUpdated(Book $book): void
   {
-    $content = $this->twig
-      ->load(self::STREAM_TEMPLATE)
-      ->renderBlock('book_updated', [
+    $content = $this->template->renderBlock('book_updated', [
         'id' => BookRenderingUtilities::contentHtmlId($book->getId()),
         'bookOwnership' => BookRenderingUtilities::wrapInEmptyOwnership($book),
       ]);
@@ -111,9 +107,7 @@ class BookBroadcaster
     // Broadcast only if the book was public,
     // since a private book card got automatically removed once the book ownership got removed.
     if ($book->isPublic()) {
-      $content = $this->twig
-        ->load(self::STREAM_TEMPLATE)
-        ->renderBlock('book_deleted', [
+      $content = $this->template->renderBlock('book_deleted', [
           'id' => BookRenderingUtilities::cardHtmlId($bookId),
         ]);
       $this->broadcastToAllUsers($content);

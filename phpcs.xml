@@ -10,8 +10,10 @@
 
     <rule ref="PSR12">
         <exclude name="PSR12.Operators.OperatorSpacing"/>
-        <!-- TODO remove this once phpcs gets updated to 3.8 -->
+        <!-- TODO remove these next few lines once phpcs gets updated to 3.8 -->
         <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+        <exclude name="PSR12.Files.FileHeader.IncorrectOrder"/>
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
     </rule>
     <rule ref="CognitiveComplexity"/>
     <rule ref="Generic.WhiteSpace.ScopeIndent">
