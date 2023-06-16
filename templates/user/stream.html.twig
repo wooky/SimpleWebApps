@@ -1,0 +1,6 @@
+{% block username_changed %}
+{% import "user/username.html.twig" as username %}
+<turbo-stream action="replace" targets=".{{ username.html_class(user) }}">
+  <template>{{ username.span(user) }}</template>
+</turbo-stream>
+{% endblock %}

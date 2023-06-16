@@ -1,6 +1,7 @@
+{%- import "user/username.html.twig" as username -%}
 <div id="{{ htmlId }}" class="panel-block">
   <div class="column py-0">
-    {{ component('user:username', {'user': this.user}) }}
+    {{ username.span(this.user) }}
   </div>
   <div class="column is-narrow py-0">
     {% if not relationship.active %}{% trans %}relationships.pending{% endtrans %} - {% endif %}
