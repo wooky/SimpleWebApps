@@ -6,6 +6,7 @@ use SimpleWebApps\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 $root = dirname(__DIR__).'/swa';
@@ -26,11 +27,14 @@ if (file_exists($zipPath)) {
   }
   $zip->close();
   unlink($zipPath);
+  // Server might time out, so redirect to keep it alive
+  header("Location: {$_SERVER['REQUEST_URI']}");
+  exit('Finished unzipping');
 }
 
 require_once $root.'/vendor/autoload_runtime.php';
 
-return function () {
+return function () use ($root) {
   $kernel = new Kernel('prod', true);
   $application = new Application($kernel);
   $application->setAutoExit(false);
@@ -38,10 +42,11 @@ return function () {
   $commands = [
     ['command' => 'doctrine:database:create', '-n' => true, '--if-not-exists' => true],
     ['command' => 'doctrine:migrations:migrate', '-n' => true],
+    ['command' => 'cache:clear'],
   ];
 
   $output = new BufferedOutput(BufferedOutput::VERBOSITY_DEBUG);
-  $ok = true;
+  $fs = new Filesystem();
   try {
     foreach ($commands as $i => $command) {
       $res = $application->run(new ArrayInput($command), $output);
@@ -50,12 +55,16 @@ return function () {
       }
     }
 
-    unlink('postdeploy.php');
+    $fs->mirror($root.'/public/build', 'build', options: ['delete' => true]);
+    $fs->copy($root.'/public/.htaccess', '.htaccess');
+    $fs->copy($root.'/public/index.prod.php', 'index.php');
+    $fs->remove('postdeploy.php');
   } catch (Exception $e) {
     $message = var_export($e, true);
     $output->writeln($message);
-    $ok = false;
+
+    return new Response($output->fetch(), 500);
   }
 
-  return new Response($output->fetch(), $ok ? 200 : 500);
+  return new Response($output->fetch());
 };

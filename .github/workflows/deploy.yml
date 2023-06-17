@@ -1,0 +1,51 @@
+name: Build & Deploy
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches:
+      - master
+  workflow_dispatch:
+permissions:
+  packages: read
+  contents: read
+env:
+  APP_ENV: prod
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wooky/simplewebapps:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          composer install -n --no-dev
+          npm install
+      - name: Build JS dependencies
+        run: |
+          mkdir public/build
+          chmod 777 public/build
+          npm run build
+          chmod 755 public/build
+      - name: Create environment file
+        env:
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: composer dump-env ${{ env.APP_ENV }}
+      - name: Zip up all the files
+        run: zip -9 -r -T simplewebapps.zip config/ migrations/ public/ src/ templates/ translations/ vendor/ .env.local.php composer.json
+      - name: FTP all the files
+        env:
+          LFTP_PASSWORD: ${{ secrets.FTP_PASS }}
+        run: lftp -c "open -u ${{ secrets.FTP_USER }} --env-password ${{ vars.FTP_HOST }} && put simplewebapps.zip -o swa/simplewebapps.zip && put public/postdeploy.php -o public_html/postdeploy.php"
+      - name: Run post-deploy actions
+        run: |
+          POST_DEPLOY_STATUS=$(curl -v -L --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.POST_DEPLOY_ENDPOINT }}")
+          echo "Post-deploy endpoint returned with code $POST_DEPLOY_STATUS."
+          if [ $POST_DEPLOY_STATUS -ne 200 ]; then exit 1; fi
