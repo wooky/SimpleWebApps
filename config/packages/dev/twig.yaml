@@ -1,0 +1,8 @@
+services:
+    twig.error_renderer.html:
+        class: Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer
+        decorates: 'error_renderer.html'
+        arguments:
+            - '@twig'
+            - '@error_handler.error_renderer.html'
+            - false

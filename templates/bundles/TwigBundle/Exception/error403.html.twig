@@ -1,0 +1,5 @@
+{%- if app.request.headers.get('Turbo-Frame') == 'app-modal' -%}
+  {%- include "modal/forbidden.html.twig" with {controller: exception.message} -%}
+{%- else -%}
+  TODO FORBIDDEN
+{%- endif -%}

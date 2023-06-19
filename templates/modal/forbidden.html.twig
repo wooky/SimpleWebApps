@@ -2,4 +2,4 @@
 
 {% block title %}{% trans %}modal.forbidden.title{% endtrans %}{% endblock %}
 
-{% block modal_body %}{{ 'modal.forbidden.message'|trans({'subject': subject|trans}) }}{% endblock %}
+{% block modal_body %}{{ 'modal.forbidden.message'|trans({'subject': (controller ~ '.subject')|trans}) }}{% endblock %}

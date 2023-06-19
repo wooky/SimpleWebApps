@@ -15,7 +15,7 @@ use function assert;
 /**
  * @extends Voter<string,Ownable>
  */
-class UserVoter extends Voter
+class OwnableEntityVoter extends Voter
 {
   public function __construct(
     private readonly RelationshipRepository $relationshipRepository,
@@ -32,10 +32,13 @@ class UserVoter extends Voter
     ]);
     $capability = RelationshipCapability::tryFrom($attribute);
 
-    return $capability && $subject instanceof Ownable;
+    return $capability && $subject instanceof Ownable && null !== $subject->getOwner();
   }
 
-  protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+  /**
+   * @param Ownable $subject
+   */
+  protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
   {
     $user = $token->getUser();
     if (!$user instanceof User) {
@@ -44,7 +47,6 @@ class UserVoter extends Voter
       return false;
     }
 
-    assert($subject instanceof Ownable);
     $this->logger->debug('Check if entity owner matches user.', [
       'entity_owner' => $subject->getOwner()?->getId(),
       'user_id' => $user->getId(),

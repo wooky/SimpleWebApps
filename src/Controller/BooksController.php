@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Controller\Mixin\CrudMixin;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
@@ -17,6 +18,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/books', name: self::CONTROLLER_SHORT_NAME)]
 class BooksController extends AbstractController
@@ -48,6 +50,7 @@ class BooksController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
+  #[IsGranted(RelationshipCapability::Write->value, 'bookOwnership', message: self::CONTROLLER_SHORT_NAME)]
   public function edit(
     Request $request,
     BookOwnership $bookOwnership,
@@ -60,6 +63,7 @@ class BooksController extends AbstractController
   }
 
   #[Route(self::ROUTE_DELETE_PATH, name: self::ROUTE_DELETE_NAME, methods: ['DELETE'])]
+  #[IsGranted(RelationshipCapability::Write->value, 'bookOwnership', message: self::CONTROLLER_SHORT_NAME)]
   public function delete(
     Request $request,
     BookOwnership $bookOwnership,

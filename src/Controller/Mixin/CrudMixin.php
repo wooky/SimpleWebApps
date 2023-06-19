@@ -28,8 +28,6 @@ trait CrudMixin
   public const ROUTE_EDIT_NAME = '_edit';
   public const ROUTE_DELETE_NAME = '_delete';
 
-  private const SUBJECT_SUFFIX = '.subject';
-
   /**
    * @param T $entity
    */
@@ -67,7 +65,7 @@ trait CrudMixin
 
     return $this->render('modal/new.html.twig', [
         'form' => $form,
-        'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
+        'controller' => self::getControllerShortName(),
     ]);
   }
 
@@ -84,13 +82,6 @@ trait CrudMixin
     array $extraButtons = [],
     ?string $deleteWarning = null,
   ): Response {
-    if ($entity instanceof Ownable && !$this->isGranted(RelationshipCapability::Write->value, $entity)) {
-      return $this->render('modal/forbidden.html.twig', [
-        'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
-      ])
-      ->setStatusCode(Response::HTTP_FORBIDDEN);
-    }
-
     $form = $this->createNewEditForm($request, $entity);
 
     if ($form->isSubmitted() && $form->isValid()) {
@@ -104,7 +95,7 @@ trait CrudMixin
     $parameters = [
         'id' => $id,
         'form' => $form,
-        'subject' => self::getControllerShortName().self::SUBJECT_SUFFIX,
+        'controller' => self::getControllerShortName(),
         'delete_path' => $isDeletable
           ? $this->generateUrl(self::getControllerShortName().self::ROUTE_DELETE_NAME, ['id' => $id])
           : null,
@@ -133,9 +124,6 @@ trait CrudMixin
   protected function crudDeleteAndTrue(Request $request, $repository, $entity, bool $flush = true): bool
   {
     if ($this->allowedToDelete($request, (string) $entity->getId())) {
-      if ($entity instanceof Ownable) {
-        $this->denyAccessUnlessGranted(RelationshipCapability::Write->value, $entity);
-      }
       $repository->remove($entity, $flush);
 
       return true;

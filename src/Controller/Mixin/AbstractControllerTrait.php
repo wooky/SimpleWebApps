@@ -41,8 +41,6 @@ trait AbstractControllerTrait
 
   abstract protected function isCsrfTokenValid(string $id, ?string $token): bool;
 
-  abstract protected function isGranted(mixed $attribute, mixed $subject = null): bool;
-
   protected function closeModalOrRedirect(Request $request): Response
   {
     if ('app-modal' === $request->headers->get('Turbo-Frame')) {
