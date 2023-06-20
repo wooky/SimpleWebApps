@@ -17,7 +17,7 @@ use function strlen;
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)
  */
-class EventBus implements EventBusInterface
+readonly class EventBus implements EventBusInterface
 {
   private const HOST = '127.255.255.255';
   private const PORT = 12345;

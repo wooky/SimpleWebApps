@@ -25,7 +25,7 @@ class BookOwnershipType extends AbstractType
   public const IS_OWNER_DISABLED = 'is_owner_disabled';
 
   public function __construct(
-    private Security $security,
+    private readonly Security $security,
   ) {
     // Do nothing.
   }

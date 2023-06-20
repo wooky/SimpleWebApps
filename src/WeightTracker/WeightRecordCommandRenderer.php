@@ -10,7 +10,7 @@ use Symfony\Component\Uid\Ulid;
 
 use function assert;
 
-class WeightRecordCommandRenderer
+readonly class WeightRecordCommandRenderer
 {
   public function __construct(
     private WeightRecordDataRenderer $dataRenderer,

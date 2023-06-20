@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function in_array;
 
-class EventStreamRenderer
+readonly class EventStreamRenderer
 {
   /**
    * @param iterable<EventStreamInitialPayloadListener> $initialPayloadListeners

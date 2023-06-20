@@ -50,7 +50,7 @@ calculator:
 
 edit_image:
   button: 'Edit Image'
-  title: 'TODO'
+  title: 'Upload New Image'
   select_image: 'Select Image'
   crop: 'Crop'
   upload: 'Upload'

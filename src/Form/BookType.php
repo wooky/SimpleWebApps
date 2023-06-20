@@ -24,7 +24,7 @@ class BookType extends AbstractType
   public const IS_PUBLIC_DISABLED = 'is_public_disabled';
 
   public function __construct(
-    private Security $security,
+    private readonly Security $security,
   ) {
     // Do nothing.
   }

@@ -17,18 +17,15 @@ use Symfony\Component\Uid\Ulid;
 use function assert;
 use function in_array;
 
-/**
- * TODO https://github.com/doctrine/orm/issues/2326 once this gets resolved, add readonly to class.
- */
-class WeightRecordBroadcaster
+readonly class WeightRecordBroadcaster
 {
   public const TOPIC = 'weight_tracker';
 
   public function __construct(
-    private readonly UserRepository $userRepository,
-    private readonly WeightRecordRepository $weightRecordRepository,
-    private readonly EventBusInterface $eventBus,
-    private readonly WeightRecordCommandRenderer $commandRenderer,
+    private UserRepository $userRepository,
+    private WeightRecordRepository $weightRecordRepository,
+    private EventBusInterface $eventBus,
+    private WeightRecordCommandRenderer $commandRenderer,
   ) {
     // Do nothing.
   }

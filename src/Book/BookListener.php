@@ -19,10 +19,13 @@ use Symfony\Component\Uid\Ulid;
 #[AsEntityListener(event: Events::postRemove, method: 'onBookDeleted', entity: Book::class)]
 class BookListener
 {
+  /**
+   * TODO https://github.com/doctrine/orm/issues/2326 hacky af.
+   */
   private ?Ulid $lastBookIdRemoved = null;
 
   public function __construct(
-    private BookBroadcaster $broadcaster,
+    private readonly BookBroadcaster $broadcaster,
   ) {
     // Do nothing.
   }

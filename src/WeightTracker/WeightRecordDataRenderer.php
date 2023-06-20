@@ -10,7 +10,7 @@ use SimpleWebApps\Entity\WeightRecord;
 
 use function assert;
 
-class WeightRecordDataRenderer
+readonly class WeightRecordDataRenderer
 {
   /**
    * @return array{id: string, x: int, y: int, owner: string}

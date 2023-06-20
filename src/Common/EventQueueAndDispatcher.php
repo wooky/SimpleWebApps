@@ -16,8 +16,8 @@ trait EventQueueAndDispatcher
   /** @var array<string, Event> */ private array $eventQueue = [];
 
   public function __construct(
-    private EventDispatcherInterface $eventDispatcher,
-    private LoggerInterface $logger,
+    private readonly EventDispatcherInterface $eventDispatcher,
+    private readonly LoggerInterface $logger,
   ) {
     // Do nothing.
   }
