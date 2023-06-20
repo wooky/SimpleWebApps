@@ -13,6 +13,7 @@ env:
   APP_ENV: prod
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/wooky/simplewebapps:latest
