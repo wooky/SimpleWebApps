@@ -44,7 +44,7 @@ jobs:
       - name: FTP all the files
         env:
           LFTP_PASSWORD: ${{ secrets.FTP_PASS }}
-        run: lftp -c "open -u ${{ secrets.FTP_USER }} --env-password ${{ vars.FTP_HOST }} && put simplewebapps.zip -o swa/simplewebapps.zip && put public/postdeploy.php -o public_html/postdeploy.php"
+        run: lftp -c "open -u ${{ secrets.FTP_USER }} --env-password ${{ vars.FTP_HOST }} && put simplewebapps.zip -o online/simplewebapps.zip && put public/postdeploy.php -o public_html/postdeploy.php"
       - name: Run post-deploy actions
         run: |
           POST_DEPLOY_STATUS=$(curl -v -L --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.POST_DEPLOY_ENDPOINT }}")

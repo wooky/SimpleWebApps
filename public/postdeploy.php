@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
-$root = dirname(__DIR__).'/swa';
+$root = dirname(__DIR__).'/online';
 header('Content-Type: text/plain');
 
 $zipPath = $root.'/simplewebapps.zip';

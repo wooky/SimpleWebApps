@@ -1,3 +1,0 @@
-stof_doctrine_extensions:
-    uploadable:
-        default_file_path: "%kernel.project_dir%/../public_html%env(UPLOAD_DIR_RELATIVE)%"
