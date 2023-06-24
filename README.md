@@ -24,6 +24,17 @@ Navigate to http://localhost:8080 on your browser to see the app. The fixtures c
 
 There's a level of quality that needs to be maintained. Run `composer fix` to lint the source files, and `composer check` to verify.
 
+## Preparing the Host
+
+This is a one-time action that needs to be performed on the host where the app will be deployed. In the root host directory:
+* Create the folders `blue` and `green`
+* Create a symlink `online` to point directly to `blue`
+* Create a symlink `standby` to point directly to `green`
+* In the public directory (e.g. public_html), create these symlinks:
+  * `.htaccess -> ../online/public/.htaccess`
+  * `build -> ../online/public/build`
+  * `index.php -> ../online/public/index.php`
+
 ## License
 
 Licensed under the Unlicense license, see [LICENSE](LICENSE).
