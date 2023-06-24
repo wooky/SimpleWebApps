@@ -9,11 +9,17 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
-$root = dirname(__DIR__).'/online';
 header('Content-Type: text/plain');
 
-$zipPath = $root.'/simplewebapps.zip';
+$root = dirname(__DIR__).'/standby';
+$online = dirname(__DIR__).'/online';
+
+$zipPath = dirname(__DIR__).'/simplewebapps.zip';
 if (file_exists($zipPath)) {
+  // Remove all existing files
+  array_map('unlink', glob($root.'/*'));
+
+  // Extract the uploaded archive
   $zip = new ZipArchive();
   $res = $zip->open($zipPath);
   if (true !== $res) {
@@ -27,6 +33,7 @@ if (file_exists($zipPath)) {
   }
   $zip->close();
   unlink($zipPath);
+
   // Server might time out, so redirect to keep it alive
   header("Location: {$_SERVER['REQUEST_URI']}");
   exit('Finished unzipping');
@@ -34,7 +41,7 @@ if (file_exists($zipPath)) {
 
 require_once $root.'/vendor/autoload_runtime.php';
 
-return function () use ($root) {
+return function () use ($root, $online) {
   $kernel = new Kernel('prod', true);
   $application = new Application($kernel);
   $application->setAutoExit(false);
@@ -54,10 +61,20 @@ return function () use ($root) {
         throw new Exception("Command $i failed with error code $res");
       }
     }
+  } catch (Exception $e) {
+    $message = var_export($e, true);
+    $output->writeln($message);
 
-    $fs->mirror($root.'/public/build', 'build', options: ['delete' => true]);
-    $fs->copy($root.'/public/.htaccess', '.htaccess');
-    $fs->copy($root.'/public/index.prod.php', 'index.php');
+    return new Response($output->fetch(), 500);
+  }
+
+  try {
+    $realOnline = $fs->readlink($online);
+    $realStandby = $fs->readlink($root);
+    assert($realOnline && $realStandby);
+
+    $fs->symlink($realStandby, $online);
+    $fs->symlink($realOnline, $root);
     $fs->remove('postdeploy.php');
   } catch (Exception $e) {
     $message = var_export($e, true);
