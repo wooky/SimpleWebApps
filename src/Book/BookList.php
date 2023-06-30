@@ -69,7 +69,7 @@ class BookList
     $this->publicBooks = [];
 
     match (BookViewFilter::tryFrom($this->viewFilter)) {
-      BookViewFilter::Public => $this->publicBooks = $this->bookRepository->findBy(['isPublic' => true]),
+      BookViewFilter::Public => $this->publicBooks = $this->bookRepository->findPublicBooks(),
       BookViewFilter::PublicAbsent => $this->publicBooks =
         $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
       default => $this->queryUserBooks(),

@@ -7,11 +7,14 @@ namespace SimpleWebApps\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use SimpleWebApps\Book\BookPublicity;
 use SimpleWebApps\Entity\Interface\Identifiable;
 use SimpleWebApps\Entity\Interface\Imageable;
 use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Entity\Mixin\ImageMixin;
 use SimpleWebApps\Repository\BookRepository;
+
+use function assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[Gedmo\Loggable]
@@ -30,7 +33,11 @@ class Book implements Identifiable, Imageable
 
   #[ORM\Column]
   #[Gedmo\Versioned]
-  private ?bool $isPublic = null;
+  private BookPublicity $publicity = BookPublicity::Private;
+
+  #[ORM\ManyToOne]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?User $creator = null;
 
   public function getTitle(): ?string
   {
@@ -56,14 +63,28 @@ class Book implements Identifiable, Imageable
     return $this;
   }
 
-  public function isPublic(): ?bool
+  public function getPublicity(): BookPublicity
   {
-    return $this->isPublic;
+    return $this->publicity;
   }
 
-  public function setIsPublic(bool $isPublic): self
+  public function setPublicity(BookPublicity $publicity): self
   {
-    $this->isPublic = $isPublic;
+    $this->publicity = $publicity;
+
+    return $this;
+  }
+
+  public function getCreator(): User
+  {
+    assert(null !== $this->creator);
+
+    return $this->creator;
+  }
+
+  public function setCreator(?User $creator): static
+  {
+    $this->creator = $creator;
 
     return $this;
   }

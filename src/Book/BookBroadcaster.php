@@ -47,7 +47,7 @@ readonly class BookBroadcaster
     ]);
     $this->broadcastToAffectedUsers([$owner], $content);
 
-    if ($bookOwnership->getBook()->isPublic()) {
+    if ($bookOwnership->getBook()->getPublicity()->isPublic()) {
       $content = $this->template->renderBlock('book_ownership_created_public', [
         'selector' => BookRenderingUtilities::composeQuerySelectorOfPublicListNotBelongingToUser($owner),
         'book' => $bookOwnership->getBook(),
@@ -86,7 +86,7 @@ readonly class BookBroadcaster
       ]);
 
     // Broadcast to all users if the book is public
-    if ($book->isPublic()) {
+    if ($book->getPublicity()->isPublic()) {
       $this->broadcastToAllUsers($content);
 
       return;
@@ -106,10 +106,10 @@ readonly class BookBroadcaster
   {
     // Broadcast only if the book was public,
     // since a private book card got automatically removed once the book ownership got removed.
-    if ($book->isPublic()) {
+    if ($book->getPublicity()->isPublic()) {
       $content = $this->template->renderBlock('book_deleted', [
-          'id' => BookRenderingUtilities::cardHtmlId($bookId),
-        ]);
+        'id' => BookRenderingUtilities::cardHtmlId($bookId),
+      ]);
       $this->broadcastToAllUsers($content);
     }
   }

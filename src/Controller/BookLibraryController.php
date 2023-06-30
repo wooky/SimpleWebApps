@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 use function assert;
 
@@ -44,6 +45,7 @@ class BookLibraryController extends AbstractController
     if ($response instanceof FormInterface) {
       $user = $response->get(BookType::OWNER_FIELD)->getData();
       assert($user instanceof User);
+      $book->setCreator($user);
       $bookOwnership = (new BookOwnership())
         ->setBook($book)
         ->setOwner($user)
@@ -60,6 +62,7 @@ class BookLibraryController extends AbstractController
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]
+  #[IsGranted('', 'book', message: self::CONTROLLER_SHORT_NAME)]
   public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
   {
     return $this->crudEdit($request, $bookRepository, $book, isDeletable: false, extraButtons: [
@@ -106,7 +109,7 @@ class BookLibraryController extends AbstractController
   {
     $form = $this->createForm(BookType::class, $entity, [
       BookType::ADD_OWNER_FIELD => null === $entity->getIdOrNull(),
-      BookType::IS_PUBLIC_DISABLED => null !== $entity->getIdOrNull() && $entity->isPublic(),
+      BookType::PUBLICITY_VALUES => $entity->getPublicity()->getAllowedChangedValues(),
     ]);
     $form->handleRequest($request);
 

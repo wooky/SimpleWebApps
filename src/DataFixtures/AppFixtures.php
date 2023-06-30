@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Book\BookOwnershipState;
+use SimpleWebApps\Book\BookPublicity;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\Relationship;
@@ -70,10 +71,10 @@ final class AppFixtures extends Fixture
     ;
 
     $this
-      ->createBookWithOwners($manager, 'Master Book', 'Master Description', true, [$master, $slaveRead, $slaveWrite, $slaveReadPending, $slaveWritePending])
-      ->createBookWithOwners($manager, 'Private Book', 'Private Description', false, [$master])
-      ->createBookWithOwners($manager, 'Slave Book', null, true, [$slaveRead, $slaveWrite])
-      ->createBookWithOwners($manager, 'Private Slave Book', 'Shhhhh!', false, [$slaveRead, $slaveWrite])
+      ->createBookWithOwners($manager, 'Master Book', 'Master Description', BookPublicity::PublicCommunity, [$master, $slaveRead, $slaveWrite, $slaveReadPending, $slaveWritePending])
+      ->createBookWithOwners($manager, 'Private Book', 'Private Description', BookPublicity::Private, [$master])
+      ->createBookWithOwners($manager, 'Slave Book', null, BookPublicity::PublicReadonly, [$slaveRead, $slaveWrite])
+      ->createBookWithOwners($manager, 'Private Slave Book', 'Shhhhh!', BookPublicity::Private, [$slaveRead, $slaveWrite])
     ;
 
     $manager->flush();
@@ -125,14 +126,15 @@ final class AppFixtures extends Fixture
   }
 
   /**
-   * @param User[] $owners
+   * @param non-empty-list<User> $owners
    */
-  private function createBookWithOwners(ObjectManager $manager, string $title, ?string $description, bool $isPublic, array $owners): self
+  private function createBookWithOwners(ObjectManager $manager, string $title, ?string $description, BookPublicity $publicity, array $owners): self
   {
     $book = (new Book())
       ->setTitle($title)
       ->setDescription($description)
-      ->setIsPublic($isPublic)
+      ->setPublicity($publicity)
+      ->setCreator($owners[0])
     ;
     $manager->persist($book);
 
