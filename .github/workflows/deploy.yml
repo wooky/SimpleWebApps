@@ -50,3 +50,14 @@ jobs:
           POST_DEPLOY_STATUS=$(curl -v -L --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.POST_DEPLOY_ENDPOINT }}")
           echo "Post-deploy endpoint returned with code $POST_DEPLOY_STATUS."
           if [ $POST_DEPLOY_STATUS -ne 200 ]; then exit 1; fi
+      - name: Smoke test
+        id: smokeTest
+        run: |
+          SMOKE_STATUS=$(curl -v --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.APP_HOMEPAGE }}")
+          echo "Smoke test returned with code $POST_DEPLOY_STATUS."
+          if [ $POST_DEPLOY_STATUS -ne 200 ]; then exit 1; fi
+      - name: Rollback on smoke test failure
+        if: always() && steps.smokeTest.outcome == 'failure'
+        run: |
+          lftp -c "open -u ${{ secrets.FTP_USER }} --env-password ${{ vars.FTP_HOST }} && put public/rollback.php -o public_html/rollback.php"
+          curl -v "${{ vars.ROLLBACK_ENDPOINT }}"
