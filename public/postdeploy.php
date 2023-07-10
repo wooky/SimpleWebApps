@@ -68,7 +68,7 @@ if (file_exists($zipPath)) {
 require_once $standby.'/vendor/autoload_runtime.php';
 
 return function () use ($standby, $online) {
-  $kernel = new Kernel('prod', true);
+  $kernel = new Kernel('prod', false);
   $application = new Application($kernel);
   $application->setAutoExit(false);
 

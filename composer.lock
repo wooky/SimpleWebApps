@@ -1446,16 +1446,16 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "v3.11.1",
+            "version": "v3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine-extensions/DoctrineExtensions.git",
-                "reference": "ae4bdf0d567e06b6bb1902a560ee78961b230953"
+                "reference": "eef4b4978118fdb4c0a03509325e807ad96e3bec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine-extensions/DoctrineExtensions/zipball/ae4bdf0d567e06b6bb1902a560ee78961b230953",
-                "reference": "ae4bdf0d567e06b6bb1902a560ee78961b230953",
+                "url": "https://api.github.com/repos/doctrine-extensions/DoctrineExtensions/zipball/eef4b4978118fdb4c0a03509325e807ad96e3bec",
+                "reference": "eef4b4978118fdb4c0a03509325e807ad96e3bec",
                 "shasum": ""
             },
             "require": {
@@ -1471,7 +1471,6 @@
                 "symfony/deprecation-contracts": "^2.1 || ^3.0"
             },
             "conflict": {
-                "doctrine/cache": "<1.11",
                 "doctrine/dbal": "<2.13.1 || ^3.0 <3.2",
                 "doctrine/mongodb-odm": "<2.3",
                 "doctrine/orm": "<2.10.2",
@@ -1483,25 +1482,25 @@
                 "doctrine/doctrine-bundle": "^2.3",
                 "doctrine/mongodb-odm": "^2.3",
                 "doctrine/orm": "^2.10.2",
-                "friendsofphp/php-cs-fixer": "^3.4.0,<3.10",
+                "friendsofphp/php-cs-fixer": "^3.4.0 <3.10",
                 "nesbot/carbon": "^2.55",
-                "phpstan/phpstan": "^1.9",
+                "phpstan/phpstan": "^1.10.2",
                 "phpstan/phpstan-doctrine": "^1.0",
                 "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^8.5 || ^9.5",
+                "rector/rector": "^0.15.20",
                 "symfony/console": "^4.4 || ^5.3 || ^6.0",
                 "symfony/phpunit-bridge": "^6.0",
                 "symfony/yaml": "^4.4 || ^5.3 || ^6.0"
             },
             "suggest": {
                 "doctrine/mongodb-odm": "to use the extensions with the MongoDB ODM",
-                "doctrine/orm": "to use the extensions with the ORM",
-                "symfony/cache": "to cache parsed annotations"
+                "doctrine/orm": "to use the extensions with the ORM"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.12-dev"
+                    "dev-main": "3.13-dev"
                 }
             },
             "autoload": {
@@ -1549,10 +1548,28 @@
             "support": {
                 "email": "gediminas.morkevicius@gmail.com",
                 "issues": "https://github.com/doctrine-extensions/DoctrineExtensions/issues",
-                "source": "https://github.com/doctrine-extensions/DoctrineExtensions/tree/v3.11.1",
+                "source": "https://github.com/doctrine-extensions/DoctrineExtensions/tree/v3.12.0",
                 "wiki": "https://github.com/Atlantic18/DoctrineExtensions/tree/main/doc"
             },
-            "time": "2023-02-20T19:24:07+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/l3pp4rd",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/mbabker",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phansys",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/stof",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-08T20:38:42+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -2524,30 +2541,31 @@
         },
         {
             "name": "stof/doctrine-extensions-bundle",
-            "version": "v1.7.2",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stof/StofDoctrineExtensionsBundle.git",
-                "reference": "5cfabc774ee0df1904b10cd03ceb39d993bb61bd"
+                "reference": "b40623da645d0e206331f506fb1065d8b0a0f3d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stof/StofDoctrineExtensionsBundle/zipball/5cfabc774ee0df1904b10cd03ceb39d993bb61bd",
-                "reference": "5cfabc774ee0df1904b10cd03ceb39d993bb61bd",
+                "url": "https://api.github.com/repos/stof/StofDoctrineExtensionsBundle/zipball/b40623da645d0e206331f506fb1065d8b0a0f3d6",
+                "reference": "b40623da645d0e206331f506fb1065d8b0a0f3d6",
                 "shasum": ""
             },
             "require": {
-                "gedmo/doctrine-extensions": "^2.3.4 || ^3.0.0",
-                "php": "^7.1.3 || ^8.0",
-                "symfony/config": "^4.4 || ^5.2 || ^6.0",
-                "symfony/dependency-injection": "^4.4 || ^5.2 || ^6.0",
-                "symfony/event-dispatcher": "^4.4 || ^5.2 || ^6.0",
-                "symfony/http-kernel": "^4.4 || ^5.2 || ^6.0"
+                "gedmo/doctrine-extensions": "^3.5.0",
+                "php": "^7.2.5 || ^8.0",
+                "symfony/cache": "^5.4 || ^6.0",
+                "symfony/config": "^5.4 || ^6.0",
+                "symfony/dependency-injection": "^5.4 || ^6.0",
+                "symfony/event-dispatcher": "^5.4 || ^6.0",
+                "symfony/http-kernel": "^5.4 || ^6.0"
             },
             "require-dev": {
-                "symfony/mime": "^4.4 || ^5.2 || ^6.0",
-                "symfony/phpunit-bridge": "^v5.2.4 || ^6.0",
-                "symfony/security-core": "^4.4 || ^5.2 || ^6.0"
+                "symfony/mime": "^5.4 || ^6.0",
+                "symfony/phpunit-bridge": "^v5.4 || ^6.0",
+                "symfony/security-core": "^5.4 || ^6.0"
             },
             "suggest": {
                 "doctrine/doctrine-bundle": "to use the ORM extensions",
@@ -2592,9 +2610,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stof/StofDoctrineExtensionsBundle/issues",
-                "source": "https://github.com/stof/StofDoctrineExtensionsBundle/tree/v1.7.2"
+                "source": "https://github.com/stof/StofDoctrineExtensionsBundle/tree/v1.8.0"
             },
-            "time": "2023-05-22T18:25:15+00:00"
+            "time": "2023-07-07T15:34:33+00:00"
         },
         {
             "name": "symfony/asset",
@@ -6068,16 +6086,16 @@
         },
         {
             "name": "symfony/stimulus-bundle",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stimulus-bundle.git",
-                "reference": "5261003352f52d9e1bcd0a04f099784ada2c3829"
+                "reference": "257ef052bebe491d7c29e9a4a8009edb82269e15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stimulus-bundle/zipball/5261003352f52d9e1bcd0a04f099784ada2c3829",
-                "reference": "5261003352f52d9e1bcd0a04f099784ada2c3829",
+                "url": "https://api.github.com/repos/symfony/stimulus-bundle/zipball/257ef052bebe491d7c29e9a4a8009edb82269e15",
+                "reference": "257ef052bebe491d7c29e9a4a8009edb82269e15",
                 "shasum": ""
             },
             "require": {
@@ -6116,7 +6134,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/stimulus-bundle/tree/v2.9.1"
+                "source": "https://github.com/symfony/stimulus-bundle/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -6132,7 +6150,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T15:13:12+00:00"
+            "time": "2023-06-29T19:46:37+00:00"
         },
         {
             "name": "symfony/stopwatch",
@@ -6723,25 +6741,26 @@
         },
         {
             "name": "symfony/ux-cropperjs",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-cropperjs.git",
-                "reference": "b0a6a1be6cb8b8f34b953b75727d6fe6bc794e7d"
+                "reference": "06835d47e6a48bf083623046924c8bac651cdb80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-cropperjs/zipball/b0a6a1be6cb8b8f34b953b75727d6fe6bc794e7d",
-                "reference": "b0a6a1be6cb8b8f34b953b75727d6fe6bc794e7d",
+                "url": "https://api.github.com/repos/symfony/ux-cropperjs/zipball/06835d47e6a48bf083623046924c8bac651cdb80",
+                "reference": "06835d47e6a48bf083623046924c8bac651cdb80",
                 "shasum": ""
             },
             "require": {
                 "intervention/image": "^2.5",
-                "php": ">=7.2.5",
+                "php": ">=8.1",
                 "symfony/config": "^5.4|^6.0",
                 "symfony/dependency-injection": "^5.4|^6.0",
                 "symfony/form": "^5.4|^6.0",
                 "symfony/http-kernel": "^5.4|^6.0",
+                "symfony/options-resolver": "^5.4|^6.0",
                 "symfony/validator": "^5.4|^6.0"
             },
             "conflict": {
@@ -6751,7 +6770,8 @@
                 "symfony/framework-bundle": "^5.4|^6.0",
                 "symfony/phpunit-bridge": "^5.4|^6.0",
                 "symfony/twig-bundle": "^5.4|^6.0",
-                "symfony/var-dumper": "^5.4|^6.0"
+                "symfony/var-dumper": "^5.4|^6.0",
+                "twig/twig": "^2.14.7|^3.0.4"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -6785,7 +6805,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.9.1"
+                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -6801,34 +6821,36 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T14:40:50+00:00"
+            "time": "2023-06-19T13:59:38+00:00"
         },
         {
             "name": "symfony/ux-dropzone",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-dropzone.git",
-                "reference": "0810d31877a6e44db03fb4903f1f076aad699f11"
+                "reference": "3b8e5cf6c54081b0bc2c850cbcaa537acb14b7bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-dropzone/zipball/0810d31877a6e44db03fb4903f1f076aad699f11",
-                "reference": "0810d31877a6e44db03fb4903f1f076aad699f11",
+                "url": "https://api.github.com/repos/symfony/ux-dropzone/zipball/3b8e5cf6c54081b0bc2c850cbcaa537acb14b7bd",
+                "reference": "3b8e5cf6c54081b0bc2c850cbcaa537acb14b7bd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
+                "php": ">=8.1",
                 "symfony/config": "^5.4|^6.0",
                 "symfony/dependency-injection": "^5.4|^6.0",
                 "symfony/form": "^5.4|^6.0",
-                "symfony/http-kernel": "^5.4|^6.0"
+                "symfony/http-kernel": "^5.4|^6.0",
+                "symfony/options-resolver": "^5.4|^6.0"
             },
             "require-dev": {
                 "symfony/framework-bundle": "^5.4|^6.0",
                 "symfony/phpunit-bridge": "^5.4|^6.0",
                 "symfony/twig-bundle": "^5.4|^6.0",
-                "symfony/var-dumper": "^5.4|^6.0"
+                "symfony/var-dumper": "^5.4|^6.0",
+                "twig/twig": "^2.14.7|^3.0.4"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -6862,7 +6884,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-dropzone/tree/v2.9.1"
+                "source": "https://github.com/symfony/ux-dropzone/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -6878,47 +6900,50 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T14:40:50+00:00"
+            "time": "2023-06-19T13:59:38+00:00"
         },
         {
             "name": "symfony/ux-live-component",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-live-component.git",
-                "reference": "5362f8c5510cadd674113c19b020bf8a22f93dd5"
+                "reference": "73f6b7c0c17711370869d17626ba4d8d29dd8c13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/5362f8c5510cadd674113c19b020bf8a22f93dd5",
-                "reference": "5362f8c5510cadd674113c19b020bf8a22f93dd5",
+                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/73f6b7c0c17711370869d17626ba4d8d29dd8c13",
+                "reference": "73f6b7c0c17711370869d17626ba4d8d29dd8c13",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0",
+                "php": ">=8.1",
                 "symfony/property-access": "^5.4.5|^6.0",
                 "symfony/serializer": "^5.4|^6.0",
-                "symfony/ux-twig-component": "^2.8"
+                "symfony/ux-twig-component": "^2.8",
+                "twig/twig": "^2.14.7|^3.0.4"
             },
             "conflict": {
                 "symfony/config": "<5.4.0"
             },
             "require-dev": {
                 "doctrine/annotations": "^1.0",
-                "doctrine/doctrine-bundle": "^2.0",
-                "doctrine/orm": "^2.7",
+                "doctrine/collections": "^1.6.8|^2.0",
+                "doctrine/doctrine-bundle": "^2.4.3",
+                "doctrine/orm": "^2.9.4",
                 "doctrine/persistence": "^2.5.2|^3.0",
                 "phpdocumentor/reflection-docblock": "5.x-dev",
                 "symfony/dependency-injection": "^5.4|^6.0",
                 "symfony/form": "^5.4|^6.0",
                 "symfony/framework-bundle": "^5.4|^6.0",
+                "symfony/options-resolver": "^5.4|^6.0",
                 "symfony/phpunit-bridge": "^6.0",
                 "symfony/property-info": "^5.4|^6.0",
                 "symfony/security-csrf": "^5.4|^6.0",
                 "symfony/twig-bundle": "^5.4|^6.0",
                 "symfony/validator": "^5.4|^6.0",
                 "zenstruck/browser": "^1.2.0",
-                "zenstruck/foundry": "^1.10"
+                "zenstruck/foundry": "^1.33"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -6950,7 +6975,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-live-component/tree/v2.9.1"
+                "source": "https://github.com/symfony/ux-live-component/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -6966,20 +6991,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T14:41:19+00:00"
+            "time": "2023-06-25T13:28:22+00:00"
         },
         {
             "name": "symfony/ux-turbo",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "32c68183b8e0c18130be53b679207e3a43f10f25"
+                "reference": "9762c373ed54c3642a4ae64b9254bc1c454f7da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/32c68183b8e0c18130be53b679207e3a43f10f25",
-                "reference": "32c68183b8e0c18130be53b679207e3a43f10f25",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/9762c373ed54c3642a4ae64b9254bc1c454f7da0",
+                "reference": "9762c373ed54c3642a4ae64b9254bc1c454f7da0",
                 "shasum": ""
             },
             "require": {
@@ -7046,7 +7071,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/v2.9.1"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -7062,29 +7087,29 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T14:40:50+00:00"
+            "time": "2023-06-19T13:59:38+00:00"
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.9.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
-                "reference": "4d664e8dd058b4ebc6ae329d89a1aa8348ef06d0"
+                "reference": "0c222ddce77fa7deda8541d8973db528e1451379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/4d664e8dd058b4ebc6ae329d89a1aa8348ef06d0",
-                "reference": "4d664e8dd058b4ebc6ae329d89a1aa8348ef06d0",
+                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/0c222ddce77fa7deda8541d8973db528e1451379",
+                "reference": "0c222ddce77fa7deda8541d8973db528e1451379",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0",
+                "php": ">=8.1",
                 "symfony/dependency-injection": "^5.4|^6.0",
                 "symfony/deprecation-contracts": "^2.2|^3.0",
                 "symfony/event-dispatcher": "^5.4|^6.0",
                 "symfony/property-access": "^5.4|^6.0",
-                "twig/twig": "^2.0|^3.0"
+                "twig/twig": "^2.14.7|^3.0.4"
             },
             "conflict": {
                 "symfony/config": "<5.4.0"
@@ -7126,7 +7151,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.9.1"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -7142,7 +7167,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-30T16:00:59+00:00"
+            "time": "2023-06-28T20:17:17+00:00"
         },
         {
             "name": "symfony/validator",
@@ -8513,16 +8538,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.20.0",
+            "version": "v3.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "0e8249e0b15e2bc022fbbd1090ce29d071481e69"
+                "reference": "229b55b3eae4729a8e2a321441ba40fcb3720b86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/0e8249e0b15e2bc022fbbd1090ce29d071481e69",
-                "reference": "0e8249e0b15e2bc022fbbd1090ce29d071481e69",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/229b55b3eae4729a8e2a321441ba40fcb3720b86",
+                "reference": "229b55b3eae4729a8e2a321441ba40fcb3720b86",
                 "shasum": ""
             },
             "require": {
@@ -8532,7 +8557,7 @@
                 "doctrine/lexer": "^2 || ^3",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": "^7.4 || ^8.0",
+                "php": "^8.0.1",
                 "sebastian/diff": "^4.0 || ^5.0",
                 "symfony/console": "^5.4 || ^6.0",
                 "symfony/event-dispatcher": "^5.4 || ^6.0",
@@ -8597,7 +8622,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.20.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.21.1"
             },
             "funding": [
                 {
@@ -8605,7 +8630,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-27T20:22:39+00:00"
+            "time": "2023-07-05T21:50:25+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -9391,16 +9416,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.22.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "ec58baf7b3c7f1c81b3b00617c953249fb8cf30c"
+                "reference": "65c39594fbd8c67abfc68bb323f86447bab79cc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/ec58baf7b3c7f1c81b3b00617c953249fb8cf30c",
-                "reference": "ec58baf7b3c7f1c81b3b00617c953249fb8cf30c",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/65c39594fbd8c67abfc68bb323f86447bab79cc0",
+                "reference": "65c39594fbd8c67abfc68bb323f86447bab79cc0",
                 "shasum": ""
             },
             "require": {
@@ -9432,9 +9457,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.22.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.22.1"
             },
-            "time": "2023-06-01T12:35:21+00:00"
+            "time": "2023-06-29T20:46:06+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -9758,16 +9783,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.2.3",
+            "version": "10.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "35c8cac1734ede2ae354a6644f7088356ff5b08e"
+                "reference": "68484779b5a2ed711fbdeba6ca01910d87acdff2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/35c8cac1734ede2ae354a6644f7088356ff5b08e",
-                "reference": "35c8cac1734ede2ae354a6644f7088356ff5b08e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/68484779b5a2ed711fbdeba6ca01910d87acdff2",
+                "reference": "68484779b5a2ed711fbdeba6ca01910d87acdff2",
                 "shasum": ""
             },
             "require": {
@@ -9839,7 +9864,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.3"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.4"
             },
             "funding": [
                 {
@@ -9855,7 +9880,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-30T06:17:38+00:00"
+            "time": "2023-07-10T04:06:08+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
