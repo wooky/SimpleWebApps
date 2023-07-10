@@ -8,10 +8,10 @@ use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Controller\Mixin\CrudMixin;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\BookOwnershipType;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\BookRepository;
+use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+use function assert;
 
 #[Route('/books', name: self::CONTROLLER_SHORT_NAME)]
 class BooksController extends AbstractController
@@ -34,13 +36,18 @@ class BooksController extends AbstractController
     return $this->render('books/index.html.twig');
   }
 
-  #[Route(self::ROUTE_NEW_PATH.'/{bookid}/{ownerid?}', name: self::ROUTE_NEW_NAME, methods: ['GET', 'POST'])]
+  #[Route(self::ROUTE_NEW_PATH.'/{bookid}', name: self::ROUTE_NEW_NAME, methods: ['POST'])]
   public function new(
     Request $request,
     #[MapEntity(id: 'bookid')] Book $book,
-    #[MapEntity(id: 'ownerid')] ?User $owner,
+    UserRepository $userRepository,
     BookOwnershipRepository $bookOwnershipRepository,
   ): Response {
+    $ownerId = $request->request->get('ownerid');
+    assert(!empty($ownerId));
+    $owner = $userRepository->find($ownerId);
+    assert(null !== $owner);
+
     $entity = (new BookOwnership())
       ->setOwner($owner)
       ->setBook($book)

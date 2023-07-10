@@ -36,7 +36,11 @@
     {% include "books/_card/private_card.html.twig" %}
   {% endfor %}
   {% for book in publicBooks %}
-    {% include "books/_card/public_card.html.twig" with {ownerId: currentUser.id} %}
+    {% include "books/_card/public_card.html.twig" %}
   {% endfor %}
   </div>
+  {# TODO hack #}
+  <form method="POST" id="booksNewForm" data-turbo-frame="app-modal">
+    <input type="hidden" name="ownerid" value="{{ currentUser.id }}">
+  </form>
 </div>

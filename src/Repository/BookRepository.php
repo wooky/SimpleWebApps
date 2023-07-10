@@ -13,6 +13,12 @@ use SimpleWebApps\Entity\User;
 
 /**
  * @extends AbstractRepository<Book>
+ * TODO psalm ignores inherited @methods, but why?
+ *
+ * @method ?Book  find($id, $lockMode = null, $lockVersion = null)
+ * @method ?Book  findOneBy(array $criteria, array $orderBy = null)
+ * @method Book[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method int    count(array $criteria)
  */
 class BookRepository extends AbstractRepository
 {
