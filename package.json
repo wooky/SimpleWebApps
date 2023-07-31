@@ -10,7 +10,7 @@
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
         "@symfony/webpack-encore": "^4.4.0",
-        "core-js": "^3.31.0",
+        "core-js": "^3.32.0",
         "cropperjs": "^1.5.13",
         "regenerator-runtime": "^0.13.11",
         "webpack": "^5.88.2",
