@@ -26,7 +26,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "chart.js": "^4.3.2",
+        "chart.js": "^4.3.3",
         "chartjs-adapter-moment": "^1.0.1",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.43"
