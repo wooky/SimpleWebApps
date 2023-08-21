@@ -11,6 +11,7 @@ permissions:
   contents: read
 env:
   APP_ENV: prod
+concurrency: deploy_prod
 jobs:
   deploy:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
