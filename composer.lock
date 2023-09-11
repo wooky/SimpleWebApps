@@ -1573,16 +1573,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "8bd7c33a0734ae1c5d074360512beb716bef3f77"
+                "reference": "be45764272e8873c72dbe3d2edcfdfcc3bc9f727"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/8bd7c33a0734ae1c5d074360512beb716bef3f77",
-                "reference": "8bd7c33a0734ae1c5d074360512beb716bef3f77",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/be45764272e8873c72dbe3d2edcfdfcc3bc9f727",
+                "reference": "be45764272e8873c72dbe3d2edcfdfcc3bc9f727",
                 "shasum": ""
             },
             "require": {
@@ -1669,7 +1669,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.6.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.6.1"
             },
             "funding": [
                 {
@@ -1685,7 +1685,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-03T15:06:02+00:00"
+            "time": "2023-08-27T10:13:57+00:00"
         },
         {
             "name": "intervention/image",
@@ -6750,16 +6750,16 @@
         },
         {
             "name": "symfony/ux-cropperjs",
-            "version": "v2.10.0",
+            "version": "v2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-cropperjs.git",
-                "reference": "06835d47e6a48bf083623046924c8bac651cdb80"
+                "reference": "c25109b937a1c571fe02e363212200a2dfc80ee6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-cropperjs/zipball/06835d47e6a48bf083623046924c8bac651cdb80",
-                "reference": "06835d47e6a48bf083623046924c8bac651cdb80",
+                "url": "https://api.github.com/repos/symfony/ux-cropperjs/zipball/c25109b937a1c571fe02e363212200a2dfc80ee6",
+                "reference": "c25109b937a1c571fe02e363212200a2dfc80ee6",
                 "shasum": ""
             },
             "require": {
@@ -6814,7 +6814,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.10.0"
+                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.11.1"
             },
             "funding": [
                 {
@@ -6830,7 +6830,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-19T13:59:38+00:00"
+            "time": "2023-08-24T16:25:14+00:00"
         },
         {
             "name": "symfony/ux-dropzone",
@@ -7180,16 +7180,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v6.3.2",
+            "version": "v6.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "b0c4ecf17d39eee1edfecc92299a03b9f5d5220b"
+                "reference": "0c8435154920b9bbe93bece675234c244cadf73b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/b0c4ecf17d39eee1edfecc92299a03b9f5d5220b",
-                "reference": "b0c4ecf17d39eee1edfecc92299a03b9f5d5220b",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/0c8435154920b9bbe93bece675234c244cadf73b",
+                "reference": "0c8435154920b9bbe93bece675234c244cadf73b",
                 "shasum": ""
             },
             "require": {
@@ -7256,7 +7256,7 @@
             "description": "Provides tools to validate values",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/validator/tree/v6.3.2"
+                "source": "https://github.com/symfony/validator/tree/v6.3.4"
             },
             "funding": [
                 {
@@ -7272,7 +7272,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-26T17:39:03+00:00"
+            "time": "2023-08-17T15:49:05+00:00"
         },
         {
             "name": "symfony/var-dumper",
