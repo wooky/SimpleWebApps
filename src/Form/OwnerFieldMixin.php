@@ -29,7 +29,7 @@ trait OwnerFieldMixin
       'label' => 'auth.username',
       'class' => User::class,
       'choice_label' => 'username',
-      'query_builder' => fn (UserRepository $userRepository) => $userRepository->getControlledUsersIncludingSelfQuery(
+      'query_builder' => static fn (UserRepository $userRepository) => $userRepository->getControlledUsersIncludingSelfQuery( // phpcs:ignore Generic.Files.LineLength.TooLong
         [$user],
         RelationshipCapability::Write->permissionsRequired(),
       ),

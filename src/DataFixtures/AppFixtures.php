@@ -62,12 +62,12 @@ final class AppFixtures extends Fixture
     ;
 
     $this
-      ->createWeightRecords($manager, $master, fn (DateTimeImmutable $date) => 100 + (int) $date->format('j'))
-      ->createWeightRecords($manager, $slaveRead, fn (DateTimeImmutable $date) => 200 - (int) $date->format('j'))
-      ->createWeightRecords($manager, $slaveWrite, fn (DateTimeImmutable $date) => 0 === (int) $date->format('j') % 2 ? 125 : 175)
-      ->createWeightRecords($manager, $slaveReadPending, fn (DateTimeImmutable $date) => (int) $date->format('j') % 4 < 2 ? 175 : 200)
-      ->createWeightRecords($manager, $slaveWritePending, fn (DateTimeImmutable $date) => (int) $date->format('N') < 6 ? 95 : 195)
-      ->createWeightRecords($manager, $loner, fn () => 150)
+      ->createWeightRecords($manager, $master, static fn (DateTimeImmutable $date) => 100 + (int) $date->format('j'))
+      ->createWeightRecords($manager, $slaveRead, static fn (DateTimeImmutable $date) => 200 - (int) $date->format('j'))
+      ->createWeightRecords($manager, $slaveWrite, static fn (DateTimeImmutable $date) => 0 === (int) $date->format('j') % 2 ? 125 : 175)
+      ->createWeightRecords($manager, $slaveReadPending, static fn (DateTimeImmutable $date) => (int) $date->format('j') % 4 < 2 ? 175 : 200)
+      ->createWeightRecords($manager, $slaveWritePending, static fn (DateTimeImmutable $date) => (int) $date->format('N') < 6 ? 95 : 195)
+      ->createWeightRecords($manager, $loner, static fn () => 150)
     ;
 
     $this

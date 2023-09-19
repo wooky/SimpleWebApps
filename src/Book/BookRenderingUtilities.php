@@ -31,7 +31,7 @@ readonly class BookRenderingUtilities
 
     if (BookViewFilter::All->value === $bookViewFilter) {
       $classes = array_map(
-        fn (BookOwnershipState $bookOwnershipState) => self::composePrivateListClass($user, $bookOwnershipState),
+        static fn (BookOwnershipState $bookOwnershipState) => self::composePrivateListClass($user, $bookOwnershipState),
         BookOwnershipState::cases(),
       );
       $classes[] = $privateClass;

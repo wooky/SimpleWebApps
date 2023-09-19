@@ -51,7 +51,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
    */
   public function getControlledUsersIncludingSelfQuery(array $self, array $capabilitiesAllowed): QueryBuilder
   {
-    $selfIds = array_map(fn (User $user) => $user->getId()?->toBinary(), $self);
+    $selfIds = array_map(static fn (User $user) => $user->getId()?->toBinary(), $self);
     $qb = $this->createQueryBuilder('u');
 
     return $qb
@@ -76,7 +76,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
    */
   public function getControllingUsersIncludingSelf(array $self, array $capabilitiesRequired): array
   {
-    $selfIds = array_map(fn (User $user) => $user->getId()?->toBinary(), $self);
+    $selfIds = array_map(static fn (User $user) => $user->getId()?->toBinary(), $self);
     $qb = $this->createQueryBuilder('u');
 
     return $qb

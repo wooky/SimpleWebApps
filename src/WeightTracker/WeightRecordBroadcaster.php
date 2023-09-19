@@ -41,7 +41,7 @@ readonly class WeightRecordBroadcaster
       [$user],
       RelationshipCapability::Read->permissionsRequired(),
     );
-    $controlledUserIds = array_map(fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
+    $controlledUserIds = array_map(static fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
     $initialPayload = json_encode($this->commandRenderer->initialData($user, $controlledUsers, $weightRecords));
     assert(false !== $initialPayload);
@@ -114,7 +114,7 @@ readonly class WeightRecordBroadcaster
    */
   private function broadcast(array $affectedUsers, array $payloadArray): void
   {
-    $users = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
+    $users = array_map(static fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = json_encode($payloadArray);
     assert(false !== $payload);
     $this->eventBus->post(new Event($users, self::TOPIC, $payload, sseEvent: self::TOPIC));

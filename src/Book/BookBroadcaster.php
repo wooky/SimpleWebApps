@@ -95,7 +95,7 @@ readonly class BookBroadcaster
     // Broadcast to all users that have the book in their library,
     // as well as other users that have a relationship with said users
     $bookOwners = array_map(
-      fn (BookOwnership $bookOwnership) => $bookOwnership->getOwner()
+      static fn (BookOwnership $bookOwnership) => $bookOwnership->getOwner()
         ?? throw new RuntimeException('Book ownership has no owner'),
       $this->bookOwnershipRepository->findBy(['book' => $book]),
     );
@@ -120,7 +120,7 @@ readonly class BookBroadcaster
   private function broadcastToAffectedUsers(array $users, string $content): void
   {
     $affectedUsers = array_map(
-      fn (User $user) => (string) $user->getId(),
+      static fn (User $user) => (string) $user->getId(),
       $this->userRepository->getControllingUsersIncludingSelf(
         $users,
         RelationshipCapability::Read->permissionsRequired(),
