@@ -67,7 +67,7 @@ if (file_exists($zipPath)) {
 /** @psalm-suppress MissingFile */
 require_once $standby.'/vendor/autoload_runtime.php';
 
-return function () use ($standby, $online) {
+return static function () use ($standby, $online) {
   $kernel = new Kernel('prod', false);
   $application = new Application($kernel);
   $application->setAutoExit(false);

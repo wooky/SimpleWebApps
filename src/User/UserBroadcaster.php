@@ -32,7 +32,7 @@ final readonly class UserBroadcaster
   public function onUsernameChanged(UsernameChangedEvent $event): void
   {
     $affectedUsers = $this->userRepository->getAllInterestedParties($event->user);
-    $userIds = array_map(fn (User $user) => (string) $user->getId(), $affectedUsers);
+    $userIds = array_map(static fn (User $user) => (string) $user->getId(), $affectedUsers);
     $payload = $this->template->renderBlock('username_changed', ['user' => $event->user]);
     $this->eventBus->post(new Event($userIds, Event::MESSAGE, $payload, EventScope::AllTopics));
   }

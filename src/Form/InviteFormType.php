@@ -30,7 +30,7 @@ class InviteFormType extends AbstractType
         ->add(self::CAPABILITY, EnumType::class, [
             'label' => 'relationships.capability.title',
             'class' => RelationshipCapability::class,
-            'choice_label' => fn (RelationshipCapability $choice) => $choice,
+            'choice_label' => static fn (RelationshipCapability $choice) => $choice,
         ]);
   }
 }

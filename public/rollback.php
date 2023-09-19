@@ -12,7 +12,7 @@ $online = dirname(__DIR__).'/online';
 /** @psalm-suppress MissingFile */
 require_once $online.'/vendor/autoload_runtime.php';
 
-return function () use ($standby, $online) {
+return static function () use ($standby, $online) {
   $fs = new Filesystem();
   $realOnline = $fs->readlink($online);
   $realStandby = $fs->readlink($standby);
