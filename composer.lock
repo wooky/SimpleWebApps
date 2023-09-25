@@ -7101,16 +7101,16 @@
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.11.2",
+            "version": "v2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
-                "reference": "1d6f7656a788e1fe6075a3bf364d8bb6be663456"
+                "reference": "adafcd7b561a7e6bf4c8e7d05af99c8fe0dd35f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/1d6f7656a788e1fe6075a3bf364d8bb6be663456",
-                "reference": "1d6f7656a788e1fe6075a3bf364d8bb6be663456",
+                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/adafcd7b561a7e6bf4c8e7d05af99c8fe0dd35f7",
+                "reference": "adafcd7b561a7e6bf4c8e7d05af99c8fe0dd35f7",
                 "shasum": ""
             },
             "require": {
@@ -7125,6 +7125,7 @@
                 "symfony/config": "<5.4.0"
             },
             "require-dev": {
+                "symfony/console": "^5.4|^6.0",
                 "symfony/css-selector": "^5.4|^6.0",
                 "symfony/dom-crawler": "^5.4|^6.0",
                 "symfony/framework-bundle": "^5.4|^6.0",
@@ -7163,7 +7164,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.11.2"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.12.0"
             },
             "funding": [
                 {
@@ -7179,7 +7180,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-07T14:51:36+00:00"
+            "time": "2023-09-22T13:26:20+00:00"
         },
         {
             "name": "symfony/validator",
