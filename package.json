@@ -9,7 +9,7 @@
         "@symfony/ux-dropzone": "file:vendor/symfony/ux-dropzone/assets",
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
-        "@symfony/webpack-encore": "^4.4.0",
+        "@symfony/webpack-encore": "^4.5.0",
         "core-js": "^3.33.1",
         "cropperjs": "^1.6.1",
         "regenerator-runtime": "^0.14",
