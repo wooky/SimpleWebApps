@@ -24,7 +24,7 @@
         "symfony/runtime": "6.3.*",
         "symfony/security-bundle": "6.3.*",
         "symfony/serializer": "6.3.*",
-        "symfony/translation": "6.3.*",
+        "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.3.*",
         "symfony/uid": "6.3.*",
         "symfony/ux-cropperjs": "^2.9",
