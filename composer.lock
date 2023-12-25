@@ -5934,16 +5934,16 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v6.3.8",
+            "version": "v6.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "b3ad1515a276473f7919ac97e560017284a7c4bf"
+                "reference": "6eee0fd95f5caa1e77cab29552620ebf8e5b1a5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/b3ad1515a276473f7919ac97e560017284a7c4bf",
-                "reference": "b3ad1515a276473f7919ac97e560017284a7c4bf",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/6eee0fd95f5caa1e77cab29552620ebf8e5b1a5f",
+                "reference": "6eee0fd95f5caa1e77cab29552620ebf8e5b1a5f",
                 "shasum": ""
             },
             "require": {
@@ -6008,7 +6008,7 @@
             "description": "Handles serializing and deserializing data structures, including object graphs, into array structures or other formats like XML and JSON.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/serializer/tree/v6.3.8"
+                "source": "https://github.com/symfony/serializer/tree/v6.3.10"
             },
             "funding": [
                 {
@@ -6024,7 +6024,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-07T10:11:25+00:00"
+            "time": "2023-12-01T14:25:58+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -6929,16 +6929,16 @@
         },
         {
             "name": "symfony/ux-live-component",
-            "version": "v2.13.2",
+            "version": "v2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-live-component.git",
-                "reference": "7dd2c62986caa2a683539050cb0a3929d2d0bfe2"
+                "reference": "34626e96324c0c414342bcfe60554c2c8f1d331a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/7dd2c62986caa2a683539050cb0a3929d2d0bfe2",
-                "reference": "7dd2c62986caa2a683539050cb0a3929d2d0bfe2",
+                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/34626e96324c0c414342bcfe60554c2c8f1d331a",
+                "reference": "34626e96324c0c414342bcfe60554c2c8f1d331a",
                 "shasum": ""
             },
             "require": {
@@ -7001,7 +7001,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-live-component/tree/v2.13.2"
+                "source": "https://github.com/symfony/ux-live-component/tree/v2.13.3"
             },
             "funding": [
                 {
@@ -7017,7 +7017,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-11T01:20:31+00:00"
+            "time": "2023-12-01T20:21:20+00:00"
         },
         {
             "name": "symfony/ux-turbo",
