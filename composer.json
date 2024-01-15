@@ -15,7 +15,7 @@
         "scheb/2fa-google-authenticator": "^6.8",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/console": "6.3.*",
-        "symfony/dotenv": "6.3.*",
+        "symfony/dotenv": "6.4.*",
         "symfony/flex": "^2",
         "symfony/form": "6.4.*",
         "symfony/framework-bundle": "6.3.*",
