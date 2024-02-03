@@ -102,7 +102,6 @@
         "friendsofphp/php-cs-fixer": "^3.49",
         "phan/phan": "^5.4.3",
         "phpmd/phpmd": "^2.15",
-        "phpunit/phpunit": "^10",
         "psalm/plugin-symfony": "^5.1",
         "rarst/phpcs-cognitive-complexity": "^0.2.0",
         "squizlabs/php_codesniffer": "*",
