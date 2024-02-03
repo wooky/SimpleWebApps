@@ -16,7 +16,7 @@ doctrine:
                 prefix: 'SimpleWebApps\Entity'
                 alias: SimpleWebApps
             gedmo_loggable:
-                type: annotation
+                type: attribute
                 prefix: Gedmo\Loggable\Entity
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
                 is_bundle: false

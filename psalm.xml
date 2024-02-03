@@ -23,7 +23,7 @@
     </projectFiles>
     <fileExtensions>
         <extension name=".php" />
-        <extension name=".twig" checker="./vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
+        <extension name=".twig" checker="/vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
     </fileExtensions>
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">

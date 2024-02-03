@@ -85,7 +85,7 @@ class AuthController extends AbstractController
       // encode the plain password
       $plainPassword = $form->get('plainPassword')->getData();
       assert(is_string($plainPassword) || null === $plainPassword);
-      if ($plainPassword) {
+      if (null !== $plainPassword) {
         $user->setPassword(
           $userPasswordHasher->hashPassword(
             $user,

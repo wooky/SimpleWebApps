@@ -44,7 +44,7 @@ class BooksController extends AbstractController
     BookOwnershipRepository $bookOwnershipRepository,
   ): Response {
     $ownerId = $request->request->get('ownerid');
-    assert(!empty($ownerId));
+    assert(null !== $ownerId && !empty($ownerId));
     $owner = $userRepository->find($ownerId);
     assert(null !== $owner);
 

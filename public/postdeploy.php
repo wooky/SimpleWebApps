@@ -97,7 +97,7 @@ return static function () use ($standby, $online) {
   try {
     $realOnline = $fs->readlink($online);
     $realStandby = $fs->readlink($standby);
-    assert($realOnline && $realStandby);
+    assert(null !== $realOnline && null !== $realStandby);
 
     $fs->symlink($realStandby, $online);
     $fs->symlink($realOnline, $standby);
