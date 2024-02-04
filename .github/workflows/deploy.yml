@@ -54,11 +54,13 @@ jobs:
       - name: Smoke test
         id: smokeTest
         run: |
-          SMOKE_STATUS=$(curl -v --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.APP_HOMEPAGE }}")
+          SMOKE_STATUS=$(curl -v -L --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.APP_HOMEPAGE }}")
           echo "Smoke test returned with code $SMOKE_STATUS."
           if [ $SMOKE_STATUS -ne 200 ]; then exit 1; fi
       - name: Rollback on smoke test failure
         if: always() && steps.smokeTest.outcome == 'failure'
+        env:
+          LFTP_PASSWORD: ${{ secrets.FTP_PASS }}
         run: |
           lftp -c "open -u ${{ secrets.FTP_USER }} --env-password ${{ vars.FTP_HOST }} && put public/rollback.php -o public_html/rollback.php"
           curl -v "${{ vars.ROLLBACK_ENDPOINT }}"
