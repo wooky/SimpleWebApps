@@ -55,8 +55,8 @@ jobs:
         id: smokeTest
         run: |
           SMOKE_STATUS=$(curl -v --silent --output /dev/stderr --write-out "%{http_code}" "${{ vars.APP_HOMEPAGE }}")
-          echo "Smoke test returned with code $POST_DEPLOY_STATUS."
-          if [ $POST_DEPLOY_STATUS -ne 200 ]; then exit 1; fi
+          echo "Smoke test returned with code $SMOKE_STATUS."
+          if [ $SMOKE_STATUS -ne 200 ]; then exit 1; fi
       - name: Rollback on smoke test failure
         if: always() && steps.smokeTest.outcome == 'failure'
         run: |
