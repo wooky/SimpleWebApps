@@ -8,8 +8,10 @@ use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Traversable;
 
 use function assert;
+use function in_array;
 
 readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -19,6 +21,36 @@ readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticated
   public function __construct(public User $user, public array $fromRelationships)
   {
     // Do nothing.
+  }
+
+  /**
+   * @param RelationshipCapability[] $capabilities
+   */
+  public function doesRelationshipExist(User $user, array $capabilities): bool
+  {
+    foreach ($this->fromRelationships as $relationship) {
+      if ($relationship->getToUser() === $user) {
+        return in_array($relationship->getCapability(), $capabilities, true);
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param RelationshipCapability[] $capabilities
+   *
+   * @return Traversable<int,User>
+   */
+  public function iterateControlledUsers(array $capabilities): Traversable
+  {
+    foreach ($this->fromRelationships as $relationship) {
+      if (in_array($relationship->getCapability(), $capabilities, true)) {
+        $toUser = $relationship->getToUser();
+        assert(null !== $toUser);
+        yield $toUser;
+      }
+    }
   }
 
   /**

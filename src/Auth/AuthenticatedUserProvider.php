@@ -38,6 +38,7 @@ class AuthenticatedUserProvider implements UserProviderInterface, PasswordUpgrad
       ->from(User::class, 'u')
       ->innerJoin(Relationship::class, 'rel', Expr\Join::WITH, $qb->expr()->eq('rel.fromUser', 'u.id'))
       ->where($qb->expr()->eq('u.username', '?1'))
+      ->andWhere($qb->expr()->eq('rel.active', true))
       ->setParameter(1, $identifier)
       ->getQuery()
       ->getResult();

@@ -7,7 +7,6 @@ namespace SimpleWebApps\Form;
 use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\User;
-use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,17 +22,18 @@ trait OwnerFieldMixin
    */
   protected function addOwnerField(FormBuilderInterface $builder, Security $security, array $options = []): void
   {
-    $user = $security->getUser();
-    assert($user instanceof AuthenticatedUser);
+    $authenticatedUser = $security->getUser();
+    assert($authenticatedUser instanceof AuthenticatedUser);
+    $owners = [
+      $authenticatedUser->user,
+      ...$authenticatedUser->iterateControlledUsers(RelationshipCapability::Write->permissionsRequired()),
+    ];
 
     $options = array_merge($options, [
       'label' => 'auth.username',
       'class' => User::class,
       'choice_label' => 'username',
-      'query_builder' => static fn (UserRepository $userRepository) => $userRepository->getControlledUsersIncludingSelfQuery( // phpcs:ignore Generic.Files.LineLength.TooLong
-        [$user->user],
-        RelationshipCapability::Write->permissionsRequired(),
-      ),
+      'choices' => $owners,
     ]);
     $builder->add(self::OWNER_FIELD, EntityType::class, $options);
   }
