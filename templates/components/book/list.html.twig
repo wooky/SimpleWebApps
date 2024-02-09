@@ -2,11 +2,7 @@
   <div>
     <span class="is-size-5">{{ 'books.filter1' | trans }}</span>
     <span class="select">
-      <select
-        data-model="currentUser"
-        data-action="live#action"
-        data-action-name="refresh"
-      >
+      <select data-model="currentUser">
       {% for user in users %}
         <option
           value="{{ user.id }}"
@@ -17,11 +13,7 @@
     </span>
     <span class="is-size-5">{{ 'books.filter2' | trans }}</span>
     <span class="select">
-      <select
-        data-model="viewFilter"
-        data-action="live#action"
-        data-action-name="refresh"
-      >
+      <select data-model="viewFilter">
       {% for vf in allViewFilters %}
         <option
           value="{{ vf.value }}"
@@ -32,10 +24,10 @@
     </span>
   </div>
   <div class="columns is-multiline {{ this.listClasses|join(' ') }}" data-live-id="book-list-{{ random() }}">
-  {% for bookOwnership in bookOwnerships %}
+  {% for bookOwnership in this.bookOwnerships %}
     {% include "books/_card/private_card.html.twig" %}
   {% endfor %}
-  {% for book in publicBooks %}
+  {% for book in this.publicBooks %}
     {% include "books/_card/public_card.html.twig" %}
   {% endfor %}
   </div>

@@ -13,7 +13,6 @@ use SimpleWebApps\Repository\BookRepository;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -33,12 +32,6 @@ class BookList
   #[LiveProp(writable: true)]
   public string $viewFilter = BookViewFilter::All->value;
 
-  /** @var BookOwnership[] */
-  public array $bookOwnerships;
-
-  /** @var Book[] */
-  public array $publicBooks;
-
   /** @var (BookViewFilter|BookOwnershipState)[] */
   public readonly array $allViewFilters;
 
@@ -51,7 +44,6 @@ class BookList
     $user = $security->getUser();
     assert($user instanceof User);
     $this->currentUser = $user;
-    $this->refresh();
 
     $this->users = $userRepository->getControlledUsersIncludingSelf(
       [$user],
@@ -60,33 +52,33 @@ class BookList
     $this->allViewFilters = array_merge(BookOwnershipState::cases(), BookViewFilter::cases());
   }
 
-  #[LiveAction]
-  public function refresh(): void
+  /**
+   * @return Book[]
+   */
+  public function getPublicBooks(): array
   {
-    // FIXME need to verify user has permission to view selected user's books!
-
-    $this->bookOwnerships = [];
-    $this->publicBooks = [];
-
-    match (BookViewFilter::tryFrom($this->viewFilter)) {
-      BookViewFilter::Public => $this->publicBooks = $this->bookRepository->findPublicBooks(),
-      BookViewFilter::PublicAbsent => $this->publicBooks =
-        $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
-      default => $this->queryUserBooks(),
+    return match (BookViewFilter::tryFrom($this->viewFilter)) {
+      BookViewFilter::Public => $this->bookRepository->findPublicBooks(),
+      BookViewFilter::PublicAbsent => $this->bookRepository->findBooksNotBelongingToUser($this->currentUser),
+      default => [],
     };
   }
 
-  private function queryUserBooks(): void
+  /**
+   * @return BookOwnership[]
+   */
+  public function getBookOwnerships(): array
   {
-    $queryCriteria = [
-      'owner' => $this->currentUser,
-    ];
-    $ownershipState = BookOwnershipState::tryFrom($this->viewFilter);
-    if ($ownershipState) {
-      $queryCriteria['state'] = $ownershipState;
+    $bookViewFilter = BookViewFilter::tryFrom($this->viewFilter);
+    if (BookViewFilter::Public === $bookViewFilter || BookViewFilter::PublicAbsent === $bookViewFilter) {
+      return [];
     }
 
-    $this->bookOwnerships = $this->bookOwnershipRepository->findBy($queryCriteria);
+    $ownershipState = BookOwnershipState::tryFrom($this->viewFilter);
+
+    return $ownershipState
+      ? $this->bookOwnershipRepository->findWithBookByOwnerAndState($this->currentUser, $ownershipState)
+      : $this->bookOwnershipRepository->findWithBookByOwner($this->currentUser);
   }
 
   public function getListClasses(): array
