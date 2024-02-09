@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace SimpleWebApps\Book;
 
 use Psr\Log\LoggerInterface;
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\RelationshipRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -39,13 +39,13 @@ final class BookPublicityVoter extends Voter
   protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
   {
     $user = $token->getUser();
-    if (!$user instanceof User) {
-      $this->logger->debug('User is not logged in.');
+    if (!$user instanceof AuthenticatedUser) {
+      $this->logger->debug('User is not logged in.', ['user' => $user]);
 
       return false;
     }
 
-    if ($user === $subject->getCreator()) {
+    if ($user->user === $subject->getCreator()) {
       return true;
     }
     if (BookPublicity::PublicCommunity === $subject->getPublicity()) {
@@ -53,7 +53,7 @@ final class BookPublicityVoter extends Voter
     }
 
     $relationship = $this->relationshipRepository->findActiveRelationship(
-      $user,
+      $user->user,
       $subject->getCreator(),
       RelationshipCapability::Write->permissionsRequired(),
     );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Book;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
@@ -42,11 +43,11 @@ class BookList
     Security $security,
   ) {
     $user = $security->getUser();
-    assert($user instanceof User);
-    $this->currentUser = $user;
+    assert($user instanceof AuthenticatedUser);
+    $this->currentUser = $user->user;
 
     $this->users = $userRepository->getControlledUsersIncludingSelf(
-      [$user],
+      [$user->user],
       RelationshipCapability::Read->permissionsRequired(),
     );
     $this->allViewFilters = array_merge(BookOwnershipState::cases(), BookViewFilter::cases());

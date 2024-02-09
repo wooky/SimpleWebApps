@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Form;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Book\BookPublicity;
 use SimpleWebApps\Entity\Book;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -34,11 +35,13 @@ class BookType extends AbstractType
   {
     assert(isset($options[self::ADD_OWNER_FIELD]));
     assert(isset($options[self::PUBLICITY_VALUES]));
+    $authenticatedUser = $this->security->getUser();
+    assert($authenticatedUser instanceof AuthenticatedUser);
 
     if ($options[self::ADD_OWNER_FIELD]) {
       $this->addOwnerField($builder, $this->security, [
         'mapped' => false,
-        'data' => $this->security->getUser(),
+        'data' => $authenticatedUser->user,
       ]);
     }
     $builder

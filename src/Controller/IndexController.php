@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use SimpleWebApps\Entity\User;
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\EventBus\EventStreamRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,8 +37,8 @@ class IndexController extends AbstractController
     assert(is_string($topicsStr) && !empty($topicsStr));
     $topics = explode(',', $topicsStr);
     $user = $this->getUser();
-    assert($user instanceof User);
-    $userId = $user->getId();
+    assert($user instanceof AuthenticatedUser);
+    $userId = $user->user->getId();
 
     return $renderer->createResponse((string) $userId, $topics);
   }

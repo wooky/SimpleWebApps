@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Book;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
@@ -33,6 +34,7 @@ readonly class BookBroadcaster
     private UserRepository $userRepository,
     private BookOwnershipRepository $bookOwnershipRepository,
     private EventBusInterface $eventBus,
+    private LoggerInterface $logger,
     Environment $twig,
   ) {
     $this->template = $twig->load(self::STREAM_TEMPLATE);
@@ -70,10 +72,20 @@ readonly class BookBroadcaster
 
   public function onBookOwnershipDeleted(BookOwnership $bookOwnership): void
   {
+    $bookId = $bookOwnership->getBook()->getIdOrNull();
+    if (!$bookId) {
+      // FIXME this cause the book ownership card to not be removed from the UI
+      $this->logger->warning(
+        'Book ownership has no book ID (book was possibly deleted?)',
+        ['bookOwnership' => $bookOwnership],
+      );
+
+      return;
+    }
     $owner = $bookOwnership->getOwner() ?? throw new RuntimeException('BookOwnership has no owner');
     $content = $this->template->renderBlock('book_ownership_deleted', [
         'privateClass' => BookRenderingUtilities::composePrivateClass($owner),
-        'id' => BookRenderingUtilities::cardHtmlId($bookOwnership->getBook()->getId()),
+        'id' => BookRenderingUtilities::cardHtmlId($bookId),
       ]);
     $this->broadcastToAffectedUsers([$owner], $content);
   }

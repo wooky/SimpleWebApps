@@ -1,4 +1,4 @@
-{%- set ulid = is_granted('IS_AUTHENTICATED_REMEMBERED') ? app.user.id : '' -%}
+{%- set ulid = is_granted('IS_AUTHENTICATED_REMEMBERED') ? app.user.user.id : '' -%}
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
     <head>

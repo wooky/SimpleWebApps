@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SimpleWebApps\Auth;
 
 use Psr\Log\LoggerInterface;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\RelationshipRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -41,26 +40,26 @@ class OwnableEntityVoter extends Voter
   protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
   {
     $user = $token->getUser();
-    if (!$user instanceof User) {
-      $this->logger->debug('User is not logged in.');
+    if (!$user instanceof AuthenticatedUser) {
+      $this->logger->debug('User is not logged in.', ['user' => $user]);
 
       return false;
     }
 
     $this->logger->debug('Check if entity owner matches user.', [
       'entity_owner' => $subject->getOwner()?->getId(),
-      'user_id' => $user->getId(),
+      'user_id' => $user->user->getId(),
     ]);
     $owner = $subject->getOwner();
     assert(null !== $owner);
-    if ($owner === $user) {
+    if ($owner === $user->user) {
       return true;
     }
 
     $this->logger->debug('Check if relationship exists');
     $capability = RelationshipCapability::from($attribute);
     $relationship =
-      $this->relationshipRepository->findActiveRelationship($user, $owner, $capability->permissionsRequired());
+      $this->relationshipRepository->findActiveRelationship($user->user, $owner, $capability->permissionsRequired());
     if ($relationship) {
       return true;
     }

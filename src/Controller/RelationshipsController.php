@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\InviteFormType;
 use SimpleWebApps\Repository\RelationshipRepository;
 use SimpleWebApps\Repository\UserRepository;
@@ -39,13 +39,15 @@ class RelationshipsController extends AbstractController
    * @SuppressWarnings(PHPMD.ElseExpression)
    */
   #[Route(self::ROUTE_INDEX_PATH, name: self::ROUTE_INDEX_NAME, methods: ['GET'])]
-  public function index(RelationshipRepository $relationshipRepository, #[CurrentUser] User $user): Response
-  {
-    $relationships = $relationshipRepository->findBidirectionalRelationships($user);
+  public function index(
+    RelationshipRepository $relationshipRepository,
+    #[CurrentUser] AuthenticatedUser $user,
+  ): Response {
+    $relationships = $relationshipRepository->findBidirectionalRelationships($user->user);
     $fromUser = [];
     $toUser = [];
     foreach ($relationships as $relationship) {
-      if ($relationship->getFromUser() === $user) {
+      if ($relationship->getFromUser() === $user->user) {
         $fromUser[] = $relationship;
       } else {
         $toUser[] = $relationship;
@@ -63,7 +65,7 @@ class RelationshipsController extends AbstractController
     Request $request,
     UserRepository $userRepository,
     RelationshipRepository $relationshipRepository,
-    #[CurrentUser] User $fromUser,
+    #[CurrentUser] AuthenticatedUser $authenticatedUser,
   ): Response {
     $form = $this->createForm(InviteFormType::class);
     $form->handleRequest($request);
@@ -72,6 +74,7 @@ class RelationshipsController extends AbstractController
       $toUserField = $form->get(InviteFormType::TO_USER);
       $toUserId = $toUserField->getData();
       assert($toUserId instanceof Ulid);
+      $fromUser = $authenticatedUser->user;
       if ($fromUser->getId()->equals($toUserId)) {
         $toUserField->addError(new FormError('relationships.error.to_self'));
       }
