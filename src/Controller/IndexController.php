@@ -9,6 +9,7 @@ use SimpleWebApps\EventBus\EventStreamRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Annotation\Route;
 
 use function assert;
@@ -22,10 +23,11 @@ class IndexController extends AbstractController
     return $this->render('index/index.html.twig');
   }
 
-  #[Route('/navbar', name: 'navbar', methods: ['GET'])]
-  public function navbar(): Response
+  #[Route('/navbar/{ulid}', name: 'navbar', methods: ['GET'])]
+  #[Cache(maxage: 3600)]
+  public function navbar(string $ulid = ''): Response
   {
-    return $this->render('index/navbar.html.twig');
+    return $this->render('index/navbar.html.twig', ['ulid' => $ulid]);
   }
 
   #[Route('/events', name: 'events', methods: ['GET'])]
