@@ -34,9 +34,10 @@ class AuthenticatedUserProvider implements UserProviderInterface, PasswordUpgrad
     $qb = $this->entityManager->createQueryBuilder();
 
     $rows = $qb
-      ->select(['u', 'rel'])
+      ->select(['u', 'rel', 'tu'])
       ->from(User::class, 'u')
       ->innerJoin(Relationship::class, 'rel', Expr\Join::WITH, $qb->expr()->eq('rel.fromUser', 'u.id'))
+      ->innerJoin(User::class, 'tu', Expr\Join::WITH, $qb->expr()->eq('tu.id', 'rel.toUser'))
       ->where($qb->expr()->eq('u.username', '?1'))
       ->andWhere($qb->expr()->eq('rel.active', true))
       ->setParameter(1, $identifier)
