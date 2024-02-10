@@ -12,14 +12,13 @@ use SimpleWebApps\Entity\Mixin\IdMixin;
 use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 use function assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'auth.username_exists')]
 #[Gedmo\Loggable]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface, Identifiable
+class User implements PasswordAuthenticatedUserInterface, TwoFactorInterface, Identifiable
 {
   use IdMixin;
 
@@ -58,27 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
   }
 
   /**
-   * A visual identifier that represents this user.
-   *
-   * @see UserInterface
-   */
-  public function getUserIdentifier(): string
-  {
-    assert(null !== $this->username);
-
-    return $this->username;
-  }
-
-  /**
-   * @see UserInterface
+   * @return string[]
    */
   public function getRoles(): array
   {
-    $roles = $this->roles;
-    // guarantee every user at least has ROLE_USER
-    $roles[] = 'ROLE_USER';
-
-    return array_unique($roles);
+    return $this->roles;
   }
 
   /**
@@ -107,19 +90,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
   }
 
   /**
-   * @see UserInterface
+   * @see TwoFactorInterface
    */
-  public function eraseCredentials(): void
-  {
-    // If you store any temporary, sensitive data on the user, clear it here
-    // $this->plainPassword = null;
-  }
-
   public function getGoogleAuthenticatorSecret(): ?string
   {
     return $this->googleAuthenticatorSecret;
   }
 
+  /**
+   * @see TwoFactorInterface
+   */
   public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): self
   {
     $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
@@ -127,13 +107,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     return $this;
   }
 
+  /**
+   * @see TwoFactorInterface
+   */
   public function isGoogleAuthenticatorEnabled(): bool
   {
     return null !== $this->googleAuthenticatorSecret;
   }
 
+  /**
+   * @see TwoFactorInterface
+   */
   public function getGoogleAuthenticatorUsername(): string
   {
-    return $this->getUserIdentifier();
+    assert(null !== $this->username);
+
+    return $this->username;
   }
 }

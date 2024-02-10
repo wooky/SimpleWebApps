@@ -6,7 +6,6 @@ namespace SimpleWebApps\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
 
@@ -33,7 +32,7 @@ class RelationshipRepository extends ServiceEntityRepository
     $qb = $this->createQueryBuilder('rel');
 
     return $qb
-        ->select()
+        ->select(['rel', 'fu', 'tu'])
         ->innerJoin('rel.fromUser', 'fu')
         ->innerJoin('rel.toUser', 'tu')
         ->where($qb->expr()->eq('fu.id', '?1'))
@@ -41,27 +40,6 @@ class RelationshipRepository extends ServiceEntityRepository
         ->setParameter(1, $user->getId(), 'ulid')
         ->getQuery()
         ->getResult();
-  }
-
-  /**
-   * @param RelationshipCapability[] $capabilities
-   */
-  public function findActiveRelationship(User $fromUser, User $toUser, array $capabilities): ?Relationship
-  {
-    $qb = $this->createQueryBuilder('rel');
-
-    return $qb
-        ->innerJoin('rel.fromUser', 'fu')
-        ->innerJoin('rel.toUser', 'tu')
-        ->where($qb->expr()->eq('fu.id', '?1'))
-        ->andWhere($qb->expr()->eq('tu.id', '?2'))
-        ->andWhere($qb->expr()->in('rel.capability', '?3'))
-        ->andWhere($qb->expr()->eq('rel.active', true))
-        ->setParameter(1, $fromUser->getId(), 'ulid')
-        ->setParameter(2, $toUser->getId(), 'ulid')
-        ->setParameter(3, $capabilities)
-        ->getQuery()
-        ->getOneOrNullResult();
   }
 
   public function save(Relationship $entity, bool $flush = false): void

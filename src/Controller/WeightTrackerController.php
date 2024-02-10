@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Controller\Mixin\CrudMixin;
-use SimpleWebApps\Entity\User;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\Form\WeightRecordType;
 use SimpleWebApps\Repository\WeightRecordRepository;
@@ -36,9 +36,9 @@ class WeightTrackerController extends AbstractController
   public function new(
     Request $request,
     WeightRecordRepository $weightRecordRepository,
-    #[CurrentUser] User $user,
+    #[CurrentUser] AuthenticatedUser $user,
   ): Response {
-    return $this->crudNewAndClose($request, $weightRecordRepository, (new WeightRecord())->setOwner($user));
+    return $this->crudNewAndClose($request, $weightRecordRepository, (new WeightRecord())->setOwner($user->user));
   }
 
   #[Route(self::ROUTE_EDIT_PATH, name: self::ROUTE_EDIT_NAME, methods: ['GET', 'POST'])]

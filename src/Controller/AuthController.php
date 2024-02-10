@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Form\LoginFormType;
 use SimpleWebApps\Form\ProfileFormType;
@@ -76,9 +77,9 @@ class AuthController extends AbstractController
     Request $request,
     UserPasswordHasherInterface $userPasswordHasher,
     UserRepository $userRepository,
-    #[CurrentUser] User $user,
+    #[CurrentUser] AuthenticatedUser $user,
   ): Response {
-    $form = $this->createForm(ProfileFormType::class, $user);
+    $form = $this->createForm(ProfileFormType::class, $user->user);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
@@ -86,22 +87,22 @@ class AuthController extends AbstractController
       $plainPassword = $form->get('plainPassword')->getData();
       assert(is_string($plainPassword) || null === $plainPassword);
       if (null !== $plainPassword) {
-        $user->setPassword(
+        $user->user->setPassword(
           $userPasswordHasher->hashPassword(
-            $user,
+            $user->user,
             $plainPassword,
           ),
         );
       }
 
-      $userRepository->save($user, true);
+      $userRepository->save($user->user, true);
 
       return $this->redirectToRoute('auth_profile');
     }
 
     return $this->render('profile/index.html.twig', [
       'form' => $form,
-      'user' => $user,
+      'user' => $user->user,
     ]);
   }
 }

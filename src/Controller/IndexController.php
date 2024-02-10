@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Controller;
 
-use SimpleWebApps\Entity\User;
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\EventBus\EventStreamRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 use function assert;
 use function is_string;
@@ -31,15 +32,15 @@ class IndexController extends AbstractController
   }
 
   #[Route('/events', name: 'events', methods: ['GET'])]
-  public function events(Request $request, EventStreamRenderer $renderer): Response
-  {
+  public function events(
+    Request $request,
+    EventStreamRenderer $renderer,
+    #[CurrentUser()] AuthenticatedUser $authenticatedUser,
+  ): Response {
     $topicsStr = $request->query->get('topics');
     assert(is_string($topicsStr) && !empty($topicsStr));
     $topics = explode(',', $topicsStr);
-    $user = $this->getUser();
-    assert($user instanceof User);
-    $userId = $user->getId();
 
-    return $renderer->createResponse((string) $userId, $topics);
+    return $renderer->createResponse($authenticatedUser, $topics);
   }
 }

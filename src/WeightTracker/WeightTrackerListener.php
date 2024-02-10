@@ -6,6 +6,7 @@ namespace SimpleWebApps\WeightTracker;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Entity\WeightRecord;
 use SimpleWebApps\EventBus\Event;
 use SimpleWebApps\EventBus\EventStreamInitialPayloadListener;
@@ -36,9 +37,9 @@ final class WeightTrackerListener implements EventStreamInitialPayloadListener
     // Do nothing.
   }
 
-  public function initiallyConnected(string $userId, array $topics): ?Event
+  public function initiallyConnected(AuthenticatedUser $authenticatedUser, array $topics): ?Event
   {
-    return $this->broadcaster->createInitialPayloadEvent($userId, $topics);
+    return $this->broadcaster->createInitialPayloadEvent($authenticatedUser, $topics);
   }
 
   public function onWeightRecordCreated(WeightRecord $weightRecord): void

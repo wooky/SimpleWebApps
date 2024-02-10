@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleWebApps\EventBus;
 
 use Psr\Log\LoggerInterface;
+use SimpleWebApps\Auth\AuthenticatedUser;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,10 +28,10 @@ readonly class EventStreamRenderer
   /**
    * @param string[] $topics
    */
-  public function createResponse(string $userId, array $topics): Response
+  public function createResponse(AuthenticatedUser $authenticatedUser, array $topics): Response
   {
     session_write_close();
-    $response = new StreamedResponse(fn () => $this->waitLoop($userId, $topics));
+    $response = new StreamedResponse(fn () => $this->waitLoop($authenticatedUser, $topics));
     $response->headers->set('Content-Type', 'text/event-stream');
     $response->headers->set('Cache-Control', 'no-cache');
     $response->headers->set('X-Accel-Buffering', 'no');
@@ -41,15 +42,17 @@ readonly class EventStreamRenderer
   /**
    * @param string[] $topics
    */
-  private function waitLoop(string $userId, array $topics): void
+  private function waitLoop(AuthenticatedUser $authenticatedUser, array $topics): void
   {
     self::flush();
     foreach ($this->initialPayloadListeners as $listener) {
-      $event = $listener->initiallyConnected($userId, $topics);
+      $event = $listener->initiallyConnected($authenticatedUser, $topics);
       if ($event) {
         self::writePayload($event);
       }
     }
+
+    $userId = (string) $authenticatedUser->user->getId();
     foreach ($this->eventBus->get() as $event) {
       $shouldWrite = match ($event->scope) {
         EventScope::SpecifiedTopic => in_array($userId, $event->users, true) && in_array($event->topic, $topics, true),

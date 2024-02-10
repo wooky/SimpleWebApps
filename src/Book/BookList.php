@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\Book;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Book;
 use SimpleWebApps\Entity\BookOwnership;
 use SimpleWebApps\Entity\User;
 use SimpleWebApps\Repository\BookOwnershipRepository;
 use SimpleWebApps\Repository\BookRepository;
-use SimpleWebApps\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -38,17 +38,16 @@ class BookList
   public function __construct(
     private BookRepository $bookRepository,
     private BookOwnershipRepository $bookOwnershipRepository,
-    UserRepository $userRepository,
     Security $security,
   ) {
-    $user = $security->getUser();
-    assert($user instanceof User);
-    $this->currentUser = $user;
+    $authenticatedUser = $security->getUser();
+    assert($authenticatedUser instanceof AuthenticatedUser);
+    $this->currentUser = $authenticatedUser->user;
 
-    $this->users = $userRepository->getControlledUsersIncludingSelf(
-      [$user],
-      RelationshipCapability::Read->permissionsRequired(),
-    );
+    $this->users = [
+      $authenticatedUser->user,
+      ...$authenticatedUser->iterateControlledUsers(RelationshipCapability::Read->permissionsRequired()),
+    ];
     $this->allViewFilters = array_merge(BookOwnershipState::cases(), BookViewFilter::cases());
   }
 

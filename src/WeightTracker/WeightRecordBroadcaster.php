@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleWebApps\WeightTracker;
 
+use SimpleWebApps\Auth\AuthenticatedUser;
 use SimpleWebApps\Auth\RelationshipCapability;
 use SimpleWebApps\Entity\Relationship;
 use SimpleWebApps\Entity\User;
@@ -30,20 +31,20 @@ readonly class WeightRecordBroadcaster
     // Do nothing.
   }
 
-  public function createInitialPayloadEvent(string $userId, array $topics): ?Event
+  public function createInitialPayloadEvent(AuthenticatedUser $authenticatedUser, array $topics): ?Event
   {
     if (!in_array(self::TOPIC, $topics, true)) {
       return null;
     }
-    $user = $this->userRepository->find($userId);
-    assert(null !== $user);
-    $controlledUsers = $this->userRepository->getControlledUsersIncludingSelf(
-      [$user],
-      RelationshipCapability::Read->permissionsRequired(),
-    );
+    $controlledUsers = [
+      $authenticatedUser->user,
+      ...$authenticatedUser->iterateControlledUsers(RelationshipCapability::Read->permissionsRequired()),
+    ];
     $controlledUserIds = array_map(static fn (User $user) => $user->getId()->toBinary(), $controlledUsers);
     $weightRecords = $this->weightRecordRepository->getDataPoints($controlledUserIds);
-    $initialPayload = json_encode($this->commandRenderer->initialData($user, $controlledUsers, $weightRecords));
+    $initialPayload = json_encode(
+      $this->commandRenderer->initialData($authenticatedUser->user, $controlledUsers, $weightRecords),
+    );
     assert(false !== $initialPayload);
 
     return new Event([], self::TOPIC, $initialPayload, sseEvent: self::TOPIC);
