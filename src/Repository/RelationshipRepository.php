@@ -32,7 +32,7 @@ class RelationshipRepository extends ServiceEntityRepository
     $qb = $this->createQueryBuilder('rel');
 
     return $qb
-        ->select(['rel', 'fu', 'tu'])
+        ->select('rel', 'fu', 'tu')
         ->innerJoin('rel.fromUser', 'fu')
         ->innerJoin('rel.toUser', 'tu')
         ->where($qb->expr()->eq('fu.id', '?1'))
