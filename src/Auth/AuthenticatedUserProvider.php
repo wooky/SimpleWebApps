@@ -57,7 +57,7 @@ class AuthenticatedUserProvider implements UserProviderInterface, PasswordUpgrad
     );
     assert($user instanceof User);
 
-    return new AuthenticatedUser($user, $fromRelationships);
+    return new AuthenticatedUser($user, $fromRelationships); // @phan-suppress-current-line PhanTypeMismatchReturn
   }
 
   public function refreshUser(UserInterface $user): AuthenticatedUser
@@ -66,6 +66,7 @@ class AuthenticatedUserProvider implements UserProviderInterface, PasswordUpgrad
       throw new UnsupportedUserException();
     }
 
+    // @phan-suppress-next-line PhanTypeMismatchReturnSuperType
     return $this->loadUserByIdentifier($user->getUserIdentifier());
   }
 
