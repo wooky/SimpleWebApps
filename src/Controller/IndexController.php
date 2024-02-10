@@ -24,11 +24,11 @@ class IndexController extends AbstractController
     return $this->render('index/index.html.twig');
   }
 
-  #[Route('/navbar/{ulid}', name: 'navbar', methods: ['GET'])]
+  #[Route('/navbar/{username}', name: 'navbar', methods: ['GET'])]
   #[Cache(maxage: 3600)]
-  public function navbar(string $ulid = ''): Response
+  public function navbar(string $username = ''): Response
   {
-    return $this->render('index/navbar.html.twig', ['ulid' => $ulid]);
+    return $this->render('index/navbar.html.twig', ['username' => $username]);
   }
 
   #[Route('/events', name: 'events', methods: ['GET'])]

@@ -1,4 +1,4 @@
-{%- set ulid = is_granted('IS_AUTHENTICATED_REMEMBERED') ? app.user.user.id : '' -%}
+{%- set username = is_granted('IS_AUTHENTICATED_REMEMBERED') ? app.user.user.username : '' -%}
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
     <head>
@@ -19,8 +19,8 @@
     </head>
     <body>
         <turbo-frame
-            id="simplewebapps-navbar-{{ ulid }}"
-            src="{{ path('navbar', {ulid: ulid}) }}"
+            id="simplewebapps-navbar-{{ username }}"
+            src="{{ path('navbar', {username: username}) }}"
             target="_top"
             data-turbo-permanent
         ></turbo-frame>

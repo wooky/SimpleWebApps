@@ -1,9 +1,9 @@
-<turbo-frame id="simplewebapps-navbar-{{ ulid }}">
+<turbo-frame id="simplewebapps-navbar-{{ username }}">
   <nav class="navbar is-fixed-top">
     <div class="navbar-brand is-hoverable">
       <a class="navbar-item" href="{{ path('index') }}">{% trans %}SimpleWebApps{% endtrans %}</a>
     </div>
-    {% if ulid %}
+    {% if username %}
     <div class="navbar-menu">
       <div id="simplewebapps-stream" {{ stimulus_controller('stream') }}
         data-stream-event-source-url-value="{{ path('events', {'topics': '{{topics}}'}) }}"
