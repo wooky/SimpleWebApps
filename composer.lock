@@ -6824,7 +6824,7 @@
         },
         {
             "name": "symfony/ux-dropzone",
-            "version": "v2.14.0",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-dropzone.git",
@@ -6883,7 +6883,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-dropzone/tree/v2.14.0"
+                "source": "https://github.com/symfony/ux-dropzone/tree/v2.15.0"
             },
             "funding": [
                 {
