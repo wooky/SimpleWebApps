@@ -6739,7 +6739,7 @@
         },
         {
             "name": "symfony/ux-cropperjs",
-            "version": "v2.14.0",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-cropperjs.git",
@@ -6804,7 +6804,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.14.0"
+                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.15.0"
             },
             "funding": [
                 {
