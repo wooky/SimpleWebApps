@@ -17,7 +17,7 @@
         "symfony/console": "7.0.*",
         "symfony/dotenv": "7.0.*",
         "symfony/flex": "^2.4.3",
-        "symfony/form": "7.0.*",
+        "symfony/form": "7.1.*",
         "symfony/framework-bundle": "7.0.*",
         "symfony/mime": "7.0.*",
         "symfony/monolog-bundle": "^3.10",
